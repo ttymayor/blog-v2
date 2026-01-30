@@ -60,21 +60,23 @@ export default function Header({ currentPath }: HeaderProps) {
         `}
       >
         <nav className="flex items-center justify-between gap-4 w-full">
-          <h2 className="hidden md:block m-0 text-[1em]">
-            <a
-              href="/"
-              className="text-[rgb(var(--black))] no-underline hover:no-underline"
-            >
-              {SITE_TITLE}
+          <div className="flex items-center gap-3">
+            <a href="/" className="flex-shrink-0 block">
+              <img
+                src={AvatarImage.src}
+                alt="Avatar"
+                className="w-10 h-10 rounded-full object-cover"
+              />
             </a>
-          </h2>
-          <a href="/" className="md:hidden flex-shrink-0 block">
-            <img
-              src={AvatarImage.src}
-              alt="Avatar"
-              className="w-10 h-10 rounded-full object-cover"
-            />
-          </a>
+            <h2 className="hidden md:block m-0 text-[1em]">
+              <a
+                href="/"
+                className="text-[rgb(var(--black))] no-underline hover:no-underline font-bold"
+              >
+                {SITE_TITLE}
+              </a>
+            </h2>
+          </div>
           <div className="flex flex-1 md:flex-none md:block">
             <Link
               href="/"

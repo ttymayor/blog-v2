@@ -7,6 +7,7 @@ import MarqueeDemo from "../components/MarqueeDemo.astro";
 import Slides from "../components/Slides.astro";
 import Projects from "../components/Projects.astro";
 import Events from "../components/Events.astro";
+import FortuneCard from "../components/FortuneCard";
 import "../styles/global.css";
 ---
 
@@ -24,6 +25,7 @@ import "../styles/global.css";
       <Projects />
       <Events />
     </main>
+    <FortuneCard client:load />
     <Footer />
   </body>
 </html>
