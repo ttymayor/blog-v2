@@ -18,5 +18,7 @@
     "lib": "@/lib",
     "hooks": "@/hooks"
   },
-  "registries": {}
+  "registries": {
+    "@fulldev": "https://ui.full.dev/r/{name}.json"
+  }
 }

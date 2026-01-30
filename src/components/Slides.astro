@@ -1,0 +1,34 @@
+---
+import SlidesList from "./SlidesList";
+
+const slides = [
+  {
+    title: "入門 Docker 開發技能 +1",
+    date: "2025-05-15",
+    link: "https://url.ttymayor.com/docker-slide",
+    made_with: ["Figma"],
+    location: "東海大學 - 駭客社",
+    pdf: "https://url.ttymayor.com/docker-slide-pdf",
+  },
+  {
+    title: "Linux - 你應該要認識的企鵝",
+    date: "2025-09-18",
+    link: "https://url.ttymayor.com/linux-slide",
+    made_with: ["Figma"],
+    location: "東海大學 - 駭客社",
+    pdf: "https://url.ttymayor.com/linux-slide-pdf",
+  },
+  {
+    title: "入門網頁漏洞",
+    date: "2025-10-02",
+    link: "https://url.ttymayor.com/web-vuln-slide",
+    made_with: ["Slidev"],
+    location: "東海大學 - 駭客社",
+  },
+];
+---
+
+<section class="py-12">
+  <h2 class="text-3xl font-bold mb-8">Slides</h2>
+  <SlidesList slides={slides} />
+</section>

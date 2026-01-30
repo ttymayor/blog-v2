@@ -1,0 +1,39 @@
+---
+const events = [
+  {
+    name: "Tech Conference 2024",
+    role: "Attendee",
+    date: "2024-06-15",
+    location: "San Francisco, CA"
+  },
+  {
+    name: "Open Source Summit",
+    role: "Volunteer",
+    date: "2023-09-22",
+    location: "Berlin, Germany"
+  },
+  {
+    name: "Hackathon 2023",
+    role: "Mentor",
+    date: "2023-05-10",
+    location: "Online"
+  }
+];
+---
+
+<section class="py-12">
+  <h2 class="text-3xl font-bold mb-8">📅 Events</h2>
+  <div class="space-y-4">
+    {events.map((event) => (
+      <div class="flex items-center justify-between p-4 bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 shadow-sm">
+        <div>
+          <h3 class="text-lg font-bold">{event.name}</h3>
+          <p class="text-gray-600 dark:text-gray-400 text-sm">{event.role} • {event.location}</p>
+        </div>
+        <div class="text-gray-500 dark:text-gray-400 font-medium">
+          {event.date}
+        </div>
+      </div>
+    ))}
+  </div>
+</section>

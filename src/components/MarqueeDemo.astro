@@ -1,0 +1,65 @@
+---
+import { Marquee, MarqueeContent } from "./ui/marquee";
+
+const items = [
+  { name: "Astro", iconClass: "devicon-astro-plain" },
+  { name: "React", iconClass: "devicon-react-original" },
+  { name: "Next.js", iconClass: "devicon-nextjs-plain" },
+  { name: "PHP", iconClass: "devicon-php-plain" },
+  { name: "Laravel", iconClass: "devicon-laravel-original" },
+  { name: "Python", iconClass: "devicon-python-plain" },
+  { name: "Flask", iconClass: "devicon-flask-original" },
+  { name: "C++", iconClass: "devicon-cplusplus-plain" },
+  { name: "TypeScript", iconClass: "devicon-typescript-plain" },
+  { name: "Vue.js", iconClass: "devicon-vuejs-plain" },
+  { name: "MongoDB", iconClass: "devicon-mongodb-plain" },
+  { name: "MariaDB", iconClass: "devicon-mariadb-original" },
+  { name: "MySQL", iconClass: "devicon-mysql-plain" },
+  { name: "Docker", iconClass: "devicon-docker-plain" },
+  { name: "Golang", iconClass: "devicon-go-original-wordmark" },
+  { name: "Google Cloud", iconClass: "devicon-googlecloud-plain" },
+  { name: "Cloudflare", iconClass: "devicon-cloudflare-plain" },
+  { name: "Ubuntu", iconClass: "devicon-ubuntu-plain" },
+  { name: "Git", iconClass: "devicon-git-plain" },
+  { name: "pnpm", iconClass: "devicon-pnpm-plain" },
+  { name: "VS Code", iconClass: "devicon-vscode-plain" },
+  { name: "Bash", iconClass: "devicon-bash-plain" },
+  { name: "GitHub", iconClass: "devicon-github-original" },
+  { name: "Tailwind CSS", iconClass: "devicon-tailwindcss-original" },
+  { name: "Markdown", iconClass: "devicon-markdown-original" },
+  { name: "Hugo", iconClass: "devicon-hugo-plain" },
+  { name: "Figma", iconClass: "devicon-figma-plain" },
+];
+
+const firstRow = items.slice(0, Math.ceil(items.length / 2));
+const secondRow = items.slice(Math.ceil(items.length / 2));
+---
+
+<div class="w-full max-w-4xl mx-auto py-12">
+  <div class="bg-gray-100 dark:bg-gray-800 rounded-xl border py-4 flex flex-col gap-4 overflow-hidden">
+    <Marquee class="[--duration:20s]">
+      <MarqueeContent direction="left" pauseOnHover={true}>
+        {
+          firstRow.map((item) => (
+            <div class="mx-4 flex items-center gap-2 text-xl font-bold text-gray-700 dark:text-gray-200">
+              <i class={`${item.iconClass} text-2xl`}></i>
+              <span>{item.name}</span>
+            </div>
+          ))
+        }
+      </MarqueeContent>
+    </Marquee>
+    <Marquee class="[--duration:20s]">
+      <MarqueeContent direction="right" pauseOnHover={true}>
+        {
+          secondRow.map((item) => (
+            <div class="mx-4 flex items-center gap-2 text-xl font-bold text-gray-700 dark:text-gray-200">
+              <i class={`${item.iconClass} text-2xl`}></i>
+              <span>{item.name}</span>
+            </div>
+          ))
+        }
+      </MarqueeContent>
+    </Marquee>
+  </div>
+</div>

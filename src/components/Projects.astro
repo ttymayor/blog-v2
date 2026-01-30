@@ -1,0 +1,80 @@
+---
+import { buttonVariants } from "@/components/ui/button";
+import thuCourseCrawler from "../assets/projects/thu-course-crawler.png";
+import thuHackerClub from "../assets/projects/thu-hacker-club.png";
+
+const projects = [
+  {
+    title: "東海選課資訊",
+    description: "利用爬蟲獲取選課資訊，優化 UI 介面，提供更方便的排課模擬功能",
+    tags: ["Next.js", "Vercel", "Tailwind CSS", "Mongoose"],
+    site: "https://thc.ttymayor.com/",
+    repo: "https://github.com/ttymayor/thu-course-frontend",
+    image: "https://thc.ttymayor.com/api/og",
+  },
+  {
+    title: "東海選課資訊（爬蟲）",
+    description: "使用 Python 爬蟲獲取東海選課資訊，並儲存到 MongoDB 中",
+    tags: ["Python", "uv", "MongoDB", "GitHub Actions"],
+    repo: "https://github.com/ttymayor/thu-course-crawler",
+    image: thuCourseCrawler,
+  },
+  {
+    title: "THU Hacker Club",
+    description:
+      "114 THU Hacker Club 的官網，雖然我在資安方面沒有過多深入研究，但在網頁開發上，為駭客社留下一個網站",
+    tags: ["Astro", "React", "Tailwind CSS"],
+    site: "https://thu-hacker-club.zeabur.app/",
+    repo: "https://github.com/ttymayor/thu-hacker-club",
+    image: thuHackerClub,
+  },
+];
+---
+
+<section class="py-12">
+  <h2 class="text-3xl font-bold mb-8">🛠️ Projects</h2>
+  <div class="grid gap-6 md:grid-cols-2">
+    {
+      projects.map((project) => (
+        <div class="block bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 shadow-sm hover:shadow-md transition-shadow overflow-hidden">
+          <img
+            src={
+              typeof project.image === "string"
+                ? project.image
+                : project.image.src
+            }
+            alt={project.title}
+            class="w-full aspect-video object-cover"
+          />
+          <div class="p-6">
+            <h3 class="text-xl font-bold mb-2">{project.title}</h3>
+            <p class="text-gray-700 dark:text-gray-300 mb-4">
+              {project.description}
+            </p>
+            <div class="flex flex-wrap gap-2 mb-4">
+              {project.tags.map((tag) => (
+                <span class="px-2 py-1 text-xs font-medium bg-gray-100 dark:bg-gray-700 rounded-md">
+                  {tag}
+                </span>
+              ))}
+            </div>
+            <div class="flex gap-4">
+              <a
+                href={project.site}
+                class={buttonVariants({ variant: "outline", size: "sm" })}
+              >
+                Visit Site
+              </a>
+              <a
+                href={project.repo}
+                class={buttonVariants({ variant: "outline", size: "sm" })}
+              >
+                GitHub Repo
+              </a>
+            </div>
+          </div>
+        </div>
+      ))
+    }
+  </div>
+</section>
