@@ -1,0 +1,24 @@
+---
+import BaseHead from "@/components/BaseHead.astro";
+import Footer from "@/components/react/Footer";
+import Header from "@/components/react/Header";
+import { SITE_DESCRIPTION, SITE_TITLE } from "@/consts";
+import "@/styles/global.css";
+import { ThemeProvider } from "@/components/ui/theme-toggle";
+
+const pathname = Astro.url.pathname.replace(import.meta.env.BASE_URL, "");
+---
+
+<html lang="en">
+  <head transition:name="root" transition:animate="none">
+    <BaseHead title={SITE_TITLE} description={SITE_DESCRIPTION} />
+    <ThemeProvider />
+  </head>
+  <body>
+    <Header client:load pathname={pathname} />
+    <main class="max-w-4xl w-full mx-auto px-4 py-12" transition:animate="fade">
+      <slot />
+    </main>
+    <Footer client:load />
+  </body>
+</html>

@@ -36,13 +36,15 @@ const secondRow = items.slice(Math.ceil(items.length / 2));
 ---
 
 <div class="w-full max-w-4xl mx-auto py-12">
-  <div class="bg-gray-100 dark:bg-gray-800 rounded-xl border py-4 flex flex-col gap-4 overflow-hidden">
+  <div
+    class="bg-muted/30 rounded-xl border border-border py-4 flex flex-col gap-4 overflow-hidden"
+  >
     <Marquee class="[--duration:20s]">
       <MarqueeContent direction="left" pauseOnHover={true}>
         {
           firstRow.map((item) => (
-            <div class="mx-4 flex items-center gap-2 text-xl font-bold text-gray-700 dark:text-gray-200">
-              <i class={`${item.iconClass} text-2xl`}></i>
+            <div class="mx-4 flex items-center gap-2 text-xl font-bold text-muted-foreground">
+              <i class={`${item.iconClass} text-2xl`} />
               <span>{item.name}</span>
             </div>
           ))
@@ -53,8 +55,8 @@ const secondRow = items.slice(Math.ceil(items.length / 2));
       <MarqueeContent direction="right" pauseOnHover={true}>
         {
           secondRow.map((item) => (
-            <div class="mx-4 flex items-center gap-2 text-xl font-bold text-gray-700 dark:text-gray-200">
-              <i class={`${item.iconClass} text-2xl`}></i>
+            <div class="mx-4 flex items-center gap-2 text-xl font-bold text-muted-foreground">
+              <i class={`${item.iconClass} text-2xl`} />
               <span>{item.name}</span>
             </div>
           ))

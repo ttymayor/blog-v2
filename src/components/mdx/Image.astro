@@ -1,0 +1,16 @@
+---
+import { Image as ImageComp } from "astro:assets";
+const props = Astro.props;
+---
+
+<div class="my-4 overflow-hidden rounded-md">
+  <p class="m-0">
+    <ImageComp
+      src=""
+      alt=""
+      {...props}
+      class:list={"hover:scale-101 transition-all duration-300 ease-out"}
+      inferSize
+    />
+  </p>
+</div>

@@ -3,6 +3,9 @@
 import mdx from "@astrojs/mdx";
 import sitemap from "@astrojs/sitemap";
 import { defineConfig } from "astro/config";
+import remarkMath from "remark-math";
+import rehypeKatex from "rehype-katex";
+import remarkGfm from "remark-gfm";
 
 import tailwindcss from "@tailwindcss/vite";
 
@@ -11,7 +14,16 @@ import react from "@astrojs/react";
 // https://astro.build/config
 export default defineConfig({
   site: "https://ttymayor.com",
-  integrations: [mdx(), sitemap(), react()],
+  integrations: [
+    mdx({
+      syntaxHighlight: "shiki",
+      remarkPlugins: [remarkMath, remarkGfm],
+      rehypePlugins: [rehypeKatex],
+      gfm: true,
+    }),
+    sitemap(),
+    react(),
+  ],
 
   vite: {
     plugins: [tailwindcss()],

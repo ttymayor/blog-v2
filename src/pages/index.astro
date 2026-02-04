@@ -1,31 +1,26 @@
 ---
-import BaseHead from "../components/BaseHead.astro";
-import Footer from "../components/Footer.astro";
-import Header from "../components/Header.astro";
-import { SITE_DESCRIPTION, SITE_TITLE } from "../consts";
-import MarqueeDemo from "../components/MarqueeDemo.astro";
-import Slides from "../components/Slides.astro";
-import Projects from "../components/Projects.astro";
-import Events from "../components/Events.astro";
-import FortuneCard from "../components/FortuneCard";
-import "../styles/global.css";
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import LatestPosts from "@/components/LatestPosts.astro";
+import { ArrowRight } from "@lucide/astro";
 ---
 
-<!doctype html>
-<html lang="en">
-  <head>
-    <BaseHead title={SITE_TITLE} description={SITE_DESCRIPTION} />
-  </head>
-  <body>
-    <Header />
-    <main class="max-w-6xl! w-full">
-      <h1 class="text-8xl">🧑‍🚀 Hello, Astronaut!</h1>
-      <MarqueeDemo />
-      <Slides />
-      <Projects />
-      <Events />
-    </main>
-    <FortuneCard client:load />
-    <Footer />
-  </body>
-</html>
+<BaseLayout>
+  <section id="hero" class="h-40 flex items-center justify-start">
+    <div>
+      <h2 class="text-3xl font-bold">休息一下</h2>
+      <p class="text-lg text-muted-foreground">這裡會記錄一些有的沒的</p>
+    </div>
+  </section>
+
+  <section id="latest-posts" class="space-y-4">
+    <div class="flex items-center justify-between">
+      <h3 class="text-2xl font-bold">最新文章</h3>
+      <a
+        href="/blog"
+        class="text-muted-foreground flex items-center gap-2 hover:translate-x-1 transition-all"
+        >瞧<ArrowRight /></a
+      >
+    </div>
+    <LatestPosts />
+  </section>
+</BaseLayout>

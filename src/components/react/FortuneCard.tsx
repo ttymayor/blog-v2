@@ -78,7 +78,7 @@ export default function FortuneCard() {
             "top-4/5 -right-4 -translate-y-1/2 w-24 h-40 rounded-lg bg-red-700 hover:brightness-110 transform translate-x-12 rotate-[-15deg] hover:translate-x-8 hover:rotate-[-20deg]",
           // Open State (Long strip)
           isOpen &&
-            "top-1/2 right-1/2 translate-x-1/2 -translate-y-1/2 w-48 h-[500px] rounded-none shadow-[0_20px_50px_rgba(0,0,0,0.5)] rotate-0"
+            "top-1/2 right-1/2 translate-x-1/2 -translate-y-1/2 w-48 h-[500px] rounded-none shadow-[0_20px_50px_rgba(0,0,0,0.5)] rotate-0",
         )}
       >
         {/* Closed Content (Omikuji Box/Charm Look) */}

@@ -36,7 +36,7 @@ const projects = [
   <div class="grid gap-6 md:grid-cols-2">
     {
       projects.map((project) => (
-        <div class="block bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 shadow-sm hover:shadow-md transition-shadow overflow-hidden">
+        <div class="block bg-card rounded-xl border border-border shadow-sm hover:shadow-md transition-shadow overflow-hidden">
           <img
             src={
               typeof project.image === "string"
@@ -47,13 +47,13 @@ const projects = [
             class="w-full aspect-video object-cover"
           />
           <div class="p-6">
-            <h3 class="text-xl font-bold mb-2">{project.title}</h3>
-            <p class="text-gray-700 dark:text-gray-300 mb-4">
+            <h3 class="text-xl font-bold mb-2 text-card-foreground">{project.title}</h3>
+            <p class="text-muted-foreground mb-4">
               {project.description}
             </p>
             <div class="flex flex-wrap gap-2 mb-4">
               {project.tags.map((tag) => (
-                <span class="px-2 py-1 text-xs font-medium bg-gray-100 dark:bg-gray-700 rounded-md">
+                <span class="px-2 py-1 text-xs font-medium bg-muted text-muted-foreground rounded-md">
                   {tag}
                 </span>
               ))}

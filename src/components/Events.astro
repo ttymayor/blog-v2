@@ -25,12 +25,12 @@ const events = [
   <h2 class="text-3xl font-bold mb-8">📅 Events</h2>
   <div class="space-y-4">
     {events.map((event) => (
-      <div class="flex items-center justify-between p-4 bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 shadow-sm">
+      <div class="flex items-center justify-between p-4 bg-card rounded-xl border border-border shadow-sm">
         <div>
-          <h3 class="text-lg font-bold">{event.name}</h3>
-          <p class="text-gray-600 dark:text-gray-400 text-sm">{event.role} • {event.location}</p>
+          <h3 class="text-lg font-bold text-card-foreground">{event.name}</h3>
+          <p class="text-muted-foreground text-sm">{event.role} • {event.location}</p>
         </div>
-        <div class="text-gray-500 dark:text-gray-400 font-medium">
+        <div class="text-muted-foreground font-medium">
           {event.date}
         </div>
       </div>
