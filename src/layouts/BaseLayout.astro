@@ -11,8 +11,8 @@ const pathname = Astro.url.pathname.replace(import.meta.env.BASE_URL, "");
 
 <html lang="en">
   <head transition:name="root" transition:animate="none">
-    <BaseHead title={SITE_TITLE} description={SITE_DESCRIPTION} />
     <ThemeProvider />
+    <BaseHead title={SITE_TITLE} description={SITE_DESCRIPTION} />
   </head>
   <body transition:animate="fade">
     <Header client:load pathname={pathname} />
