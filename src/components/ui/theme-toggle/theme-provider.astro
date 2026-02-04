@@ -1,31 +1,35 @@
 <script is:inline>
   (() => {
-    if (window.__themeInitialized) return;
-    window.__themeInitialized = true;
-
-    const theme = (() => {
-      // Get theme from localStorage
-      const localStorageTheme = localStorage?.getItem("theme") ?? "";
-      if (["dark", "light"].includes(localStorageTheme)) {
+    const getTheme = () => {
+      const localStorageTheme = localStorage?.getItem("theme");
+      if (localStorageTheme === "dark" || localStorageTheme === "light") {
         return localStorageTheme;
       }
-      // Get theme from system
-      if (window.matchMedia("(prefers-color-scheme: dark)").matches) {
-        return "dark";
-      }
-      return "light";
-    })();
+      return window.matchMedia("(prefers-color-scheme: dark)").matches
+        ? "dark"
+        : "light";
+    };
 
-    function applyTheme() {
-      if (theme === "light") {
-        document.documentElement.classList.remove("dark");
-      } else {
-        document.documentElement.classList.add("dark");
-      }
+    const applyTheme = () => {
+      const theme = getTheme();
+      const isDark = theme === "dark";
+      document.documentElement.classList.toggle("dark", isDark);
       document.documentElement.setAttribute("data-theme", theme);
-      window.localStorage.setItem("theme", theme);
-    }
-    document.addEventListener("astro:after-swap", applyTheme);
+    };
+
     applyTheme();
+
+    if (!window.__theme_listener_initialized) {
+      window.__theme_listener_initialized = true;
+      document.addEventListener("astro:after-swap", applyTheme);
+
+      window
+        .matchMedia("(prefers-color-scheme: dark)")
+        .addEventListener("change", (e) => {
+          if (!localStorage.getItem("theme")) {
+            applyTheme();
+          }
+        });
+    }
   })();
 </script>

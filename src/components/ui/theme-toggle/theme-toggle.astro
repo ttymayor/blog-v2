@@ -31,25 +31,31 @@ const { class: className } = Astro.props;
 </style>
 
 <script is:inline>
-  if (!window.__themeHandlersInitialized) {
-    window.__themeHandlersInitialized = true;
-    document
-      .querySelectorAll("[data-slot='theme-toggle']")
-      .forEach((toggle) => {
-        toggle.addEventListener("click", () => {
-          const element = document.documentElement;
-          element.classList.add("no-transitions");
-          element.classList.toggle("dark");
+  const initThemeToggle = () => {
+    document.querySelectorAll("[data-slot='theme-toggle']").forEach((toggle) => {
+      // Remove existing listener if any to avoid duplicates
+      toggle.removeEventListener("click", handleToggleClick);
+      toggle.addEventListener("click", handleToggleClick);
+    });
+  };
 
-          const isDark = element.classList.contains("dark");
-          const newTheme = isDark ? "dark" : "light";
-          localStorage.setItem("theme", newTheme);
-          element.setAttribute("data-theme", newTheme);
+  const handleToggleClick = () => {
+    const element = document.documentElement;
+    element.classList.add("no-transitions");
+    element.classList.toggle("dark");
 
-          requestAnimationFrame(() => {
-            element.classList.remove("no-transitions");
-          });
-        });
-      });
-  }
+    const isDark = element.classList.contains("dark");
+    const newTheme = isDark ? "dark" : "light";
+    localStorage.setItem("theme", newTheme);
+    element.setAttribute("data-theme", newTheme);
+
+    requestAnimationFrame(() => {
+      element.classList.remove("no-transitions");
+    });
+  };
+
+  // Initial init
+  initThemeToggle();
+  // Init on every page navigation
+  document.addEventListener("astro:page-load", initThemeToggle);
 </script>

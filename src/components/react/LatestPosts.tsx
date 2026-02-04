@@ -1,8 +1,9 @@
-import type { CollectionEntry } from "astro:content";
+// import type { CollectionEntry } from "astro:content";
+import type { BlogPost } from "@/types/blog";
 import { PostCard } from "@/components/react/PostCard";
 
 interface LatestPostsProps {
-  posts: CollectionEntry<"blog">[];
+  posts: BlogPost[];
 }
 
 export function LatestPosts({ posts }: LatestPostsProps) {

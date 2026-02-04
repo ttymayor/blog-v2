@@ -1,10 +1,8 @@
 ---
 import { LatestPosts as LatestPostsReact } from "@/components/react/LatestPosts";
-import { getCollection } from "astro:content";
+import { getPosts } from "@/lib/blog";
 
-const posts = (await getCollection("blog"))
-  .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf())
-  .slice(0, 6);
+const posts = (await getPosts()).slice(0, 6);
 ---
 
 <LatestPostsReact posts={posts} />
