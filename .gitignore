@@ -21,3 +21,7 @@ pnpm-debug.log*
 
 # jetbrains setting folder
 .idea/
+.vercel
+
+.vercel
+.env*.local

@@ -1,7 +1,7 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import type { BlogPost } from "@/types/blog";
-import { Pencil } from "lucide-react";
+// import { Pencil } from "lucide-react";
 
 interface PostCardProps {
   post: BlogPost;
@@ -16,9 +16,10 @@ export function PostCard({ post }: PostCardProps) {
             <h3 className="mb-0 flex items-center gap-2 text-lg font-bold">
               {post.title}
 
-              {post.draft && import.meta.env.DEV && (
-                <Pencil className="size-4" />
-              )}
+              {post.draft &&
+                import.meta.env.DEV &&
+                // <Pencil className="size-4" />
+                "draft"}
             </h3>
           </CardTitle>
           {(post.category || post.tags?.length > 0) && (

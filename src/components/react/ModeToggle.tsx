@@ -10,22 +10,16 @@ export function ModeToggle() {
   React.useEffect(() => {
     const savedTheme = window.localStorage.getItem("theme");
     const prefersDark = window.matchMedia(
-      "(prefers-color-scheme: dark)"
+      "(prefers-color-scheme: dark)",
     ).matches;
     const initialIsDark =
       savedTheme === "dark" || (savedTheme === null && prefersDark);
     setIsDark(initialIsDark);
     isDarkRef.current = initialIsDark;
 
-    function applyTheme() {
-      document.documentElement.classList[isDarkRef.current ? "add" : "remove"](
-        "dark"
-      );
-    }
-
-    applyTheme();
-    document.addEventListener("astro:after-swap", applyTheme);
-    return () => document.removeEventListener("astro:after-swap", applyTheme);
+    document.documentElement.classList[isDarkRef.current ? "add" : "remove"](
+      "dark",
+    );
   }, []);
 
   React.useEffect(() => {
