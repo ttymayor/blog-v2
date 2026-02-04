@@ -11,7 +11,8 @@ import {
 import { cn } from "@/lib/utils";
 import { SearchInput } from "./SearchInput";
 import { BlogPostList } from "./BlogPostList";
-import type { BlogIndexProps, FilterState, BlogPost } from "./types";
+import type { BlogIndexProps, FilterState } from "./types";
+import type { BlogPost } from "@/types/blog";
 
 // Category Selector Component
 function CategorySelector({

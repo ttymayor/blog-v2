@@ -1,6 +1,3 @@
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { Pencil } from "lucide-react";
 import type { BlogPost } from "@/types/blog";
 import { PostCard } from "@/components/react/PostCard";
 
@@ -20,7 +17,7 @@ export function BlogPostList({ posts }: BlogPostListProps) {
   return (
     <div className="grid gap-6 md:grid-cols-2">
       {posts.map((post) => (
-        <PostCard post={post} />
+        <PostCard key={post.id} post={post} />
       ))}
     </div>
   );

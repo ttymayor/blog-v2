@@ -2,21 +2,67 @@
 import BaseHead from "@/components/BaseHead.astro";
 import Footer from "@/components/react/Footer";
 import Header from "@/components/react/Header";
+import { ClientRouter } from "astro:transitions";
 import { SITE_DESCRIPTION, SITE_TITLE } from "@/consts";
 import "@/styles/global.css";
-import { ThemeProvider } from "@/components/ui/theme-toggle";
 
 const pathname = Astro.url.pathname.replace(import.meta.env.BASE_URL, "");
 ---
 
 <html lang="en">
-  <head transition:name="root" transition:animate="none">
-    <ThemeProvider />
+  <head>
+    <script is:inline>
+      const getThemePreference = () => {
+        try {
+          const stored = localStorage.getItem("theme");
+          if (stored) return stored;
+        } catch {
+          // localStorage can be blocked; fall through to system preference.
+        }
+        return window.matchMedia("(prefers-color-scheme: dark)").matches
+          ? "dark"
+          : "light";
+      };
+
+      const applyTheme = () => {
+        const isDark = getThemePreference() === "dark";
+        document.documentElement.classList.toggle("dark", isDark);
+        document.documentElement.style.colorScheme = isDark ? "dark" : "light";
+      };
+
+      applyTheme();
+
+      try {
+        const observer = new MutationObserver(() => {
+          const isDark = document.documentElement.classList.contains("dark");
+          localStorage.setItem("theme", isDark ? "dark" : "light");
+          document.documentElement.style.colorScheme = isDark ? "dark" : "light";
+        });
+        observer.observe(document.documentElement, {
+          attributes: true,
+          attributeFilter: ["class"],
+        });
+      } catch {
+        // Ignore storage errors.
+      }
+
+      document.addEventListener("astro:before-swap", (event) => {
+        const nextDocument = event.newDocument;
+        const isDark = document.documentElement.classList.contains("dark");
+        nextDocument.documentElement.classList.toggle("dark", isDark);
+        nextDocument.documentElement.style.colorScheme = isDark
+          ? "dark"
+          : "light";
+      });
+
+      document.addEventListener("astro:after-swap", applyTheme);
+    </script>
+    <ClientRouter />
     <BaseHead title={SITE_TITLE} description={SITE_DESCRIPTION} />
   </head>
-  <body transition:animate="fade">
-    <Header client:load pathname={pathname} />
-    <main class="max-w-4xl w-full mx-auto px-4 py-12">
+  <body>
+    <Header client:load pathname={pathname} transition:persist />
+    <main class="max-w-4xl w-full mx-auto px-4 py-12" transition:animate="fade">
       <slot />
     </main>
     <Footer client:load />
