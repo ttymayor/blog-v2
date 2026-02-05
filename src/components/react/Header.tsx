@@ -21,7 +21,7 @@ export default function Header({ pathname }: HeaderProps) {
 
   return (
     <header className="top pointer-events-auto fixed bottom-4 left-0 z-50 flex w-full flex-col items-center md:sticky md:top-0 md:bottom-auto md:left-auto">
-      <nav className="bg-secondary/75 mx-auto flex w-[95%] max-w-4xl items-center justify-between gap-4 rounded-2xl border p-4 shadow-xl backdrop-blur-sm transition-all duration-500 ease-in-out md:mt-4">
+      <nav className="bg-secondary/50 mx-auto flex w-[95%] max-w-5xl items-center justify-between gap-4 rounded-2xl border p-4 shadow-xl backdrop-blur-sm transition-all duration-500 ease-in-out md:mt-4">
         <div className="flex items-center gap-3">
           <a href="/" className="block shrink-0">
             <img
@@ -41,8 +41,8 @@ export default function Header({ pathname }: HeaderProps) {
           {navItems.map((item) => (
             <a key={item.href} href={item.href}>
               <Button
-                variant="ghost"
-                className={cn(isActive(item.href) && "bg-muted/50")}
+                variant="link"
+                // className={cn(isActive(item.href) && "bg-secondary/50")}
               >
                 {item.label}
               </Button>

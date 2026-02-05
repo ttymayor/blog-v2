@@ -123,6 +123,8 @@
 }
 
 @layer base {
+
+
   /* Google Fonts are loaded in BaseHead.astro */
 
   * {
@@ -172,7 +174,10 @@
     @apply text-xl;
   }
   .prose p {
-    margin-bottom: 2em;
+    @apply my-4;
+  }
+  .prose a {
+    @apply text-blue-200 underline underline-offset-4 transition-all hover:text-blue-300 hover:no-underline;
   }
   .prose blockquote {
     @apply bg-background/50 text-foreground/80 m-0 my-4 border-l-4 border-[#eebbc3] py-4 pl-5 text-base;

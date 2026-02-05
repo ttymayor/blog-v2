@@ -3,32 +3,47 @@ import BaseLayout from "@/layouts/BaseLayout.astro";
 import { Image } from "astro:assets";
 import FormattedDate from "@/components/FormattedDate.astro";
 import { Separator } from "@/components/ui/separator";
+import TableOfContents from "@/components/mdx/TableOfContents.astro";
 
-const { title, description, pubDate, updatedDate, heroImage } = Astro.props;
+const { title, description, pubDate, updatedDate, heroImage, headings } =
+  Astro.props;
 ---
 
 <BaseLayout>
-  <article class="bg-card p-4 rounded-xl">
-    <div class="hero-image">
-      {heroImage && <Image width={1020} height={510} src={heroImage} alt="" />}
-    </div>
-    <div class="prose">
-      <div class="title">
-        <h1>{title}</h1>
-        <!-- <p class="mb-0">{description}</p> -->
-        <div class="">
-          <FormattedDate date={pubDate} />
-          {
-            updatedDate && (
-              <div class="last-updated-on">
-                Last updated on <FormattedDate date={updatedDate} />
-              </div>
-            )
-          }
-        </div>
+  <div class="lg:flex lg:gap-4 lg:items-start relative">
+    <article class="bg-card p-4 rounded-xl md:p-8 flex-1 min-w-0 max-w-4xl">
+      <div class="hero-image">
+        {
+          heroImage && (
+            <Image width={1020} height={510} src={heroImage} alt="" />
+          )
+        }
       </div>
-      <Separator className="mt-8 mb-10 bg-gray-500" client:only="react" />
-      <slot />
-    </div>
-  </article>
+      <div class="prose max-w-none">
+        <div class="title">
+          <h1 class="font-bold">{title}</h1>
+          <div class="">
+            <FormattedDate date={pubDate} />
+            {
+              updatedDate && (
+                <div class="last-updated-on">
+                  Last updated on <FormattedDate date={updatedDate} />
+                </div>
+              )
+            }
+          </div>
+        </div>
+        <Separator className="mt-8 mb-10 bg-gray-500" client:only="react" />
+        <slot />
+      </div>
+    </article>
+
+    {
+      headings && headings.length > 0 && (
+        <aside class="hidden p-4  bg-card rounded-xl lg:block w-64 sticky top-26 shrink-0 self-start">
+          <TableOfContents headings={headings} />
+        </aside>
+      )
+    }
+  </div>
 </BaseLayout>

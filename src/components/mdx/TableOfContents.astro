@@ -1,0 +1,42 @@
+---
+interface Props {
+  headings: { depth: number; slug: string; text: string }[];
+}
+
+const { headings } = Astro.props;
+
+// Only show H2 and H3 in ToC for simplicity, or all if preferred.
+// Usually H1 is the title, so we start from H2.
+const tocHeadings = headings.filter((h) => h.depth >= 2 && h.depth <= 3);
+
+if (tocHeadings.length === 0) return null;
+---
+
+<nav class="toc space-y-2 text-sm">
+  <p
+    class="font-bold mb-4 uppercase tracking-wider text-muted-foreground text-xs"
+  >
+    Table of Contents
+  </p>
+  <ul class="space-y-2 pl-4">
+    {
+      tocHeadings.map((heading) => (
+        <li class={heading.depth === 3 ? "ml-4" : ""}>
+          <a
+            href={`#${heading.slug}`}
+            class="text-muted-foreground hover:text-foreground transition-colors block py-1"
+          >
+            {heading.text}
+          </a>
+        </li>
+      ))
+    }
+  </ul>
+</nav>
+
+<style>
+  .toc {
+    max-height: calc(100vh - 8rem);
+    overflow-y: auto;
+  }
+</style>

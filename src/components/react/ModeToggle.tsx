@@ -30,7 +30,7 @@ export function ModeToggle() {
 
   return (
     <Button
-      variant="outline"
+      variant="ghost"
       size="icon"
       onClick={() => setIsDark((current) => !current)}
       aria-pressed={isDark}

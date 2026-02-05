@@ -1,0 +1,42 @@
+---
+import { cn } from "@/lib/utils";
+
+interface Props {
+  level: 1 | 2 | 3 | 4 | 5 | 6;
+  class?: string;
+  id?: string;
+}
+
+const { level, class: className, id, ...props } = Astro.props;
+const Tag = `h${level}`;
+
+const baseStyles = "group scroll-m-20 tracking-tight font-bold text-foreground";
+
+const levelStyles: Record<number, string> = {
+  1: "text-4xl mb-8 mt-12",
+  2: "text-3xl mb-6 mt-10 border-b pb-2",
+  3: "text-2xl mb-4 mt-8",
+  4: "text-xl mb-4 mt-6",
+  5: "text-lg mb-2 mt-4",
+  6: "text-base mb-2 mt-4",
+};
+---
+
+<Tag
+  id={id}
+  class:list={cn(baseStyles, levelStyles[level], className)}
+  {...props}
+>
+  <slot />
+  {
+    id && (
+      <a
+        href={`#${id}`}
+        class=" ml-2 opacity-0 group-hover:opacity-100 transition-opacity text-muted-foreground hover:text-foreground no-underline font-normal"
+        aria-label="Link to this section"
+      >
+        #
+      </a>
+    )
+  }
+</Tag>

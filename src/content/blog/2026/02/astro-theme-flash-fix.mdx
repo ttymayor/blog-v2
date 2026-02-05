@@ -12,7 +12,7 @@ category: 'DevLog'
 
 這個網站使用 Astro 的 view transitions 並有主題切換功能，換頁時，新文件可能在主題 class 重新套用前就先繪製。硬重新整理時，HTML 比 JavaScript 先到，瀏覽器會先畫出預設主題。
 
-且一開始有使用 `<ClientRouter />` 寫在 `<head />` 也有在我的 Layout 組件上新增 `astro:after-swap` 監聽器（根據 [Astro 官方文檔](https://docs.astro.build/en/guides/view-transitions/#script-re-execution)描述的去做）
+且一開始有使用 `<ClientRouter />` 寫在 `<head />` 也有在我的 Layout 組件上新增 `astro:after-swap` 監聽器（根據 [Astro 官方文檔](https://docs.astro.build/en/guides/view-transitions/#script-re-execution) 描述的去做）
 
 ## 改動
 

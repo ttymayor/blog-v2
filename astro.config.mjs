@@ -2,10 +2,11 @@
 
 import mdx from "@astrojs/mdx";
 import sitemap from "@astrojs/sitemap";
-import { defineConfig } from "astro/config";
+import { defineConfig, fontProviders } from "astro/config";
 import remarkMath from "remark-math";
 import rehypeKatex from "rehype-katex";
 import remarkGfm from "remark-gfm";
+import rehypeSlug from "rehype-slug";
 
 import tailwindcss from "@tailwindcss/vite";
 
@@ -21,7 +22,7 @@ export default defineConfig({
     mdx({
       syntaxHighlight: "shiki",
       remarkPlugins: [remarkMath, remarkGfm],
-      rehypePlugins: [rehypeKatex],
+      rehypePlugins: [rehypeKatex, rehypeSlug],
       gfm: true,
     }),
     sitemap(),
@@ -35,4 +36,14 @@ export default defineConfig({
   },
 
   adapter: vercel(),
+
+  experimental: {
+    fonts: [
+      {
+        provider: fontProviders.google(),
+        name: "Roboto",
+        cssVariable: "--font-roboto",
+      },
+    ],
+  },
 });

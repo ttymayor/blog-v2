@@ -3,6 +3,7 @@ import BaseHead from "@/components/BaseHead.astro";
 import Footer from "@/components/react/Footer";
 import Header from "@/components/react/Header";
 import { ClientRouter } from "astro:transitions";
+import { Font } from "astro:assets";
 import { SITE_DESCRIPTION, SITE_TITLE } from "@/consts";
 import "@/styles/global.css";
 
@@ -11,6 +12,7 @@ const pathname = Astro.url.pathname.replace(import.meta.env.BASE_URL, "");
 
 <html lang="en">
   <head>
+    <Font cssVariable="--font-roboto" preload />
     <script is:inline>
       document.documentElement.style.visibility = "hidden";
 
@@ -72,9 +74,15 @@ const pathname = Astro.url.pathname.replace(import.meta.env.BASE_URL, "");
       transition:persist
       transition:name="Header"
     />
-    <main class="max-w-4xl w-full mx-auto px-4 py-12" transition:animate="fade">
+    <main class="max-w-5xl w-full mx-auto px-4 py-12" transition:animate="fade">
       <slot />
     </main>
     <Footer client:load />
   </body>
 </html>
+
+<style>
+  body {
+    font-family: var(--font-roboto);
+  }
+</style>
