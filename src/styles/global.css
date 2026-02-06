@@ -123,8 +123,6 @@
 }
 
 @layer base {
-
-
   /* Google Fonts are loaded in BaseHead.astro */
 
   * {

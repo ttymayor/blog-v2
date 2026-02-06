@@ -1,80 +1,64 @@
 ---
 import BaseHead from "@/components/BaseHead.astro";
 import Footer from "@/components/react/Footer";
-import Header from "@/components/react/Header";
+import Header from "@/components/Header.astro";
 import { ClientRouter } from "astro:transitions";
 import { Font } from "astro:assets";
 import { SITE_DESCRIPTION, SITE_TITLE } from "@/consts";
 import "@/styles/global.css";
-
-const pathname = Astro.url.pathname.replace(import.meta.env.BASE_URL, "");
 ---
 
 <html lang="en">
   <head>
     <Font cssVariable="--font-roboto" preload />
+
     <script is:inline>
-      document.documentElement.style.visibility = "hidden";
-
-      const getThemePreference = () => {
-        try {
-          const stored = localStorage.getItem("theme");
-          if (stored) return stored;
-        } catch {
-          // localStorage can be blocked; fall through to system preference.
+      // Get the current theme from localStorage only
+      function getTheme() {
+        if (
+          typeof localStorage !== "undefined" &&
+          localStorage.getItem("theme")
+        ) {
+          return localStorage.getItem("theme");
         }
-        return window.matchMedia("(prefers-color-scheme: dark)").matches
-          ? "dark"
-          : "light";
-      };
-
-      const applyTheme = () => {
-        const isDark = getThemePreference() === "dark";
-        document.documentElement.classList.toggle("dark", isDark);
-        document.documentElement.style.colorScheme = isDark ? "dark" : "light";
-        document.documentElement.style.visibility = "";
-      };
-
-      applyTheme();
-
-      try {
-        const observer = new MutationObserver(() => {
-          const isDark = document.documentElement.classList.contains("dark");
-          localStorage.setItem("theme", isDark ? "dark" : "light");
-          document.documentElement.style.colorScheme = isDark
-            ? "dark"
-            : "light";
-        });
-        observer.observe(document.documentElement, {
-          attributes: true,
-          attributeFilter: ["class"],
-        });
-      } catch {
-        // Ignore storage errors.
+        return "dark";
       }
 
-      document.addEventListener("astro:before-swap", (event) => {
-        const nextDocument = event.newDocument;
-        const isDark = document.documentElement.classList.contains("dark");
-        nextDocument.documentElement.classList.toggle("dark", isDark);
-        nextDocument.documentElement.style.colorScheme = isDark
-          ? "dark"
-          : "light";
-      });
+      // Apply theme to document
+      function applyTheme(doc = document) {
+        const theme = getTheme();
+        const isDark = theme === "dark";
+        doc.documentElement.classList[isDark ? "add" : "remove"]("dark");
 
-      document.addEventListener("astro:after-swap", applyTheme);
+        // Dispatch custom event (only for current document)
+        if (doc === document) {
+          document.dispatchEvent(
+            new CustomEvent("themechange", { detail: { theme } })
+          );
+        }
+      }
+
+      // Apply theme immediately to prevent flash
+      applyTheme();
+
+      // Re-apply after view transition swap
+      document.addEventListener("astro:after-swap", () => applyTheme());
+
+      // Apply theme to new document before swap to prevent flash
+      document.addEventListener("astro:before-swap", (event) => {
+        applyTheme(event.newDocument);
+      });
     </script>
     <ClientRouter />
     <BaseHead title={SITE_TITLE} description={SITE_DESCRIPTION} />
   </head>
   <body>
-    <Header
-      client:load
-      pathname={pathname}
-      transition:persist
-      transition:name="Header"
-    />
-    <main class="max-w-5xl w-full mx-auto px-4 py-12" transition:animate="fade">
+    <Header transition:persist transition:name="header" />
+    <main
+      class="max-w-5xl w-full mx-auto px-4 py-12"
+      transition:animate="slide"
+      transition:name="main"
+    >
       <slot />
     </main>
     <Footer client:load />
