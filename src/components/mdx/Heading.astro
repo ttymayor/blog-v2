@@ -8,7 +8,7 @@ interface Props {
 }
 
 const { level, class: className, id, ...props } = Astro.props;
-const Tag = `h${level}`;
+const Tag: "h1" | "h2" | "h3" | "h4" | "h5" | "h6" = `h${level}`;
 
 const baseStyles = "group scroll-m-20 tracking-tight font-bold text-foreground";
 

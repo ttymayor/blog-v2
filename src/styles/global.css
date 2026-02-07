@@ -139,6 +139,7 @@
     word-wrap: break-word;
     overflow-wrap: break-word;
     line-height: 1.7;
+    text-autospace: normal;
     /* 
     --sb-track-color: transparent;
     --sb-thumb-color: #9f9f9f;

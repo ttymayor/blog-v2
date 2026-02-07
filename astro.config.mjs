@@ -14,7 +14,7 @@ import react from "@astrojs/react";
 
 // https://astro.build/config
 export default defineConfig({
-  site: "https://ttymayor.com",
+  site: "https://v2.ttymayor.com",
 
   integrations: [
     mdx({
