@@ -1,0 +1,82 @@
+---
+title: 'View Transition'
+description: ''
+pubDate: '2026-02-06'
+tags: ['astro', 'view-transition']
+category: 'Astro'
+---
+
+> Astro Version: `5.16.16`
+
+## 什麼是 View Transition
+
+> The View Transition API provides a mechanism for easily creating animated transitions between different website views. This includes animating between DOM states in a single-page app (SPA), and animating the navigation between documents in a multi-page app (MPA).
+> -- https://developer.mozilla.org/en-US/docs/Web/API/View_Transition_API
+
+用來在 SPA（單頁）或 MPA（多頁）做平滑的視圖轉場動畫，透過 `document.startViewTransition()` 觸發，自動捕捉舊或新視圖快照，產生 ::view-transition 偽元素並執行預設或自訂動畫。
+
+簡單來說 View Transition API 就是一個讓網頁畫面切換時產生動畫效果的工具。不會突然「跳」過去，而是以平滑的動畫過渡。
+
+### 關鍵階段
+
+1. ready — 偽元素樹建好，動畫即將開始
+2. updateCallbackDone — 更新回調 (DOM 切換) 完成
+3. finished — 動畫結束，新視圖可互動
+
+## Astro 實作方式
+
+根據 MDN 的 API 跟 Astro Docs 推測 Astro 過渡視圖的實作方式：
+
+- 使用者點擊連結（Route Change）
+- （Astro Server 判斷導航方向 forward/back ）
+- （新增 `data-astro-transition="forward/back"` 到 `<html>`）
+- `astro:before-preparation`
+- （載入內容）
+- `astro:after-preparation`
+- （DOM 開始視圖過渡 `document.startViewTransition()`）
+- `astro:before-swap`
+- （DOM swap）
+- `astro:after-swap`
+- `astro:page-load`
+
+### 生命週期
+
+![view-transition-lifecycle](@/assets/blog/view-transition-lifecycle.png)
+
+左半部在 fetch 向伺服器請求新頁面內容，右半部 DOM swap 過程才會被使用者看到畫面過渡
+
+### Before Preparation
+
+在頁面導航開始後，但在內容載入之前。
+
+開發上可以通常可以做：
+
+1. 最常見的是顯示 loading spinner。
+2. 可以自訂頁面過渡內容的場景。
+3. 修改導航方向（就是改變 Forward/Back）
+
+### After Preparation
+
+在獲取目標內容後，可以停止 Before Preparation 階段啟動的 loading spinner，等操作。
+
+### Before Swap
+
+在該階段，使用者仍然會看到 Old View，因為要拿舊的過渡到新的了，即可以先獲取 Theme 偏好了
+
+### Page Load
+
+主要有兩個情況觸發該事件
+
+1. Page loaded：初次載入、重新整理、直接輸入網址
+2. Soft-navigated：點擊站內連結，透過 View Transitions 切換
+
+### 避免主題色切換狀態消失
+
+起初，使用 shadcn/ui 依照 [文檔](https://ui.shadcn.com/docs/dark-mode/astro) 寫 Dark Mode 會閃白畫面，有點頭大。
+
+不過 shadcn/ui 部分是沒問題的，例如使用 `<script is:inline>` 表示腳本不會被打包或優化、不會變成 ES module，可以直接原封不動地輸出到 HTML 中（通常瀏覽器解析到這段腳本時，即被執行）
+
+1. 首先建議定義函數 `setTheme()` 或 `applyTheme()` 和 `getTheme()` 在調用比較方便。
+2. 接著若依官方提示寫 ``
+
+有趣的是，在開發生產（dev）的預覽，狀態似乎與建置後的生產（build）不一樣。

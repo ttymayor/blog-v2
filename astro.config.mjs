@@ -29,7 +29,7 @@ export default defineConfig({
     react(),
   ],
 
-  output: "server",
+  // output: "server",
 
   vite: {
     plugins: [tailwindcss()],
