@@ -10,7 +10,7 @@ interface PostCardProps {
 export function PostCard({ post }: PostCardProps) {
   return (
     <a key={post.id} href={`/blog/${post.id}/`}>
-      <Card className="h-full rounded-none shadow-[4px_4px_4px_0px_rgba(0,0,0,0.2)] transition-all hover:-translate-x-[4px] hover:-translate-y-[4px] hover:shadow-[10px_10px_4px_0px_rgba(0,0,0,0.2)]">
+      <Card className="hover:border-accent h-full shadow-[4px_4px_4px_0px_rgba(0,0,0,0.2)] transition-all hover:-translate-x-[4px] hover:-translate-y-[4px] hover:shadow-[10px_10px_4px_0px_rgba(0,0,0,0.2)]">
         <CardHeader>
           <CardTitle>
             <h3 className="mb-0 flex items-center gap-2 text-lg font-bold">
