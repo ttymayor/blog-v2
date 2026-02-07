@@ -43,19 +43,13 @@ import "@/styles/global.css";
 
       // Re-apply after view transition swap
       document.addEventListener("astro:after-swap", () => {
-        // console.log("after-swap!");
         applyTheme();
       });
 
       // Apply theme to new document before swap to prevent flash
-      document.addEventListener("astro:after-preparation", (event) => {
+      document.addEventListener("astro:before-swap", (event) => {
         applyTheme(event.newDocument);
       });
-
-      // for testing
-      // document.addEventListener("astro:page-load", () => {
-      //   console.log("Page loaded or soft-navigated!");
-      // });
     </script>
     <ClientRouter />
     <BaseHead title={SITE_TITLE} description={SITE_DESCRIPTION} />

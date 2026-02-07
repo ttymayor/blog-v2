@@ -7,6 +7,7 @@ category: 'Astro'
 ---
 
 > Astro Version: `5.16.16`
+> 註：我的明暗主題，不偵測系統偏好。
 
 ## 什麼是 View Transition
 
@@ -77,6 +78,8 @@ category: 'Astro'
 不過 shadcn/ui 部分是沒問題的，例如使用 `<script is:inline>` 表示腳本不會被打包或優化、不會變成 ES module，可以直接原封不動地輸出到 HTML 中（通常瀏覽器解析到這段腳本時，即被執行）
 
 1. 首先建議定義函數 `setTheme()` 或 `applyTheme()` 和 `getTheme()` 在調用比較方便。
-2. 接著若依官方提示寫 ``
+2. 接著若依官方提示寫 `astro:after-swap` 
 
-有趣的是，在開發生產（dev）的預覽，狀態似乎與建置後的生產（build）不一樣。
+不過，儘管看 YouTube 教學或很多文檔，可能都告訴你在 astro:after-swap 事件 applyTheme 就好，但個人猜測若有部屬在機器上可能有延遲問題，考慮使用使用 astro:before-swap 可能會好一些。
+
+同時也可以使用 Lifecycle events attributes `newDocument` 檢查並套用主題，確保主題已套用。
