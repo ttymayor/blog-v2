@@ -48,7 +48,7 @@ import "@/styles/global.css";
       });
 
       // Apply theme to new document before swap to prevent flash
-      document.addEventListener("astro:before-preparation", (event) => {
+      document.addEventListener("astro:after-preparation", (event) => {
         applyTheme(event.newDocument);
       });
 
