@@ -5,9 +5,9 @@ interface Props {
 
 const { headings } = Astro.props;
 
-// Only show H2 and H3 in ToC for simplicity, or all if preferred.
+// Show H2, H3, and H4 in ToC
 // Usually H1 is the title, so we start from H2.
-const tocHeadings = headings.filter((h) => h.depth >= 2 && h.depth <= 3);
+const tocHeadings = headings.filter((h) => h.depth >= 2 && h.depth <= 4);
 
 if (tocHeadings.length === 0) return null;
 ---
@@ -18,21 +18,87 @@ if (tocHeadings.length === 0) return null;
   >
     Table of Contents
   </p>
-  <ul class="space-y-2 pl-4">
+  <ul class="pl-4">
     {
-      tocHeadings.map((heading) => (
-        <li class={heading.depth === 3 ? "ml-4" : ""}>
-          <a
-            href={`#${heading.slug}`}
-            class="text-muted-foreground hover:text-foreground transition-colors block py-1"
-          >
-            {heading.text}
-          </a>
-        </li>
-      ))
+      tocHeadings.map((heading) => {
+        const indentClass =
+          heading.depth === 3 ? "ml-4" : heading.depth === 4 ? "ml-8" : "";
+        return (
+          <li class={indentClass}>
+            <a
+              href={`#${heading.slug}`}
+              data-toc-link
+              data-target={heading.slug}
+              class="toc-link border-l-gray-500 text-muted-foreground hover:text-foreground transition-colors block py-1.5"
+            >
+              {heading.text}
+            </a>
+          </li>
+        );
+      })
     }
   </ul>
 </nav>
+
+<script>
+  function initTableOfContents() {
+    const tocLinks = document.querySelectorAll("[data-toc-link]");
+    const headings = document.querySelectorAll("h2[id], h3[id], h4[id]");
+
+    if (!tocLinks.length || !headings.length) return;
+
+    const observerOptions = {
+      rootMargin: "-80px 0px -80% 0px",
+      threshold: 0,
+    };
+
+    let activeLink: Element | null = null;
+
+    const setActiveLink = (link: Element) => {
+      if (activeLink) {
+        activeLink.classList.remove("active");
+      }
+      link.classList.add("active");
+      activeLink = link;
+    };
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          const id = entry.target.getAttribute("id");
+          const link = document.querySelector(
+            `[data-toc-link][data-target="${id}"]`
+          );
+          if (link) {
+            setActiveLink(link);
+          }
+        }
+      });
+    }, observerOptions);
+
+    headings.forEach((heading) => observer.observe(heading));
+
+    // Handle click events for smooth scroll
+    tocLinks.forEach((link) => {
+      link.addEventListener("click", (e) => {
+        e.preventDefault();
+        const target = link.getAttribute("data-target");
+        const heading = document.getElementById(target!);
+        if (heading) {
+          heading.scrollIntoView({ behavior: "smooth", block: "start" });
+          // Update active state immediately on click
+          setActiveLink(link);
+        }
+      });
+    });
+  }
+
+  // Initialize on page load
+  initTableOfContents();
+
+  // Re-initialize after view transitions
+  // document.addEventListener("astro:page-load", initTableOfContents);
+</script>
 
 <style>
   .toc {
@@ -61,5 +127,13 @@ if (tocHeadings.length === 0) return null;
   .toc::-webkit-scrollbar-thumb:hover {
     background: #d1d1d1;
     border-radius: 999px;
+  }
+
+  .toc-link.active {
+    color: var(--foreground);
+    font-weight: 600;
+    border-left: 2px solid var(--primary);
+    padding-left: 0.75rem;
+    margin-left: -0.75rem;
   }
 </style>

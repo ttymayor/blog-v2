@@ -189,25 +189,29 @@
     @apply m-0 p-0;
   }
   .prose code {
-    @apply text-[#f16d81] dark:text-[#eebbc3];
+    @apply rounded border px-[2px] py-px text-[#f16d81] dark:text-[#eebbc3];
+  }
+  .prose ul,
+  .prose ol {
+    @apply my-4 list-inside marker:text-gray-500;
   }
   .prose ul {
-    @apply my-4 list-inside list-disc;
+    @apply list-disc;
   }
   .prose ol {
-    @apply my-4 list-inside list-decimal;
+    @apply list-decimal;
   }
   .prose li {
-    @apply pl-6;
+    @apply pb-1 pl-6;
   }
   .prose pre {
-    @apply my-4;
+    @apply my-4 rounded-lg p-4 md:p-6;
   }
   .prose pre > code {
-    @apply text-white;
+    all: unset;
   }
   .prose table {
-    @apply bg-background/50 table-auto;
+    @apply bg-background/50 w-full table-auto;
     thead {
       @apply [&_tr]:border-b;
     }
@@ -230,10 +234,6 @@
   .prose mark {
     @apply bg-[#eebbc3] p-[2px];
   }
-  /* .prose p > img {
-    @apply hover:;
-  } */
-
   textarea {
     width: 100%;
     font-size: 16px;
@@ -241,28 +241,11 @@
   input {
     font-size: 16px;
   }
-  table {
-    width: 100%;
-  }
   img {
     max-width: 100%;
     height: auto;
     border-radius: 8px;
   }
-
-  code {
-    padding: 2px 5px;
-    background-color: rgb(var(--gray-light));
-    border-radius: 2px;
-  }
-  pre {
-    padding: 1.5em;
-    border-radius: 8px;
-  }
-  pre > code {
-    all: unset;
-  }
-
   hr {
     border: none;
     border-top: 1px solid rgb(var(--gray-light));

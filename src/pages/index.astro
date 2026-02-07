@@ -7,12 +7,44 @@ import { ArrowRight } from "@lucide/astro";
 <BaseLayout>
   <section id="hero" class="h-40 flex items-center justify-start">
     <div>
-      <h2 class="text-3xl font-bold">休息一下</h2>
+      <h2 id="greeting" class="text-3xl font-bold">休息一下</h2>
       <p class="text-lg text-muted-foreground">
         我還是年少輕狂、涉世未深、少不更事，更是不知天高地厚的年輕人
       </p>
     </div>
   </section>
+
+  <script>
+    function updateGreeting() {
+      const greetingElement = document.getElementById("greeting");
+      if (!greetingElement) return;
+
+      const currentHour = new Date().getHours();
+      let greeting = "休息一下"; // default
+
+      if (currentHour >= 0 && currentHour < 6) {
+        greeting = "還沒入睡嗎 🥱";
+      } else if (currentHour >= 6 && currentHour < 11) {
+        greeting = "早上好 👋";
+      } else if (currentHour >= 11 && currentHour < 13) {
+        greeting = "午安 🌤️";
+      } else if (currentHour >= 13 && currentHour < 17) {
+        greeting = "喝點水，記得休息 🍵";
+      } else if (currentHour >= 17 && currentHour < 21) {
+        greeting = "晚上好 🌙";
+      } else if (currentHour >= 21 && currentHour < 24) {
+        greeting = "晚安，祝你有個好夢 😴";
+      }
+
+      greetingElement.textContent = greeting;
+    }
+
+    // Update greeting on page load
+    updateGreeting();
+
+    // Re-update after view transitions
+    document.addEventListener("astro:page-load", updateGreeting);
+  </script>
 
   <section id="latest-posts" class="space-y-4">
     <div class="flex items-center justify-between">
