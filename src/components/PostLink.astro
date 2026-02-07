@@ -1,0 +1,75 @@
+---
+import type { BlogPost } from "@/types/blog";
+import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+
+interface Props {
+  post: BlogPost;
+}
+
+const { post } = Astro.props;
+---
+
+<a href={`/blog/${post.id}/`}>
+  <Card
+    client:load
+    className="hover:border-accent h-full shadow-[4px_4px_4px_0px_rgba(0,0,0,0.2)] transition-all hover:-translate-x-[4px] hover:-translate-y-[4px] hover:shadow-[10px_10px_4px_0px_rgba(0,0,0,0.2)]"
+  >
+    <CardHeader client:load>
+      <CardTitle client:load>
+        <div class="flex flex-row gap-2">
+          {
+            post.category && (
+              <Badge
+                client:load
+                variant="outline"
+                className="text-xs dark:border-[#eebbc3] dark:text-[#eebbc3] dark:bg-[#eebbc3]/10 rounded-sm"
+              >
+                {post.category}
+              </Badge>
+            )
+          }
+          <h3 class="mb-0 flex items-center gap-2 text-lg font-bold">
+            {post.title}
+            {
+              post.draft && import.meta.env.DEV && (
+                <span class="text-muted-foreground font-mono text-sm">
+                  draft
+                </span>
+              )
+            }
+          </h3>
+        </div>
+      </CardTitle>
+      {
+        (post.category || post.tags?.length > 0) && (
+          <div class="mt-2 flex flex-wrap gap-1.5">
+            {post.tags.slice(0, 3).map((tag) => (
+              <Badge
+                client:load
+                key={tag}
+                variant="secondary"
+                className="text-xs"
+              >
+                #{tag}
+              </Badge>
+            ))}
+            {post.tags.length > 3 && (
+              <Badge client:load variant="outline" className="text-xs">
+                +{post.tags.length - 3}
+              </Badge>
+            )}
+          </div>
+        )
+      }
+    </CardHeader>
+    <CardContent client:load>
+      <p class="text-muted-foreground line-clamp-2 text-sm">
+        {post.description}
+      </p>
+      <p class="text-muted-foreground mt-2 text-sm">
+        {new Date(post.pubDate).toLocaleDateString()}
+      </p>
+    </CardContent>
+  </Card>
+</a>

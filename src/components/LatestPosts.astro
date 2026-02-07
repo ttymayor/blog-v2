@@ -1,8 +1,10 @@
 ---
-import { LatestPosts as LatestPostsReact } from "@/components/react/LatestPosts";
 import { getPosts } from "@/lib/blog";
+import PostLink from "./PostLink.astro";
 
 const posts = (await getPosts()).slice(0, 6);
 ---
 
-<LatestPostsReact posts={posts} />
+<div class="grid grid-cols-1 gap-4 md:grid-cols-2">
+  {posts.map((post) => <PostLink post={post} />)}
+</div>

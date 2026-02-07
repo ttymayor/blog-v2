@@ -36,7 +36,30 @@ if (tocHeadings.length === 0) return null;
 
 <style>
   .toc {
-    max-height: calc(100vh - 8rem);
+    max-height: calc(100vh - 14rem);
     overflow-y: auto;
+
+    --sb-track-color: transparent;
+    --sb-thumb-color: #9f9f9f;
+    --sb-size: 8px;
+  }
+
+  .toc::-webkit-scrollbar-track {
+    background: var(--sb-track-color);
+    border-radius: 999px;
+  }
+
+  .toc::-webkit-scrollbar {
+    width: var(--sb-size);
+  }
+
+  .toc::-webkit-scrollbar-thumb {
+    background: var(--sb-thumb-color);
+    border-radius: 999px;
+  }
+
+  .toc::-webkit-scrollbar-thumb:hover {
+    background: #d1d1d1;
+    border-radius: 999px;
   }
 </style>

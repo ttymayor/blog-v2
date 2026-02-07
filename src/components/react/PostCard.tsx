@@ -9,7 +9,11 @@ interface PostCardProps {
 
 export function PostCard({ post }: PostCardProps) {
   return (
-    <a key={post.id} href={`/blog/${post.id}/`}>
+    <a
+      key={post.id}
+      href={`/blog/${post.id}/`}
+      data-astro-transition="content-container"
+    >
       <Card className="hover:border-accent h-full shadow-[4px_4px_4px_0px_rgba(0,0,0,0.2)] transition-all hover:-translate-x-[4px] hover:-translate-y-[4px] hover:shadow-[10px_10px_4px_0px_rgba(0,0,0,0.2)]">
         <CardHeader>
           <CardTitle>

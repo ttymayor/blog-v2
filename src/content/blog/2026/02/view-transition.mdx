@@ -6,8 +6,8 @@ tags: ['astro', 'view-transition']
 category: 'Astro'
 ---
 
-> Astro Version: `5.16.16`
-> 註：我的明暗主題，不偵測系統偏好。
+> Astro Version: `5.16.16`  
+> 註：我的明暗主題，不偵測系統偏好。範例在最下方
 
 ## 什麼是 View Transition
 
@@ -64,6 +64,10 @@ category: 'Astro'
 
 可以透過 event.newDocument 在 swap 前先對新 document 套用 theme，避免閃白
 
+### After Swap
+
+在視圖過渡結束後，可以做的事可以像是：滾動到最上方
+
 ### Page Load
 
 主要有兩個情況觸發該事件
@@ -80,23 +84,40 @@ category: 'Astro'
 1. 首先建議定義函數 `setTheme()` 或 `applyTheme()` 和 `getTheme()` 在調用比較方便。然後可以直接先呼叫 `applyTheme()`
 2. 接著若依官方提示寫 `astro:after-swap` 時再 applyTheme() 一次
 
-不過，儘管看 YouTube 教學或很多文檔，可能都告訴你在 astro:after-swap 事件 applyTheme 就好，但 after-swap 時新 DOM 已經換上去了，在 applyTheme() 執行前會有一瞬間是預設樣式。用 before-swap 是因為可以在 swap 之前就把 theme 套好。
+不過，儘管看 YouTube 教學或很多文檔，可能都告訴你在 astro:after-swap 事件 applyTheme 就好，但 after-swap 時新 DOM 已經換上去了，在 applyTheme() 執行前會有一瞬間是預設樣式。
 
-同時也可以使用 Lifecycle events attributes `newDocument` 檢查並套用主題，確保主題已套用。
+所以可以嘗試看看在 swap 前就先執行判斷主題色，比較不會有閃屏問題。
 
-所以可以嘗試看看在 swap 前還是後，哪個比較不會有延遲問題。
+It work for me!
 
-```js
-// Apply theme immediately to prevent flash
-applyTheme();
+```astro
+<script is:inline>
+   function getTheme() {
+      if (
+         typeof localStorage !== "undefined" &&
+         localStorage.getItem("theme")
+      ) {
+         return localStorage.getItem("theme");
+      }
+      return "dark";
+   }
 
-// Re-apply after view transition swap
-document.addEventListener("astro:after-swap", () => {
+   function applyTheme(doc = document) {
+      const theme = getTheme();
+      const isDark = theme === "dark";
+      doc.documentElement.classList[isDark ? "add" : "remove"]("dark");
+
+      if (doc === document) {
+         document.dispatchEvent(
+         new CustomEvent("themechange", { detail: { theme } })
+         );
+      }
+   }
+
    applyTheme();
-});
 
-// Apply theme to new document before swap to prevent flash
-document.addEventListener("astro:before-swap", (event) => {
-   applyTheme(event.newDocument);
-});
+   document.addEventListener("astro:before-swap", (event) => {
+      applyTheme(event.newDocument);
+   });
+</script>
 ```

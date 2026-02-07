@@ -1,5 +1,6 @@
 @import "tailwindcss";
 @import "tw-animate-css";
+@import "locomotive-scroll/dist/locomotive-scroll.css";
 
 @plugin "tailwindcss-animate";
 
@@ -138,6 +139,10 @@
     word-wrap: break-word;
     overflow-wrap: break-word;
     line-height: 1.7;
+    /* 
+    --sb-track-color: transparent;
+    --sb-thumb-color: #9f9f9f;
+    --sb-size: 8px; */
   }
 
   h1,
@@ -160,31 +165,31 @@
   }
 
   .prose h1 {
-    @apply text-4xl;
+    @apply text-3xl md:text-4xl;
   }
   .prose h2 {
-    @apply text-3xl;
+    @apply text-2xl md:text-3xl;
   }
   .prose h3 {
-    @apply text-2xl;
+    @apply text-xl md:text-2xl;
   }
   .prose h4 {
-    @apply text-xl;
+    @apply md:text-xl;
   }
   .prose p {
     @apply my-4;
   }
   .prose a {
-    @apply text-blue-200 underline underline-offset-4 transition-all hover:text-blue-300 hover:no-underline;
+    @apply text-blue-500 underline underline-offset-4 transition-all hover:text-blue-400 hover:no-underline dark:text-blue-200 dark:hover:text-blue-300;
   }
   .prose blockquote {
-    @apply bg-background/50 text-foreground/80 m-0 my-4 border-l-4 border-[#eebbc3] px-5 py-4 text-base;
+    @apply dark:bg-background/50 text-foreground/80 m-0 my-4 border-l-4 border-[#b8c1ec] bg-[#ecefff] px-5 py-4 text-base dark:border-[#eebbc3];
   }
   .prose blockquote > p {
     @apply m-0 p-0;
   }
   .prose code {
-    @apply text-[#eebbc3];
+    @apply text-[#f16d81] dark:text-[#eebbc3];
   }
   .prose ul {
     @apply my-4 list-inside list-disc;

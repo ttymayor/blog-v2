@@ -1,6 +1,6 @@
 ---
 import BaseLayout from "@/layouts/BaseLayout.astro";
-import { BlogIndex } from "@/components/react/blog/BlogIndex";
+import BlogIndex from "@/components/blog/BlogIndex.astro";
 import { getPosts } from "@/lib/blog";
 
 const posts = await getPosts();
@@ -15,7 +15,6 @@ const allCategories = [
 <BaseLayout>
   <div class="py-8">
     <BlogIndex
-      client:load
       posts={posts}
       allTags={allTags}
       allCategories={allCategories}
