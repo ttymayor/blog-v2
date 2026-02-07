@@ -1,6 +1,6 @@
 ---
 title: 'View Transition'
-description: ''
+description: '探索 Astro 中 View Transition API 的實作方式，包含生命週期事件、導航過渡動畫，以及如何在頁面切換時避免主題閃爍問題的完整指南。'
 pubDate: '2026-02-06'
 tags: ['astro', 'view-transition']
 category: 'Astro'
@@ -84,7 +84,7 @@ category: 'Astro'
 
 同時也可以使用 Lifecycle events attributes `newDocument` 檢查並套用主題，確保主題已套用。
 
-所以可以嘗試看看三個
+所以可以嘗試看看在 swap 前還是後，哪個比較不會有延遲問題。
 
 ```js
 // Apply theme immediately to prevent flash
