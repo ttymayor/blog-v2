@@ -29,7 +29,7 @@ category: 'Astro'
 根據 MDN 的 API 跟 Astro Docs 推測 Astro 過渡視圖的實作方式：
 
 - 使用者點擊連結（Route Change）
-- （Astro Server 判斷導航方向 forward/back ）
+- （客戶端判斷導航方向 forward/back ）
 - （新增 `data-astro-transition="forward/back"` 到 `<html>`）
 - `astro:before-preparation`
 - （載入內容）
@@ -62,7 +62,7 @@ category: 'Astro'
 
 ### Before Swap
 
-在該階段，使用者仍然會看到 Old View，因為要拿舊的過渡到新的了，即可以先獲取 Theme 偏好了
+可以透過 event.newDocument 在 swap 前先對新 document 套用 theme，避免閃白
 
 ### Page Load
 
@@ -77,9 +77,26 @@ category: 'Astro'
 
 不過 shadcn/ui 部分是沒問題的，例如使用 `<script is:inline>` 表示腳本不會被打包或優化、不會變成 ES module，可以直接原封不動地輸出到 HTML 中（通常瀏覽器解析到這段腳本時，即被執行）
 
-1. 首先建議定義函數 `setTheme()` 或 `applyTheme()` 和 `getTheme()` 在調用比較方便。
-2. 接著若依官方提示寫 `astro:after-swap` 
+1. 首先建議定義函數 `setTheme()` 或 `applyTheme()` 和 `getTheme()` 在調用比較方便。然後可以直接先呼叫 `applyTheme()`
+2. 接著若依官方提示寫 `astro:after-swap` 時再 applyTheme() 一次
 
-不過，儘管看 YouTube 教學或很多文檔，可能都告訴你在 astro:after-swap 事件 applyTheme 就好，但個人猜測若有部屬在機器上可能有延遲問題，考慮使用使用 astro:before-swap 可能會好一些。
+不過，儘管看 YouTube 教學或很多文檔，可能都告訴你在 astro:after-swap 事件 applyTheme 就好，但 after-swap 時新 DOM 已經換上去了，在 applyTheme() 執行前會有一瞬間是預設樣式。用 before-swap 是因為可以在 swap 之前就把 theme 套好。
 
 同時也可以使用 Lifecycle events attributes `newDocument` 檢查並套用主題，確保主題已套用。
+
+所以可以嘗試看看三個
+
+```js
+// Apply theme immediately to prevent flash
+applyTheme();
+
+// Re-apply after view transition swap
+document.addEventListener("astro:after-swap", () => {
+   applyTheme();
+});
+
+// Apply theme to new document before swap to prevent flash
+document.addEventListener("astro:before-swap", (event) => {
+   applyTheme(event.newDocument);
+});
+```
