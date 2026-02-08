@@ -11,10 +11,10 @@ const navItems = [{ href: "/blog", label: "文章" }];
 ---
 
 <header
-  class="top pointer-events-auto fixed bottom-4 left-0 z-50 flex w-full flex-col items-center md:sticky md:top-0 md:bottom-auto md:left-auto"
+  class="top pointer-events-auto fixed bottom-4 left-0 z-50 flex w-full justify-center flex-row items-center md:sticky md:top-0 gap-2"
 >
   <nav
-    class="mx-auto flex w-fit md:w-[95%] max-w-5xl items-center justify-between gap-4 rounded-full bg-black/10 dark:bg-white/10 p-4 shadow-xl backdrop-blur-sm transition-all duration-500 ease-in-out md:mt-4"
+    class="md:mx-auto flex w-fit md:w-[95%] max-w-5xl items-center justify-between gap-4 rounded-full bg-black/10 dark:bg-white/10 p-4 shadow-xl backdrop-blur-sm transition-all duration-500 ease-in-out md:mt-4"
   >
     <a
       href="/"
@@ -53,7 +53,14 @@ const navItems = [{ href: "/blog", label: "文章" }];
           </Button>
         ))
       }
-      <ModeToggle client:load />
+      <div class="hidden md:block">
+        <ModeToggle client:load />
+      </div>
     </div>
   </nav>
+  <div
+    class="rounded-full bg-black/10 p-4 shadow-xl backdrop-blur-sm dark:bg-white/10 md:hidden"
+  >
+    <ModeToggle client:load />
+  </div>
 </header>
