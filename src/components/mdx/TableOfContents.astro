@@ -67,7 +67,7 @@ if (tocHeadings.length === 0) return null;
         if (entry.isIntersecting) {
           const id = entry.target.getAttribute("id");
           const link = document.querySelector(
-            `[data-toc-link][data-target="${id}"]`
+            `[data-toc-link][data-target="${id}"]`,
           );
           if (link) {
             setActiveLink(link);
@@ -107,7 +107,7 @@ if (tocHeadings.length === 0) return null;
 
     --sb-track-color: transparent;
     --sb-thumb-color: #9f9f9f;
-    --sb-size: 8px;
+    --sb-size: 6px;
   }
 
   .toc::-webkit-scrollbar-track {
