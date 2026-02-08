@@ -5,7 +5,7 @@ import FormattedDate from "@/components/FormattedDate.astro";
 import { Separator } from "@/components/ui/separator";
 import { Badge } from "@/components/ui/badge";
 import TableOfContents from "@/components/mdx/TableOfContents.astro";
-import { Calendar } from "@lucide/astro";
+import { Calendar, Clock, Pencil, FileText } from "@lucide/astro";
 
 const {
   title,
@@ -15,7 +15,15 @@ const {
   heroImage,
   headings,
   category,
+  minutesRead,
+  wordCount,
+  lastModified,
+  readMinutes,
 } = Astro.props;
+
+// Use lastModified from git if available, otherwise fall back to manual updatedDate
+const modifiedDate = lastModified ? new Date(lastModified) : updatedDate;
+const readTime: Number = Math.round(readMinutes);
 ---
 
 <BaseLayout>
@@ -47,14 +55,33 @@ const {
           <h1 class="font-bold m-0">{title}</h1>
         </div>
         <div
-          class="flex flex-row items-center gap-2 text-muted-foreground text-sm"
+          class="flex flex-row items-center gap-2 text-muted-foreground text-sm flex-wrap"
         >
-          <Calendar class="size-4" />
-          <FormattedDate date={pubDate} />
+          <div class="flex items-center gap-1.5">
+            <Calendar class="size-4" />
+            <FormattedDate date={pubDate} />
+          </div>
           {
-            updatedDate && (
-              <div class="last-updated-on">
-                Last updated on <FormattedDate date={updatedDate} />
+            modifiedDate && (
+              <div class="flex items-center gap-1.5">
+                <Pencil class="size-4" />
+                <FormattedDate date={modifiedDate} />
+              </div>
+            )
+          }
+          {
+            minutesRead && (
+              <div class="flex items-center gap-1.5">
+                <Clock class="size-4" />
+                <span>{readTime} 分鐘</span>
+              </div>
+            )
+          }
+          {
+            wordCount && (
+              <div class="flex items-center gap-1.5">
+                <FileText class="size-4" />
+                <span>約 {wordCount} 字</span>
               </div>
             )
           }

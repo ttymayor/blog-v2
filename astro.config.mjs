@@ -7,6 +7,8 @@ import remarkMath from "remark-math";
 import rehypeKatex from "rehype-katex";
 import remarkGfm from "remark-gfm";
 import rehypeSlug from "rehype-slug";
+import { remarkReadingTime } from "./src/lib/remark-reading-time.mjs";
+import { remarkModifiedTime } from "./src/lib/remark-modified-time.mjs";
 
 import tailwindcss from "@tailwindcss/vite";
 
@@ -19,7 +21,7 @@ export default defineConfig({
   integrations: [
     mdx({
       syntaxHighlight: "shiki",
-      remarkPlugins: [remarkMath, remarkGfm],
+      remarkPlugins: [remarkMath, remarkGfm, remarkReadingTime, remarkModifiedTime],
       rehypePlugins: [rehypeKatex, rehypeSlug],
       gfm: true,
     }),

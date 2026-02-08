@@ -1,0 +1,187 @@
+---
+// Zhuyin (Bopomofo) mapping for Traditional Chinese characters
+const zhuyinMap: Record<string, string> = {
+  // Common characters in greetings
+  還: "ㄏㄞˊ",
+  沒: "ㄇㄟˊ",
+  入: "ㄖㄨˋ",
+  睡: "ㄕㄨㄟˋ",
+  嗎: "ㄇㄚ˙",
+  早: "ㄗㄠˇ",
+  上: "ㄕㄤˋ",
+  好: "ㄏㄠˇ",
+  午: "ㄨˇ",
+  安: "ㄢ",
+  喝: "ㄏㄜ",
+  點: "ㄉㄧㄢˇ",
+  水: "ㄕㄨㄟˇ",
+  記: "ㄐㄧˋ",
+  得: "ㄉㄜ˙",
+  休: "ㄒㄧㄡ",
+  息: "ㄒㄧˊ",
+  晚: "ㄨㄢˇ",
+  祝: "ㄓㄨˋ",
+  你: "ㄋㄧˇ",
+  有: "ㄧㄡˇ",
+  個: "ㄍㄜˋ",
+  夢: "ㄇㄥˋ",
+  // Emojis and symbols (no conversion needed)
+  "🥱": "🥱",
+  "👋": "👋",
+  "🌤️": "🌤️",
+  "🍵": "🍵",
+  "🌙": "🌙",
+  "😴": "😴",
+  " ": " ",
+  "，": "，",
+};
+
+interface Props {
+  text: string;
+  speed?: number;
+  zhuyinSpeed?: number;
+  class?: string;
+}
+
+const { text, speed = 120, zhuyinSpeed = 60, class: className } = Astro.props;
+---
+
+<span class={className} data-text={text} data-speed={speed} data-zhuyin-speed={zhuyinSpeed}>
+  <span class="typing-text"></span><span class="cursor">▍</span>
+</span>
+
+<style>
+  .cursor {
+    animation: blink 1s step-end infinite;
+  }
+
+  @keyframes blink {
+    0%,
+    100% {
+      opacity: 1;
+    }
+    50% {
+      opacity: 0;
+    }
+  }
+</style>
+
+<script>
+  const zhuyinMap: Record<string, string> = {
+    還: "ㄏㄞˊ",
+    沒: "ㄇㄟˊ",
+    入: "ㄖㄨˋ",
+    睡: "ㄕㄨㄟˋ",
+    嗎: "ㄇㄚ",
+    早: "ㄗㄠˇ",
+    上: "ㄕㄤˋ",
+    好: "ㄏㄠˇ",
+    午: "ㄨˇ",
+    安: "ㄢ",
+    喝: "ㄏㄜ",
+    點: "ㄉㄧㄢˇ",
+    水: "ㄕㄨㄟˇ",
+    記: "ㄐㄧˋ",
+    得: "ㄉㄜˊ",
+    休: "ㄒㄧㄡ",
+    息: "ㄒㄧˊ",
+    晚: "ㄨㄢˇ",
+    祝: "ㄓㄨˋ",
+    你: "ㄋㄧˇ",
+    有: "ㄧㄡˇ",
+    個: "ㄍㄜ˙",
+    夢: "ㄇㄥˋ",
+    "🥱": "🥱",
+    "👋": "👋",
+    "🌤️": "🌤️",
+    "🍵": "🍵",
+    "🌙": "🌙",
+    "😴": "😴",
+    " ": " ", 
+    "，": "，",
+  };
+
+  class ZhuyinTyper {
+    private element: HTMLElement;
+    private textElement: HTMLElement;
+    public text: string;
+    private speed: number;
+    private zhuyinSpeed: number;
+    private timeout: number | null = null;
+
+    constructor(element: HTMLElement) {
+      this.element = element;
+      this.textElement = element.querySelector(".typing-text")!;
+      this.text = element.dataset.text || "";
+      this.speed = parseInt(element.dataset.speed || "120");
+      this.zhuyinSpeed = parseInt(element.dataset.zhuyinSpeed || "60");
+    }
+
+    async type() {
+      if (this.timeout) {
+        clearTimeout(this.timeout);
+      }
+
+      this.textElement.textContent = "";
+      let result = "";
+
+      for (let i = 0; i < this.text.length; i++) {
+        const char = this.text[i];
+        const zhuyin = zhuyinMap[char];
+
+        if (zhuyin && zhuyin !== char) {
+          // Type Zhuyin characters one by one
+          for (let j = 0; j < zhuyin.length; j++) {
+            this.textElement.textContent = result + zhuyin.substring(0, j + 1);
+            await this.sleep(this.zhuyinSpeed);
+          }
+          // Convert to Chinese character
+          result += char;
+          this.textElement.textContent = result;
+          await this.sleep(this.speed);
+        } else {
+          // For characters without Zhuyin mapping, type directly
+          result += char;
+          this.textElement.textContent = result;
+          await this.sleep(this.speed);
+        }
+      }
+    }
+
+    private sleep(ms: number): Promise<void> {
+      return new Promise((resolve) => {
+        this.timeout = window.setTimeout(resolve, ms);
+      });
+    }
+
+    stop() {
+      if (this.timeout) {
+        clearTimeout(this.timeout);
+      }
+    }
+  }
+
+  function initZhuyinTyping() {
+    const elements = document.querySelectorAll<HTMLElement>(
+      "[data-text]"
+    );
+    elements.forEach((element) => {
+      const typer = new ZhuyinTyper(element);
+      typer.type();
+
+      // Listen for retype event
+      element.addEventListener("retype", () => {
+        typer.stop();
+        // Update text from data attribute
+        typer.text = element.dataset.text || "";
+        typer.type();
+      });
+    });
+  }
+
+  // Initialize on page load
+  initZhuyinTyping();
+
+  // Re-initialize after view transitions
+  document.addEventListener("astro:page-load", initZhuyinTyping);
+</script>

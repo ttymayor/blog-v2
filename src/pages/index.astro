@@ -1,13 +1,16 @@
 ---
 import BaseLayout from "@/layouts/BaseLayout.astro";
 import LatestPosts from "@/components/LatestPosts.astro";
+import ZhuyinTyping from "@/components/ZhuyinTyping.astro";
 import { ArrowRight } from "@lucide/astro";
 ---
 
 <BaseLayout>
   <section id="hero" class="h-40 flex items-center justify-start">
     <div>
-      <h2 id="greeting" class="text-3xl font-bold">休息一下</h2>
+      <h2 id="greeting" class="text-3xl font-bold">
+        <ZhuyinTyping text="休息一下" class="greeting-text" />
+      </h2>
       <p class="text-lg text-muted-foreground">
         我還是年少輕狂、涉世未深、少不更事，更是不知天高地厚的年輕人
       </p>
@@ -16,7 +19,7 @@ import { ArrowRight } from "@lucide/astro";
 
   <script>
     function updateGreeting() {
-      const greetingElement = document.getElementById("greeting");
+      const greetingElement = document.querySelector(".greeting-text");
       if (!greetingElement) return;
 
       const currentHour = new Date().getHours();
@@ -36,7 +39,12 @@ import { ArrowRight } from "@lucide/astro";
         greeting = "晚安，祝你有個好夢 😴";
       }
 
-      greetingElement.textContent = greeting;
+      // Update the data-text attribute and trigger re-typing
+      greetingElement.setAttribute("data-text", greeting);
+
+      // Trigger the typing animation
+      const event = new CustomEvent("retype");
+      greetingElement.dispatchEvent(event);
     }
 
     // Update greeting on page load
