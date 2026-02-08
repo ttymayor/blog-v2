@@ -13,7 +13,7 @@ const { post } = Astro.props;
 <a href={`/blog/${post.id}/`}>
   <Card
     client:load
-    className="hover:border-accent h-full shadow-[4px_4px_4px_0px_rgba(0,0,0,0.2)] transition-all hover:-translate-x-[4px] hover:-translate-y-[4px] hover:shadow-[10px_10px_4px_0px_rgba(0,0,0,0.2)]"
+    className="hover:border-accent h-full shadow-xl transition-all hover:-translate-x-[4px] hover:-translate-y-[4px] hover:shadow-2xl"
   >
     <CardHeader client:load>
       <CardTitle client:load>

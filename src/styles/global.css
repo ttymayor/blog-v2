@@ -146,6 +146,10 @@
     --sb-size: 8px; */
   }
 
+  ::selection {
+    @apply bg-blue-300/50 dark:bg-blue-200/30;
+  }
+
   h1,
   h2,
   h3,
@@ -184,7 +188,7 @@
     @apply text-blue-500 underline underline-offset-4 transition-all hover:text-blue-400 hover:no-underline dark:text-blue-200 dark:hover:text-blue-300;
   }
   .prose blockquote {
-    @apply dark:bg-background/50 text-foreground/80 m-0 my-4 border-l-4 border-[#b8c1ec] bg-[#ecefff] px-5 py-4 text-base dark:border-[#eebbc3];
+    @apply dark:bg-background/50 text-foreground/80 m-0 my-4 border-l-4 border-[#687afc] bg-[#ecefff] px-5 py-4 text-base dark:border-[#eebbc3];
   }
   .prose blockquote > p {
     @apply m-0 p-0;

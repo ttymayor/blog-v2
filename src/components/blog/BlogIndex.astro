@@ -1,7 +1,7 @@
 ---
 import type { BlogPost } from "@/types/blog";
 import PostLink from "@/components/PostLink.astro";
-import { Search, ChevronDown, X, Check } from "@lucide/astro";
+import { Search, SearchX, X } from "@lucide/astro";
 
 interface Props {
   posts: BlogPost[];
@@ -9,171 +9,60 @@ interface Props {
   allCategories: string[];
 }
 
-const { posts, allTags, allCategories } = Astro.props;
+const { posts } = Astro.props;
 ---
 
 <div class="space-y-6" id="blog-index">
   <!-- Search -->
-  <div class="flex flex-col gap-2">
-    <div class="w-full">
-      <div class="flex gap-2">
-        <div class="relative flex-1">
-          <div
-            data-slot="input-group"
-            role="group"
-            class="group/input-group border-input dark:bg-input/30 relative flex w-full items-center rounded-md border shadow-xs transition-[color,box-shadow] outline-none h-9 min-w-0 has-[>[data-align=inline-start]]:[&>input]:pl-2 has-[[data-slot=input-group-control]:focus-visible]:border-ring has-[[data-slot=input-group-control]:focus-visible]:ring-ring/50 has-[[data-slot=input-group-control]:focus-visible]:ring-[3px]"
-          >
-            <input
-              type="search"
-              id="search-input"
-              data-slot="input-group-control"
-              class="file:text-foreground placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground dark:bg-input/30 border-input h-9 w-full min-w-0 rounded-md border bg-transparent px-3 py-1 text-base shadow-xs transition-[color,box-shadow] outline-none md:text-sm flex-1 rounded-none border-0 shadow-none focus-visible:ring-0 dark:bg-transparent"
-              placeholder="尋"
-              aria-label="Search blog posts"
-            />
-            <div
-              data-slot="input-group-addon"
-              data-align="inline-start"
-              class="text-muted-foreground flex h-auto cursor-text items-center justify-center gap-2 py-1.5 text-sm font-medium select-none [&>svg:not([class*='size-'])]:size-4 order-first pl-3"
-            >
-              <Search class="text-muted-foreground" />
-            </div>
-          </div>
-        </div>
-        <button
-          type="button"
-          id="search-btn"
-          class="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] bg-primary text-primary-foreground hover:bg-primary/90 h-9 px-4 py-2 shrink-0 cursor-pointer"
-          aria-label="Search"
-        >
-          找
-        </button>
-      </div>
-    </div>
-
-    <!-- Filters row -->
-    <!-- <div class="flex flex-col gap-4 sm:flex-row">
-      {/* Category dropdown */}
-      {allCategories.length > 0 && (
-        <div class="w-full sm:w-48 relative">
-          <button
-            type="button"
-            id="category-trigger"
-            class="inline-flex items-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 h-9 px-3 py-2 w-full justify-between text-muted-foreground cursor-pointer"
-          >
-            <span class="truncate" id="category-label">Category</span>
-            <div class="flex items-center gap-1">
-              <button
-                type="button"
-                id="category-clear"
-                class="hover:bg-accent rounded-full p-0.5 hidden"
-                aria-label="Clear category"
-              >
-                <X class="text-muted-foreground h-4 w-4" />
-              </button>
-              <ChevronDown class="h-4 w-4 shrink-0 opacity-50" />
-            </div>
-          </button>
-          <div
-            id="category-panel"
-            class="hidden absolute z-50 mt-1 w-full rounded-md border bg-popover p-2 shadow-md"
-          >
-            <div class="max-h-60 overflow-y-auto">
-              {allCategories.map((category) => (
-                <button
-                  type="button"
-                  data-category={category}
-                  class="category-option hover:bg-accent flex w-full cursor-pointer items-center justify-between rounded-sm px-2 py-1.5 text-left text-sm"
-                >
-                  <span>{category}</span>
-                  <Check class="h-4 w-4 hidden category-check" />
-                </button>
-              ))}
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* Tag dropdown */}
-      {allTags.length > 0 && (
-        <div class="w-full sm:w-64 relative">
-          <button
-            type="button"
-            id="tag-trigger"
-            class="inline-flex items-center gap-2 rounded-md text-sm font-medium transition-all outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 h-auto min-h-9 px-3 py-2 w-full justify-between text-muted-foreground cursor-pointer"
-          >
-            <div class="flex flex-wrap gap-1" id="tag-trigger-content">
-              <span>Select tags...</span>
-            </div>
-            <div class="flex items-center gap-1 shrink-0">
-              <button
-                type="button"
-                id="tag-clear-all"
-                class="hover:bg-accent rounded-full p-0.5 hidden"
-                aria-label="Clear all tags"
-              >
-                <X class="text-muted-foreground h-4 w-4" />
-              </button>
-              <ChevronDown class="h-4 w-4 shrink-0 opacity-50" />
-            </div>
-          </button>
-          <div
-            id="tag-panel"
-            class="hidden absolute z-50 mt-1 w-full rounded-md border bg-popover p-2 shadow-md"
-          >
-            <div class="max-h-60 overflow-y-auto">
-              {allTags.map((tag) => (
-                <label class="hover:bg-accent flex cursor-pointer items-center gap-2 rounded-sm px-2 py-1.5">
-                  <input
-                    type="checkbox"
-                    data-tag={tag}
-                    class="peer sr-only"
-                  />
-                  <span class="peer-checked:bg-primary peer-checked:text-primary-foreground peer-checked:border-primary border-input dark:bg-input/30 size-4 shrink-0 rounded-[4px] border shadow-xs inline-flex items-center justify-center">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="hidden peer-checked:block"><path d="M20 6 9 17l-5-5"/></svg>
-                  </span>
-                  <span class="text-sm">{tag}</span>
-                </label>
-              ))}
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* Clear filters button */}
-      <button
-        type="button"
-        id="clear-filters"
-        class="hidden inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 h-9 px-4 py-2 shrink-0 cursor-pointer"
-      >
-        清除
-      </button>
-    </div> -->
+  <div
+    class="flex items-center gap-2 rounded-md border border-input bg-transparent shadow-xs transition-[color,box-shadow] focus-within:border-ring focus-within:ring-ring/50 focus-within:ring-[3px] dark:bg-input/30"
+  >
+    <Search class="ml-3 size-4 shrink-0 text-muted-foreground" />
+    <input
+      type="text"
+      id="search-input"
+      class="h-9 w-full min-w-0 bg-transparent px-2 py-1 text-base outline-none placeholder:text-muted-foreground md:text-sm"
+      placeholder="搜尋文章..."
+      aria-label="Search blog posts"
+    />
+    <button
+      type="button"
+      id="search-clear"
+      class="mr-2 hidden shrink-0 cursor-pointer rounded-full p-0.5 text-muted-foreground transition-colors hover:text-foreground"
+      aria-label="清除搜尋"
+    >
+      <X class="size-4" />
+    </button>
   </div>
 
   <!-- Post count -->
   <p class="text-muted-foreground text-sm" id="post-count">
-    {posts.length} {posts.length === 1 ? "post" : "posts"}
+    {posts.length} 篇文章
   </p>
 
   <!-- Post grid -->
   <div class="grid gap-6 md:grid-cols-2" id="post-grid">
-    {posts.map((post) => (
-      <div
-        class="blog-post-item"
-        data-title={post.title.toLowerCase()}
-        data-description={post.description.toLowerCase()}
-        data-category={post.category || ""}
-        data-tags={post.tags.join(",")}
-      >
-        <PostLink post={post} />
-      </div>
-    ))}
+    {
+      posts.map((post) => (
+        <div
+          class="blog-post-item"
+          data-title={post.title.toLowerCase()}
+          data-description={post.description.toLowerCase()}
+        >
+          <PostLink post={post} />
+        </div>
+      ))
+    }
   </div>
 
   <!-- Empty state -->
   <div class="py-12 text-center hidden" id="empty-state">
-    <p class="text-muted-foreground text-lg">找不到文章</p>
+    <div
+      class="flex flex-col text-muted-foreground items-center justify-center gap-2"
+    >
+      <SearchX class="size-12" />
+      <p class="text-lg">找不到文章</p>
+    </div>
   </div>
 </div>
 
@@ -182,48 +71,31 @@ const { posts, allTags, allCategories } = Astro.props;
     const container = document.getElementById("blog-index");
     if (!container) return;
 
-    const searchInput = document.getElementById("search-input") as HTMLInputElement | null;
-    const searchBtn = document.getElementById("search-btn");
-    const categoryTrigger = document.getElementById("category-trigger");
-    const categoryPanel = document.getElementById("category-panel");
-    const categoryLabel = document.getElementById("category-label");
-    const categoryClear = document.getElementById("category-clear");
-    const tagTrigger = document.getElementById("tag-trigger");
-    const tagPanel = document.getElementById("tag-panel");
-    const tagTriggerContent = document.getElementById("tag-trigger-content");
-    const tagClearAll = document.getElementById("tag-clear-all");
-    const clearFilters = document.getElementById("clear-filters");
+    const searchInput = document.getElementById(
+      "search-input",
+    ) as HTMLInputElement | null;
+    const searchClear = document.getElementById("search-clear");
     const postCount = document.getElementById("post-count");
     const postGrid = document.getElementById("post-grid");
     const emptyState = document.getElementById("empty-state");
-    const postItems = container.querySelectorAll<HTMLElement>(".blog-post-item");
-    const categoryOptions = container.querySelectorAll<HTMLElement>(".category-option");
-    const tagCheckboxes = container.querySelectorAll<HTMLInputElement>('input[data-tag]');
+    const postItems =
+      container.querySelectorAll<HTMLElement>(".blog-post-item");
 
-    // State
     let query = "";
-    let selectedCategory: string | null = null;
-    let selectedTags: string[] = [];
 
-    // ---- URL params ----
     function readUrlParams() {
       const params = new URLSearchParams(window.location.search);
       query = params.get("q") || "";
-      selectedTags = params.get("tags")?.split(",").filter(Boolean) || [];
-      selectedCategory = params.get("category") || null;
     }
 
     function syncUrl() {
       const params = new URLSearchParams();
       if (query) params.set("q", query);
-      if (selectedTags.length > 0) params.set("tags", selectedTags.join(","));
-      if (selectedCategory) params.set("category", selectedCategory);
       const search = params.toString();
       const url = search ? `?${search}` : window.location.pathname;
       window.history.replaceState({}, "", url);
     }
 
-    // ---- Filtering ----
     function applyFilters() {
       let visibleCount = 0;
       const searchLower = query.toLowerCase();
@@ -239,221 +111,46 @@ const { posts, allTags, allCategories } = Astro.props;
           }
         }
 
-        if (show && selectedTags.length > 0) {
-          const itemTags = (item.dataset.tags || "").split(",").filter(Boolean);
-          if (!selectedTags.every((t) => itemTags.includes(t))) {
-            show = false;
-          }
-        }
-
-        if (show && selectedCategory) {
-          if (item.dataset.category !== selectedCategory) {
-            show = false;
-          }
-        }
-
         item.classList.toggle("hidden", !show);
         if (show) visibleCount++;
       });
 
-      // Update count
-      const hasFilters = query || selectedTags.length > 0 || selectedCategory;
       if (postCount) {
-        postCount.textContent = `${visibleCount} ${visibleCount === 1 ? "post" : "posts"}${hasFilters ? " found" : ""}`;
+        postCount.textContent = query
+          ? `找到 ${visibleCount} 篇文章`
+          : `${visibleCount} 篇文章`;
       }
 
-      // Empty state
       if (postGrid) postGrid.classList.toggle("hidden", visibleCount === 0);
       if (emptyState) emptyState.classList.toggle("hidden", visibleCount > 0);
-
-      // Clear button
-      if (clearFilters) clearFilters.classList.toggle("hidden", !hasFilters);
 
       syncUrl();
     }
 
-    // ---- Search ----
-    function doSearch() {
-      if (!searchInput) return;
+    function updateClearButton() {
+      searchClear?.classList.toggle("hidden", !query);
+    }
+
+    // Real-time search on input
+    searchInput?.addEventListener("input", () => {
       query = searchInput.value;
-      applyFilters();
-    }
-
-    searchBtn?.addEventListener("click", doSearch);
-    searchInput?.addEventListener("keydown", (e) => {
-      if (e.key === "Enter") doSearch();
-    });
-
-    // ---- Category dropdown ----
-    function updateCategoryUI() {
-      if (categoryLabel) {
-        categoryLabel.textContent = selectedCategory || "Category";
-      }
-      if (categoryTrigger) {
-        if (selectedCategory) {
-          categoryTrigger.classList.remove("text-muted-foreground");
-        } else {
-          categoryTrigger.classList.add("text-muted-foreground");
-        }
-      }
-      if (categoryClear) {
-        categoryClear.classList.toggle("hidden", !selectedCategory);
-      }
-      categoryOptions.forEach((opt) => {
-        const cat = opt.dataset.category;
-        const isSelected = cat === selectedCategory;
-        opt.classList.toggle("bg-accent", isSelected);
-        const check = opt.querySelector(".category-check");
-        if (check) check.classList.toggle("hidden", !isSelected);
-      });
-    }
-
-    categoryTrigger?.addEventListener("click", (e) => {
-      // Don't toggle panel if clear button was clicked
-      if ((e.target as HTMLElement).closest("#category-clear")) return;
-      categoryPanel?.classList.toggle("hidden");
-      // Close tag panel
-      tagPanel?.classList.add("hidden");
-    });
-
-    categoryClear?.addEventListener("click", (e) => {
-      e.stopPropagation();
-      selectedCategory = null;
-      updateCategoryUI();
+      updateClearButton();
       applyFilters();
     });
 
-    categoryOptions.forEach((opt) => {
-      opt.addEventListener("click", () => {
-        const cat = opt.dataset.category || null;
-        selectedCategory = selectedCategory === cat ? null : cat;
-        updateCategoryUI();
-        categoryPanel?.classList.add("hidden");
-        applyFilters();
-      });
-    });
-
-    // ---- Tag dropdown ----
-    function updateTagUI() {
-      // Update trigger content
-      if (tagTriggerContent) {
-        if (selectedTags.length === 0) {
-          tagTriggerContent.innerHTML = "<span>Select tags...</span>";
-        } else {
-          tagTriggerContent.innerHTML = selectedTags
-            .map(
-              (tag) =>
-                `<span class="inline-flex items-center justify-center rounded-full border border-transparent px-2 py-0.5 text-xs font-medium bg-secondary text-secondary-foreground mr-1 mb-1 last:mb-0">${tag}<button type="button" data-remove-tag="${tag}" class="ring-offset-background focus:ring-ring ml-1 rounded-full outline-none focus:ring-2 focus:ring-offset-2" aria-label="Remove ${tag}"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg></button></span>`
-            )
-            .join("");
-
-          // Attach remove handlers
-          tagTriggerContent.querySelectorAll<HTMLElement>("[data-remove-tag]").forEach((btn) => {
-            btn.addEventListener("click", (e) => {
-              e.stopPropagation();
-              const tag = btn.dataset.removeTag!;
-              selectedTags = selectedTags.filter((t) => t !== tag);
-              syncCheckboxes();
-              updateTagUI();
-              applyFilters();
-            });
-          });
-        }
-      }
-
-      // Update trigger style
-      if (tagTrigger) {
-        if (selectedTags.length > 0) {
-          tagTrigger.classList.remove("text-muted-foreground");
-        } else {
-          tagTrigger.classList.add("text-muted-foreground");
-        }
-      }
-
-      // Clear all button
-      if (tagClearAll) {
-        tagClearAll.classList.toggle("hidden", selectedTags.length === 0);
-      }
-    }
-
-    function syncCheckboxes() {
-      tagCheckboxes.forEach((cb) => {
-        const tag = cb.dataset.tag!;
-        cb.checked = selectedTags.includes(tag);
-        // Update the visual indicator
-        const indicator = cb.nextElementSibling;
-        if (indicator) {
-          const svg = indicator.querySelector("svg");
-          if (cb.checked) {
-            indicator.classList.add("bg-primary", "text-primary-foreground", "border-primary");
-            indicator.classList.remove("border-input", "dark:bg-input/30");
-            if (svg) svg.classList.remove("hidden");
-          } else {
-            indicator.classList.remove("bg-primary", "text-primary-foreground", "border-primary");
-            indicator.classList.add("border-input", "dark:bg-input/30");
-            if (svg) svg.classList.add("hidden");
-          }
-        }
-      });
-    }
-
-    tagTrigger?.addEventListener("click", (e) => {
-      if ((e.target as HTMLElement).closest("#tag-clear-all")) return;
-      tagPanel?.classList.toggle("hidden");
-      categoryPanel?.classList.add("hidden");
-    });
-
-    tagClearAll?.addEventListener("click", (e) => {
-      e.stopPropagation();
-      selectedTags = [];
-      syncCheckboxes();
-      updateTagUI();
-      applyFilters();
-    });
-
-    tagCheckboxes.forEach((cb) => {
-      cb.addEventListener("change", () => {
-        const tag = cb.dataset.tag!;
-        if (cb.checked) {
-          if (!selectedTags.includes(tag)) selectedTags.push(tag);
-        } else {
-          selectedTags = selectedTags.filter((t) => t !== tag);
-        }
-        syncCheckboxes();
-        updateTagUI();
-        applyFilters();
-      });
-    });
-
-    // ---- Clear all filters ----
-    clearFilters?.addEventListener("click", () => {
-      query = "";
-      selectedCategory = null;
-      selectedTags = [];
+    // Clear button
+    searchClear?.addEventListener("click", () => {
       if (searchInput) searchInput.value = "";
-      updateCategoryUI();
-      syncCheckboxes();
-      updateTagUI();
+      query = "";
+      updateClearButton();
       applyFilters();
+      searchInput?.focus();
     });
 
-    // ---- Close dropdowns on outside click ----
-    document.addEventListener("click", (e) => {
-      const target = e.target as HTMLElement;
-      if (categoryTrigger && categoryPanel && !categoryTrigger.contains(target) && !categoryPanel.contains(target)) {
-        categoryPanel.classList.add("hidden");
-      }
-      if (tagTrigger && tagPanel && !tagTrigger.contains(target) && !tagPanel.contains(target)) {
-        tagPanel.classList.add("hidden");
-      }
-    });
-
-    // ---- Init from URL ----
+    // Init from URL
     readUrlParams();
     if (searchInput) searchInput.value = query;
-    syncCheckboxes();
-    updateCategoryUI();
-    updateTagUI();
+    updateClearButton();
     applyFilters();
   });
 </script>

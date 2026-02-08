@@ -46,7 +46,7 @@ interface Props {
 const { text, speed = 180, zhuyinSpeed = 90, class: className } = Astro.props;
 ---
 
-<span class={className} data-text={text} data-speed={speed} data-zhuyin-speed={zhuyinSpeed}>
+<span class={className} data-zhuyin-typing data-text={text} data-speed={speed} data-zhuyin-speed={zhuyinSpeed}>
   <span class="typing-text"></span><span class="cursor">▍</span>
 </span>
 
@@ -108,13 +108,14 @@ const { text, speed = 180, zhuyinSpeed = 90, class: className } = Astro.props;
     private speed: number;
     private zhuyinSpeed: number;
     private timeout: number | null = null;
+    private cancelled = false;
 
     constructor(element: HTMLElement) {
       this.element = element;
       this.textElement = element.querySelector(".typing-text")!;
       this.text = element.dataset.text || "";
-      this.speed = parseInt(element.dataset.speed || "120");
-      this.zhuyinSpeed = parseInt(element.dataset.zhuyinSpeed || "60");
+      this.speed = parseInt(element.dataset.speed || "180");
+      this.zhuyinSpeed = parseInt(element.dataset.zhuyinSpeed || "90");
     }
 
     private randomSpeed(base: number): number {
@@ -122,10 +123,8 @@ const { text, speed = 180, zhuyinSpeed = 90, class: className } = Astro.props;
     }
 
     async type() {
-      if (this.timeout) {
-        clearTimeout(this.timeout);
-      }
-
+      this.stop();
+      this.cancelled = false;
       this.textElement.textContent = "";
       let result = "";
 
@@ -133,21 +132,21 @@ const { text, speed = 180, zhuyinSpeed = 90, class: className } = Astro.props;
       await this.sleep(1000);
 
       for (let i = 0; i < this.text.length; i++) {
+        if (this.cancelled) return;
+
         const char = this.text[i];
         const zhuyin = zhuyinMap[char];
 
         if (zhuyin && zhuyin !== char) {
-          // Type Zhuyin characters one by one
           for (let j = 0; j < zhuyin.length; j++) {
+            if (this.cancelled) return;
             this.textElement.textContent = result + zhuyin.substring(0, j + 1);
             await this.sleep(this.randomSpeed(this.zhuyinSpeed));
           }
-          // Convert to Chinese character
           result += char;
           this.textElement.textContent = result;
           await this.sleep(this.randomSpeed(this.speed));
         } else {
-          // For characters without Zhuyin mapping, type directly
           result += char;
           this.textElement.textContent = result;
           await this.sleep(this.randomSpeed(this.speed));
@@ -162,33 +161,34 @@ const { text, speed = 180, zhuyinSpeed = 90, class: className } = Astro.props;
     }
 
     stop() {
+      this.cancelled = true;
       if (this.timeout) {
         clearTimeout(this.timeout);
+        this.timeout = null;
       }
     }
   }
 
   function initZhuyinTyping() {
     const elements = document.querySelectorAll<HTMLElement>(
-      "[data-text]"
+      "[data-zhuyin-typing]"
     );
     elements.forEach((element) => {
+      // Skip if already initialized
+      if (element.dataset.typerInit) return;
+      element.dataset.typerInit = "true";
+
       const typer = new ZhuyinTyper(element);
       typer.type();
 
-      // Listen for retype event
       element.addEventListener("retype", () => {
         typer.stop();
-        // Update text from data attribute
         typer.text = element.dataset.text || "";
         typer.type();
       });
     });
   }
 
-  // Initialize on page load
-  initZhuyinTyping();
-
-  // Re-initialize after view transitions
   document.addEventListener("astro:page-load", initZhuyinTyping);
+  initZhuyinTyping();
 </script>
