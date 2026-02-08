@@ -43,7 +43,7 @@ interface Props {
   class?: string;
 }
 
-const { text, speed = 120, zhuyinSpeed = 60, class: className } = Astro.props;
+const { text, speed = 180, zhuyinSpeed = 90, class: className } = Astro.props;
 ---
 
 <span class={className} data-text={text} data-speed={speed} data-zhuyin-speed={zhuyinSpeed}>
@@ -117,6 +117,10 @@ const { text, speed = 120, zhuyinSpeed = 60, class: className } = Astro.props;
       this.zhuyinSpeed = parseInt(element.dataset.zhuyinSpeed || "60");
     }
 
+    private randomSpeed(base: number): number {
+      return base + Math.random() * base * 0.8 - base * 0.4;
+    }
+
     async type() {
       if (this.timeout) {
         clearTimeout(this.timeout);
@@ -124,6 +128,9 @@ const { text, speed = 120, zhuyinSpeed = 60, class: className } = Astro.props;
 
       this.textElement.textContent = "";
       let result = "";
+
+      // Initial 1s pause before typing starts
+      await this.sleep(1000);
 
       for (let i = 0; i < this.text.length; i++) {
         const char = this.text[i];
@@ -133,17 +140,17 @@ const { text, speed = 120, zhuyinSpeed = 60, class: className } = Astro.props;
           // Type Zhuyin characters one by one
           for (let j = 0; j < zhuyin.length; j++) {
             this.textElement.textContent = result + zhuyin.substring(0, j + 1);
-            await this.sleep(this.zhuyinSpeed);
+            await this.sleep(this.randomSpeed(this.zhuyinSpeed));
           }
           // Convert to Chinese character
           result += char;
           this.textElement.textContent = result;
-          await this.sleep(this.speed);
+          await this.sleep(this.randomSpeed(this.speed));
         } else {
           // For characters without Zhuyin mapping, type directly
           result += char;
           this.textElement.textContent = result;
-          await this.sleep(this.speed);
+          await this.sleep(this.randomSpeed(this.speed));
         }
       }
     }
