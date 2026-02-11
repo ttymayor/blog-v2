@@ -17,11 +17,17 @@ import react from "@astrojs/react";
 // https://astro.build/config
 export default defineConfig({
   site: "https://v2.ttymayor.com",
+  // image: { domains: ["*"] },
 
   integrations: [
     mdx({
       syntaxHighlight: "shiki",
-      remarkPlugins: [remarkMath, remarkGfm, remarkReadingTime, remarkModifiedTime],
+      remarkPlugins: [
+        remarkMath,
+        remarkGfm,
+        remarkReadingTime,
+        remarkModifiedTime,
+      ],
       rehypePlugins: [rehypeKatex, rehypeSlug],
       gfm: true,
     }),
@@ -37,8 +43,8 @@ export default defineConfig({
     fonts: [
       {
         provider: fontProviders.google(),
-        name: "Roboto",
-        cssVariable: "--font-roboto",
+        name: "Geist",
+        cssVariable: "--font-geist-sans",
       },
     ],
   },

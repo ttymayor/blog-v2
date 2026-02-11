@@ -1,62 +1,83 @@
 ---
 import { Marquee, MarqueeContent } from "./ui/marquee";
 
+const CDN = "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons";
+
 const items = [
-  { name: "Astro", iconClass: "devicon-astro-plain" },
-  { name: "React", iconClass: "devicon-react-original" },
-  { name: "Next.js", iconClass: "devicon-nextjs-plain" },
-  { name: "PHP", iconClass: "devicon-php-plain" },
-  { name: "Laravel", iconClass: "devicon-laravel-original" },
-  { name: "Python", iconClass: "devicon-python-plain" },
-  { name: "Flask", iconClass: "devicon-flask-original" },
-  { name: "C++", iconClass: "devicon-cplusplus-plain" },
-  { name: "TypeScript", iconClass: "devicon-typescript-plain" },
-  { name: "Vue.js", iconClass: "devicon-vuejs-plain" },
-  { name: "MongoDB", iconClass: "devicon-mongodb-plain" },
-  { name: "MariaDB", iconClass: "devicon-mariadb-original" },
-  { name: "MySQL", iconClass: "devicon-mysql-plain" },
-  { name: "Docker", iconClass: "devicon-docker-plain" },
-  { name: "Golang", iconClass: "devicon-go-original-wordmark" },
-  { name: "Google Cloud", iconClass: "devicon-googlecloud-plain" },
-  { name: "Cloudflare", iconClass: "devicon-cloudflare-plain" },
-  { name: "Ubuntu", iconClass: "devicon-ubuntu-plain" },
-  { name: "Git", iconClass: "devicon-git-plain" },
-  { name: "pnpm", iconClass: "devicon-pnpm-plain" },
-  { name: "VS Code", iconClass: "devicon-vscode-plain" },
-  { name: "Bash", iconClass: "devicon-bash-plain" },
-  { name: "GitHub", iconClass: "devicon-github-original" },
-  { name: "Tailwind CSS", iconClass: "devicon-tailwindcss-original" },
-  { name: "Markdown", iconClass: "devicon-markdown-original" },
-  { name: "Hugo", iconClass: "devicon-hugo-plain" },
-  { name: "Figma", iconClass: "devicon-figma-plain" },
+  { name: "Astro", icon: "astro/astro-original" },
+  { name: "React", icon: "react/react-original" },
+  { name: "Next.js", icon: "nextjs/nextjs-original" },
+  { name: "PHP", icon: "php/php-original" },
+  { name: "Laravel", icon: "laravel/laravel-original" },
+  { name: "Python", icon: "python/python-original" },
+  { name: "Flask", icon: "flask/flask-original" },
+  { name: "C++", icon: "cplusplus/cplusplus-original" },
+  { name: "TypeScript", icon: "typescript/typescript-original" },
+  { name: "Vue.js", icon: "vuejs/vuejs-original" },
+  { name: "MongoDB", icon: "mongodb/mongodb-original" },
+  { name: "MariaDB", icon: "mariadb/mariadb-original" },
+  { name: "MySQL", icon: "mysql/mysql-original" },
+  { name: "Docker", icon: "docker/docker-original" },
+  { name: "Golang", icon: "go/go-original-wordmark" },
+  { name: "Google Cloud", icon: "googlecloud/googlecloud-original" },
+  { name: "Vercel", icon: "vercel/vercel-original" },
+  { name: "Cloudflare", icon: "cloudflare/cloudflare-original" },
+  { name: "Ubuntu", icon: "ubuntu/ubuntu-original" },
+  { name: "Git", icon: "git/git-original" },
+  { name: "pnpm", icon: "pnpm/pnpm-original" },
+  { name: "VS Code", icon: "vscode/vscode-original" },
+  { name: "Bash", icon: "bash/bash-original" },
+  { name: "GitHub", icon: "github/github-original" },
+  { name: "Tailwind CSS", icon: "tailwindcss/tailwindcss-original" },
+  { name: "Markdown", icon: "markdown/markdown-original" },
+  { name: "Hugo", icon: "hugo/hugo-original" },
+  { name: "Figma", icon: "figma/figma-original" },
 ];
 
 const firstRow = items.slice(0, Math.ceil(items.length / 2));
 const secondRow = items.slice(Math.ceil(items.length / 2));
 ---
 
-<div class="w-full max-w-4xl mx-auto py-12">
-  <div
-    class="bg-muted/30 rounded-xl border border-border py-4 flex flex-col gap-4 overflow-hidden"
-  >
-    <Marquee class="[--duration:20s]">
+<div class="w-full max-w-4xl mx-auto">
+  <div class="relative py-4 flex flex-col gap-8 overflow-hidden">
+    <div
+      class="pointer-events-none absolute inset-y-0 left-0 z-10 w-16 bg-linear-to-r from-background to-transparent"
+    >
+    </div>
+    <div
+      class="pointer-events-none absolute inset-y-0 right-0 z-10 w-16 bg-linear-to-l from-background to-transparent"
+    >
+    </div>
+    <Marquee>
       <MarqueeContent direction="left" pauseOnHover={true}>
         {
           firstRow.map((item) => (
-            <div class="mx-4 flex items-center gap-2 text-xl font-bold text-muted-foreground">
-              <i class={`${item.iconClass} text-2xl`} />
+            <div class="mx-6 flex items-center gap-3 text-2xl font-bold text-foreground grayscale opacity-40 transition-[filter,opacity] duration-300 hover:grayscale-0 hover:opacity-100">
+              <img
+                src={`${CDN}/${item.icon}.svg`}
+                alt={item.name}
+                class="size-9"
+                loading="lazy"
+                decoding="async"
+              />
               <span>{item.name}</span>
             </div>
           ))
         }
       </MarqueeContent>
     </Marquee>
-    <Marquee class="[--duration:20s]">
+    <Marquee>
       <MarqueeContent direction="right" pauseOnHover={true}>
         {
           secondRow.map((item) => (
-            <div class="mx-4 flex items-center gap-2 text-xl font-bold text-muted-foreground">
-              <i class={`${item.iconClass} text-2xl`} />
+            <div class="mx-6 flex items-center gap-3 text-2xl font-bold text-foreground grayscale opacity-40 transition-[filter,opacity] duration-300 hover:grayscale-0 hover:opacity-100">
+              <img
+                src={`${CDN}/${item.icon}.svg`}
+                alt={item.name}
+                class="size-9"
+                loading="lazy"
+                decoding="async"
+              />
               <span>{item.name}</span>
             </div>
           ))
