@@ -50,7 +50,7 @@ const readTime: Number = Math.round(readMinutes);
             {
               modifiedDate && (
                 <ModifiedDateButton
-                  client:only="react"
+                  client:load
                   date={modifiedDate.toISOString()}
                 />
               )
