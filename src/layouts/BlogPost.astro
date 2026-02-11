@@ -27,6 +27,7 @@ const readTime: Number = Math.round(readMinutes);
 ---
 
 <BaseLayout>
+  <div class="max-w-5xl w-full mx-auto px-4 py-12">
   <div class="lg:flex lg:gap-4 lg:items-start relative">
     <article
       id="content"
@@ -40,7 +41,7 @@ const readTime: Number = Math.round(readMinutes);
           </div>
         )
       }
-      <div class="prose space-y-2">
+      <div class="prose">
         <div class="flex flex-row items-center gap-2">
           {
             category && (
@@ -98,5 +99,6 @@ const readTime: Number = Math.round(readMinutes);
         </aside>
       )
     }
+  </div>
   </div>
 </BaseLayout>

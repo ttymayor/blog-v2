@@ -3,15 +3,15 @@ import BaseHead from "@/components/BaseHead.astro";
 import Footer from "@/components/Footer.astro";
 import Header from "@/components/Header.astro";
 import { ClientRouter } from "astro:transitions";
-import { Font } from "astro:assets";
+// import { Font } from "astro:assets";
 import { SITE_DESCRIPTION, SITE_TITLE } from "@/consts";
 
 import "@/styles/global.css";
 ---
 
-<html lang="en" class="scroll-smooth">
+<html lang="en" class=`scroll-smooth`>
   <head>
-    <Font cssVariable="--font-roboto" preload />
+    <!-- <Font cssVariable="--font-geist-sans" preload /> -->
 
     <script is:inline>
       // Get the current theme from localStorage only
@@ -34,7 +34,7 @@ import "@/styles/global.css";
         // Dispatch custom event (only for current document)
         if (doc === document) {
           document.dispatchEvent(
-            new CustomEvent("themechange", { detail: { theme } })
+            new CustomEvent("themechange", { detail: { theme } }),
           );
         }
       }
@@ -57,18 +57,9 @@ import "@/styles/global.css";
   </head>
   <body>
     <Header transition:persist transition:name="header" />
-    <main
-      class="max-w-5xl w-full mx-auto px-4 py-12"
-      transition:animate="slide"
-    >
+    <main class="p-0" transition:animate="fade">
       <slot />
     </main>
     <Footer />
   </body>
 </html>
-
-<style>
-  body {
-    font-family: var(--font-roboto);
-  }
-</style>
