@@ -28,7 +28,11 @@ function SpringCounter({ value }: { value: number }) {
   );
 
   return (
-    <span ref={ref} className="inline-block tabular-nums" style={{ fontFamily: '"Geist Mono", monospace' }}>
+    <span
+      ref={ref}
+      className={`inline-block cursor-default tabular-nums transition-[filter] duration-700 ${isInView ? "blur-none" : "blur"}`}
+      style={{ fontFamily: '"Geist Mono", monospace' }}
+    >
       0
     </span>
   );

@@ -59,7 +59,7 @@ import { Toaster } from "@/components/ui/sonner";
     <main class="p-0" transition:animate="fade">
       <slot />
     </main>
-    <Footer />
+    <Footer transition:persist transition:name="footer" />
     <Toaster client:load />
   </body>
 </html>
