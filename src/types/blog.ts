@@ -8,4 +8,5 @@ export interface BlogPost {
   tags: string[];
   category?: string;
   draft?: boolean;
+  excerpt?: string;
 }

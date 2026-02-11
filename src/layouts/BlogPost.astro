@@ -3,14 +3,14 @@ import BaseLayout from "@/layouts/BaseLayout.astro";
 import { Image } from "astro:assets";
 import FormattedDate from "@/components/FormattedDate.astro";
 import { Separator } from "@/components/ui/separator";
-import { Badge } from "@/components/ui/badge";
 import TableOfContents from "@/components/mdx/TableOfContents.astro";
-import { Calendar, Clock, Pencil, FileText } from "@lucide/astro";
+import { Clock, FileText } from "@lucide/astro";
+import { TtyBadge } from "@/components/ui/ttyBadge";
+import ModifiedDateButton from "@/components/ModifiedDateButton";
 
 const {
   title,
   description,
-  pubDate,
   updatedDate,
   heroImage,
   headings,
@@ -28,77 +28,66 @@ const readTime: Number = Math.round(readMinutes);
 
 <BaseLayout>
   <div class="max-w-5xl w-full mx-auto px-4 py-12">
-  <div class="lg:flex lg:gap-4 lg:items-start relative">
-    <article
-      id="content"
-      class="bg-card border shadow-2xl p-4 rounded-xl md:p-8 flex-1 min-w-0 max-w-4xl"
-      data-scroll
-    >
-      {
-        heroImage && (
-          <div class="md:mb-8 mb-4">
-            <Image width={1020} height={510} src={heroImage} alt="" />
+    <div class="lg:flex lg:gap-4 lg:items-start relative">
+      <article
+        id="content"
+        class="bg-card border shadow-2xl p-4 rounded-xl md:p-8 flex-1 min-w-0 max-w-4xl"
+        data-scroll
+      >
+        {
+          heroImage && (
+            <div class="md:mb-8 mb-4">
+              <Image width={1020} height={510} src={heroImage} alt="" />
+            </div>
+          )
+        }
+        <div class="prose">
+          <div class="flex flex-row items-center justify-between gap-2 mb-4">
+            <div class="flex flex-row items-center gap-2">
+              {category && <TtyBadge variant={"category"}>{category}</TtyBadge>}
+              <h1 class="font-bold m-0">{title}</h1>
+            </div>
+            {
+              modifiedDate && (
+                <ModifiedDateButton
+                  client:only="react"
+                  date={modifiedDate.toISOString()}
+                />
+              )
+            }
           </div>
+          <div
+            class="flex flex-row items-center gap-2 text-muted-foreground text-sm flex-wrap"
+          >
+            {
+              minutesRead && (
+                <div class="flex items-center gap-1.5">
+                  <Clock class="size-4" />
+                  <span>{readTime} 分鐘</span>
+                </div>
+              )
+            }
+            {
+              wordCount && (
+                <div class="flex items-center gap-1.5">
+                  <FileText class="size-4" />
+                  <span>約 {wordCount} 字</span>
+                </div>
+              )
+            }
+          </div>
+          <Separator className="mt-8 mb-10 bg-gray-500" client:only="react" />
+          <slot />
+        </div>
+      </article>
+
+      {
+        headings && headings.length > 0 && (
+          <aside class="hidden p-4 bg-card border shadow-2xl rounded-xl lg:block w-64 sticky top-26 shrink-0 self-start">
+            <TableOfContents headings={headings} />
+          </aside>
         )
       }
-      <div class="prose">
-        <div class="flex flex-row items-center gap-2">
-          {
-            category && (
-              <Badge
-                client:load
-                className="text-sm h-fit dark:border-[#eebbc3] dark:text-[#eebbc3] dark:bg-[#eebbc3]/10 rounded-sm"
-              >
-                {category}
-              </Badge>
-            )
-          }
-          <h1 class="font-bold m-0">{title}</h1>
-        </div>
-        <div
-          class="flex flex-row items-center gap-2 text-muted-foreground text-sm flex-wrap"
-        >
-          <div class="flex items-center gap-1.5">
-            <Calendar class="size-4" />
-            <FormattedDate date={pubDate} />
-          </div>
-          {
-            modifiedDate && (
-              <div class="flex items-center gap-1.5">
-                <Pencil class="size-4" />
-                <FormattedDate date={modifiedDate} />
-              </div>
-            )
-          }
-          {
-            minutesRead && (
-              <div class="flex items-center gap-1.5">
-                <Clock class="size-4" />
-                <span>{readTime} 分鐘</span>
-              </div>
-            )
-          }
-          {
-            wordCount && (
-              <div class="flex items-center gap-1.5">
-                <FileText class="size-4" />
-                <span>約 {wordCount} 字</span>
-              </div>
-            )
-          }
-        </div>
-        <Separator className="mt-8 mb-10 bg-gray-500" client:only="react" />
-        <slot />
-      </div>
-    </article>
-
-    {
-      headings && headings.length > 0 && (
-        <aside class="hidden p-4 bg-card border shadow-2xl rounded-xl lg:block w-64 sticky top-26 shrink-0 self-start">
-          <TableOfContents headings={headings} />
-        </aside>
-      )
-    }
-  </div>
+    </div>
   </div>
 </BaseLayout>
