@@ -6,6 +6,8 @@ import { ClientRouter } from "astro:transitions";
 import { SITE_DESCRIPTION, SITE_TITLE } from "@/consts";
 
 import "@/styles/global.css";
+import "sonner/dist/styles.css";
+import { Toaster } from "@/components/ui/sonner";
 ---
 
 <html lang="en" class=`scroll-smooth`>
@@ -58,5 +60,6 @@ import "@/styles/global.css";
       <slot />
     </main>
     <Footer />
+    <Toaster client:load />
   </body>
 </html>

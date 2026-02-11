@@ -1,19 +1,28 @@
-import { Toaster as Sonner, type ToasterProps } from "sonner"
+import { useState, useEffect } from "react";
+import { Toaster as Sonner, type ToasterProps } from "sonner";
+
+function useIsMobile(breakpoint = 768) {
+  const [isMobile, setIsMobile] = useState(false);
+  useEffect(() => {
+    const mql = window.matchMedia(`(max-width: ${breakpoint - 1}px)`);
+    setIsMobile(mql.matches);
+    const handler = (e: MediaQueryListEvent) => setIsMobile(e.matches);
+    mql.addEventListener("change", handler);
+    return () => mql.removeEventListener("change", handler);
+  }, [breakpoint]);
+  return isMobile;
+}
 
 function Toaster({ ...props }: ToasterProps) {
+  const isMobile = useIsMobile();
   return (
     <Sonner
       className="toaster group"
-      style={
-        {
-          "--normal-bg": "var(--popover)",
-          "--normal-text": "var(--popover-foreground)",
-          "--normal-border": "var(--border)",
-        } as React.CSSProperties
-      }
+      position={isMobile ? "top-center" : "bottom-center"}
+      richColors={true}
       {...props}
     />
-  )
+  );
 }
 
-export { Toaster }
+export { Toaster };
