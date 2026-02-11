@@ -1,0 +1,121 @@
+---
+title: '2>&1'
+description: ''
+pubDate: '2026-02-11'
+tags: ['Bash']
+category: 'Command'
+draft: true
+---
+
+## 前言
+
+剛學習指令的時候，對於這段 `2>&1` 始終抱著疑惑的眼神看待。現在再次看到 Claude 也偶爾會在指令後方加上它，讓我又好奇 `2>&1` 究竟藏了甚麼秘密？
+
+## 2>&1 是什麼？
+
+`2>&1` 是 Unix / Linux shell（例如 bash、zsh）中的檔案描述子重新導向（file descriptor redirection）語法，用來將標準錯誤（stderr）重新導向到標準輸出（stdout）。
+
+首先，在類 Unix 系統中，每個行程（process）預設會開啟三個檔案描述子（file descriptor）：
+
+- `0` 代表標準輸入（stdin）
+- `1` 代表標準輸出（stdout）
+- `2` 代表標準錯誤（stderr）
+
+接著我們分兩段來看 `2>&1`
+
+- `2>` 表示要重新導向檔案描述子 2（stderr）
+- `&1` 表示指向檔案描述子 1（stdout）
+
+簡單來說，就是讓兩者指向同一個輸出目標。
+
+### 舉例
+
+再更簡單易點的舉例說明，
+
+> `cat` 是 concatenate 的縮寫。`cat` 會先把檔案內容讀出來，然後再輸出到終端機。
+
+#### 範例 1
+
+```bash
+# 假設沒有該檔案
+cat hi.txt
+```
+```text
+cat: hi.txt: No such file or directory
+```
+
+可以看到如果沒有檔案就會報錯
+
+#### 範例 2
+
+這段指令代表將「標準錯誤（stderr）」輸出到 `log` 檔案中
+
+```bash
+cat hi.txt 2>log
+```
+```
+
+```
+
+這時會將 `cat: hi.txt: No such file or directory` 寫進 `log` 這個純文字檔案中，也可以看到在當前目錄中會有 `log` 檔案出現。
+
+```bash
+cat log
+```
+```
+cat: hi.txt: No such file or directory
+```
+
+#### 範例 3
+
+那試試看這樣呢
+
+```bash
+cat hi.txt 2>&1
+```
+```
+cat: hi.txt: No such file or directory
+```
+
+欸？怎麼還有輸出？
+
+這是因為原本指令 `cat hi.txt` 的 stdout 本來就指向終端機，沒有被重新導向！
+
+除非，現在要改變 stdout 的目標，例如：`cat hi.txt > log` 這時候指令標準輸出（1）到 `log` 同時再加上 `2>&1`（標準錯誤指向到標準輸出）也就是將錯誤也寫進 `log` 就沒有東西輸出到終端機啦
+
+```bash
+cat hi.txt > log 2>&1
+```
+```
+
+```
+
+## 補充
+
+### /dev/null
+
+`/dev/null` 不管寫進什麼值，都仍然是空的。
+
+可以參考[原始碼](https://github.com/torvalds/linux/blob/master/drivers/char/mem.c#L710)註冊了名為 **null** 的驅動程式，當讀取時 `cat /dev/null` 會直接回傳 0 (EOF)
+
+```c
+static ssize_t read_null(struct file *file, char __user *buf,
+			 size_t count, loff_t *ppos)
+{
+	return 0;
+}
+```
+
+而寫入時 `cat hi.txt > /dev/null` 則是
+
+```c
+static ssize_t write_null(struct file *file, const char __user *buf,
+			  size_t count, loff_t *ppos)
+{
+	return count;
+}
+```
+
+這裡回傳 count 就是讓使用者以為實際寫入，但實際上只是告知我處理了寫入，但背後沒有其他事情發生。
+
+有點像問服務生還有沒有鞋子，但服務生只是跑進儲藏室又跑出來說，沒有！

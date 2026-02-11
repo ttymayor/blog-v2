@@ -17,7 +17,6 @@ import react from "@astrojs/react";
 // https://astro.build/config
 export default defineConfig({
   site: "https://v2.ttymayor.com",
-  // image: { domains: ["*"] },
 
   integrations: [
     mdx({
@@ -37,15 +36,5 @@ export default defineConfig({
 
   vite: {
     plugins: [tailwindcss()],
-  },
-
-  experimental: {
-    fonts: [
-      {
-        provider: fontProviders.google(),
-        name: "Geist",
-        cssVariable: "--font-geist-sans",
-      },
-    ],
   },
 });
