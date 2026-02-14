@@ -14,14 +14,21 @@ const navItems = [
 ---
 
 <header
-  class="top pointer-events-auto fixed bottom-4 left-0 z-50 flex w-full justify-center flex-row items-center md:sticky md:top-0 gap-2"
+  class="pointer-events-auto fixed bottom-4 left-0 z-50 flex w-full flex-row items-center justify-center gap-2 md:bottom-auto md:top-0"
 >
   <nav
-    class="md:mx-auto flex w-fit md:w-[95%] max-w-5xl items-center justify-between gap-2 md:gap-4 rounded-full bg-black/10 dark:bg-white/10 p-2 md:p-4 shadow-xl backdrop-blur-sm transition-all duration-500 ease-in-out md:mt-4"
+    id="nav-container"
+    class="relative md:mx-auto flex w-fit md:w-[95%] max-w-5xl items-center justify-between gap-2 md:gap-4 rounded-full bg-black/10 dark:bg-white/10 p-2 md:p-4 shadow-xl backdrop-blur-sm transition-all duration-500 ease-in-out md:mt-4"
   >
+    <span
+      id="nav-indicator"
+      class="pointer-events-none absolute rounded-full bg-black/15 transition-all duration-300 ease-in-out dark:bg-white/15"
+    ></span>
     <a
       href="/"
-      class="flex shrink-0 items-center gap-3 opacity-100 transition-opacity hover:opacity-75"
+      data-nav-item
+      data-active={pathname === "" || pathname === "/" ? "true" : undefined}
+      class="relative z-10 flex shrink-0 items-center gap-3 transition-opacity"
     >
       <Image
         inferSize
@@ -41,11 +48,12 @@ const navItems = [
           return (
             <a
               href={href}
+              data-nav-item
+              data-active={isActive ? "true" : undefined}
               class:list={[
-                "inline-flex whitespace-nowrap flex-col md:flex-row w-10 h-10 md:w-fit items-center justify-center gap-1 md:gap-2 rounded-full px-0 md:py-2 md:px-3 text-[10px] md:text-sm no-underline transition-all",
-                "hover:bg-black/10 dark:hover:bg-white/10",
+                "relative z-10 inline-flex whitespace-nowrap flex-col md:flex-row w-10 h-10 md:w-fit items-center justify-center gap-1 md:gap-2 rounded-full px-0 md:py-2 md:px-3 text-[10px] md:text-sm no-underline transition-colors",
                 isActive
-                  ? "text-[#687afc] md:text-foreground dark:text-[#b8c1ec] md:dark:text-foreground md:bg-black/15 md:dark:bg-white/15"
+                  ? "text-[#687afc] md:text-foreground dark:text-[#b8c1ec] md:dark:text-foreground"
                   : "",
               ]}
             >
@@ -66,3 +74,95 @@ const navItems = [
     <ModeToggle client:load />
   </div>
 </header>
+
+<script>
+  let currentActive: HTMLAnchorElement | null = null;
+  let cleanups: (() => void)[] = [];
+
+  function initNavIndicator() {
+    // Clean up previous listeners
+    cleanups.forEach((fn) => fn());
+    cleanups = [];
+
+    const container = document.getElementById("nav-container");
+    const indicator = document.getElementById("nav-indicator");
+    if (!container || !indicator) return;
+
+    const isDesktop = window.matchMedia("(min-width: 768px)").matches;
+    const allItems =
+      container.querySelectorAll<HTMLAnchorElement>("[data-nav-item]");
+    // On desktop, exclude the home link from the indicator system
+    const items = Array.from(allItems).filter(
+      (item) => !isDesktop || item.getAttribute("href") !== "/",
+    );
+
+    // Update data-active based on current pathname
+    const pathname = window.location.pathname.replace(/\/$/, "");
+    allItems.forEach((item) => {
+      const href = item.getAttribute("href") || "";
+      const isActive =
+        href === "/"
+          ? pathname === "" || pathname === "/"
+          : pathname.startsWith(href);
+      if (isActive) {
+        item.setAttribute("data-active", "true");
+      } else {
+        item.removeAttribute("data-active");
+      }
+    });
+
+    // Only pick active from filtered items
+    currentActive =
+      items.find((item) => item.hasAttribute("data-active")) || null;
+
+    const PAD = 4; // expand indicator by 4px on each side
+
+    function moveTo(el: HTMLElement) {
+      const containerRect = container!.getBoundingClientRect();
+      const elRect = el.getBoundingClientRect();
+      indicator!.style.left = `${elRect.left - containerRect.left - PAD}px`;
+      indicator!.style.top = `${elRect.top - containerRect.top - PAD}px`;
+      indicator!.style.width = `${elRect.width + PAD * 2}px`;
+      indicator!.style.height = `${elRect.height + PAD * 2}px`;
+      indicator!.style.opacity = "1";
+    }
+
+    function moveToActive() {
+      if (currentActive) {
+        moveTo(currentActive);
+      } else {
+        indicator!.style.opacity = "0";
+      }
+    }
+
+    // Set initial position without transition
+    indicator.style.transition = "none";
+    moveToActive();
+    indicator.offsetHeight;
+    indicator.style.transition = "";
+
+    items.forEach((item) => {
+      const onEnter = () => moveTo(item);
+      const onClick = () => {
+        // Update active immediately on click
+        items.forEach((i) => i.removeAttribute("data-active"));
+        item.setAttribute("data-active", "true");
+        currentActive = item;
+        moveTo(item);
+      };
+      item.addEventListener("mouseenter", onEnter);
+      item.addEventListener("click", onClick);
+      cleanups.push(() => {
+        item.removeEventListener("mouseenter", onEnter);
+        item.removeEventListener("click", onClick);
+      });
+    });
+
+    const onLeave = () => moveToActive();
+    container.addEventListener("mouseleave", onLeave);
+    cleanups.push(() => container.removeEventListener("mouseleave", onLeave));
+  }
+
+  initNavIndicator();
+  document.addEventListener("astro:page-load", initNavIndicator);
+</script>

@@ -13,6 +13,8 @@ import thuCourseCrawler from "@/assets/projects/thu-course-crawler.png";
 import thuHackerClub from "@/assets/projects/thu-hacker-club.png";
 import ExternalLink from "@lucide/astro/icons/external-link";
 import { TtyBadge } from "@/components/ui/ttyBadge";
+import FlipCard from "@/components/react/FlipCard";
+import avatar from "@/assets/avatar.jpg";
 
 const projects = [
   {
@@ -146,6 +148,9 @@ function formatRoleDate(role: SingleRole | RangeRole) {
   <TtyBadge variant={"outline"}>outline</TtyBadge>
   <TtyBadge variant={"tag"}>tag</TtyBadge>
   <TtyBadge variant={"category"}>category</TtyBadge> -->
+  <section class="min-h-dvh flex flex-col items-center justify-center py-12">
+    <FlipCard client:load avatarSrc={avatar.src} />
+  </section>
   <section
     id="marquee-section"
     class="min-h-[80dvh] flex flex-col items-center justify-center bg-[#ecefff] dark:bg-[#1e2238]"

@@ -52,11 +52,11 @@ const secondRow = items.slice(Math.ceil(items.length / 2));
       <MarqueeContent direction="left" pauseOnHover={true}>
         {
           firstRow.map((item) => (
-            <div class="mx-6 flex items-center gap-3 text-2xl font-bold text-foreground grayscale opacity-40 transition-[filter,opacity] duration-300 hover:grayscale-0 hover:opacity-100">
+            <div class="mx-6 flex items-center gap-3 text-2xl font-bold text-foreground md:grayscale md:opacity-40 transition-[filter,opacity] duration-300 hover:grayscale-0 hover:opacity-100">
               <img
                 src={`${CDN}/${item.icon}.svg`}
                 alt={item.name}
-                class="size-9"
+                class="size-9 rounded-none"
                 loading="lazy"
                 decoding="async"
               />
@@ -70,11 +70,11 @@ const secondRow = items.slice(Math.ceil(items.length / 2));
       <MarqueeContent direction="right" pauseOnHover={true}>
         {
           secondRow.map((item) => (
-            <div class="mx-6 flex items-center gap-3 text-2xl font-bold text-foreground grayscale opacity-40 transition-[filter,opacity] duration-300 hover:grayscale-0 hover:opacity-100">
+            <div class="mx-6 flex items-center gap-3 text-2xl font-bold text-foreground md:grayscale md:opacity-40 transition-[filter,opacity] duration-300 hover:grayscale-0 hover:opacity-100">
               <img
                 src={`${CDN}/${item.icon}.svg`}
                 alt={item.name}
-                class="size-9"
+                class="size-9 rounded-none"
                 loading="lazy"
                 decoding="async"
               />

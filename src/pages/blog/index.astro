@@ -13,11 +13,8 @@ const allCategories = [
 ---
 
 <BaseLayout>
+  <div class="hidden md:block md:h-22" aria-hidden="true"></div>
   <div class="max-w-5xl w-full mx-auto px-4 py-12">
-    <BlogIndex
-      posts={posts}
-      allTags={allTags}
-      allCategories={allCategories}
-    />
+    <BlogIndex posts={posts} allTags={allTags} allCategories={allCategories} />
   </div>
 </BaseLayout>

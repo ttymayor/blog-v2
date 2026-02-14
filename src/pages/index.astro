@@ -6,65 +6,66 @@ import { ArrowRight } from "@lucide/astro";
 ---
 
 <BaseLayout>
+  <div class="hidden md:block md:h-22" aria-hidden="true"></div>
   <div class="max-w-5xl w-full mx-auto px-4 py-12">
-  <section id="hero" class="h-40 flex items-center justify-start">
-    <div>
-      <h2 id="greeting" class="text-3xl font-bold">
-        <ZhuyinTyping text="休息一下" class="greeting-text" />
-      </h2>
-      <p class="text-lg text-muted-foreground m-0">
-        涉世未深、少不更事的年輕人
-      </p>
-    </div>
-  </section>
+    <section id="hero" class="h-40 flex items-center justify-start">
+      <div>
+        <h2 id="greeting" class="text-3xl font-bold">
+          <ZhuyinTyping text="休息一下" class="greeting-text" />
+        </h2>
+        <p class="text-lg text-muted-foreground m-0">
+          涉世未深、少不更事的年輕人
+        </p>
+      </div>
+    </section>
 
-  <script>
-    function updateGreeting() {
-      const greetingElement = document.querySelector(".greeting-text");
-      if (!greetingElement) return;
+    <script>
+      function updateGreeting() {
+        const greetingElement = document.querySelector(".greeting-text");
+        if (!greetingElement) return;
 
-      const currentHour = new Date().getHours();
-      let greeting = "休息一下"; // default
+        const currentHour = new Date().getHours();
+        let greeting = "休息一下"; // default
 
-      if (currentHour >= 0 && currentHour < 6) {
-        greeting = "還沒入睡嗎 🥱";
-      } else if (currentHour >= 6 && currentHour < 11) {
-        greeting = "早上好 👋";
-      } else if (currentHour >= 11 && currentHour < 13) {
-        greeting = "午安 🌤️";
-      } else if (currentHour >= 13 && currentHour < 17) {
-        greeting = "喝點水，記得休息 🍵";
-      } else if (currentHour >= 17 && currentHour < 21) {
-        greeting = "晚上好 🌙";
-      } else if (currentHour >= 21 && currentHour < 24) {
-        greeting = "晚安，祝你有個好夢 😴";
+        if (currentHour >= 0 && currentHour < 6) {
+          greeting = "還沒入睡嗎 🥱";
+        } else if (currentHour >= 6 && currentHour < 11) {
+          greeting = "早上好 👋";
+        } else if (currentHour >= 11 && currentHour < 13) {
+          greeting = "午安 🌤️";
+        } else if (currentHour >= 13 && currentHour < 17) {
+          greeting = "喝點水，記得休息 🍵";
+        } else if (currentHour >= 17 && currentHour < 21) {
+          greeting = "晚上好 🌙";
+        } else if (currentHour >= 21 && currentHour < 24) {
+          greeting = "晚安，祝你有個好夢 😴";
+        }
+
+        // Update the data-text attribute and trigger re-typing
+        greetingElement.setAttribute("data-text", greeting);
+
+        // Trigger the typing animation
+        const event = new CustomEvent("retype");
+        greetingElement.dispatchEvent(event);
       }
 
-      // Update the data-text attribute and trigger re-typing
-      greetingElement.setAttribute("data-text", greeting);
+      // Update greeting on page load
+      updateGreeting();
 
-      // Trigger the typing animation
-      const event = new CustomEvent("retype");
-      greetingElement.dispatchEvent(event);
-    }
+      // Re-update after view transitions
+      document.addEventListener("astro:page-load", updateGreeting);
+    </script>
 
-    // Update greeting on page load
-    updateGreeting();
-
-    // Re-update after view transitions
-    document.addEventListener("astro:page-load", updateGreeting);
-  </script>
-
-  <section id="latest-posts" class="space-y-4">
-    <div class="flex items-center justify-between">
-      <h3 class="text-2xl font-bold">最新文章</h3>
-      <a
-        href="/blog"
-        class="text-muted-foreground flex items-center gap-2 hover:translate-x-1 transition-all"
-        >瞧<ArrowRight /></a
-      >
-    </div>
-    <LatestPosts />
-  </section>
+    <section id="latest-posts" class="space-y-4">
+      <div class="flex items-center justify-between">
+        <h3 class="text-2xl font-bold">最新文章</h3>
+        <a
+          href="/blog"
+          class="text-muted-foreground flex items-center gap-2 hover:translate-x-1 transition-all"
+          >瞧<ArrowRight /></a
+        >
+      </div>
+      <LatestPosts />
+    </section>
   </div>
 </BaseLayout>

@@ -27,6 +27,7 @@ const readTime: Number = Math.round(readMinutes);
 ---
 
 <BaseLayout>
+  <div class="hidden md:block md:h-22" aria-hidden="true"></div>
   <div class="max-w-5xl w-full mx-auto px-4 py-12">
     <div class="lg:flex lg:gap-4 lg:items-start relative">
       <article
@@ -76,7 +77,7 @@ const readTime: Number = Math.round(readMinutes);
               )
             }
           </div>
-          <Separator className="mt-8 mb-10 bg-gray-500" client:only="react" />
+          <Separator className="mt-8 mb-10 bg-gray-500" client:load />
           <slot />
         </div>
       </article>
