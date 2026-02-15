@@ -13,16 +13,34 @@ const navItems = [
 ];
 ---
 
+<script>
+import { animate } from "motion/mini"
+
+animate("header", {
+  opacity: [0.5, 1],
+  filter: ["blur(10px)", "blur(0px)"],
+}, {
+  delay: 0.3,
+}).finished.then(() => {
+  // Clear inline styles after animation to prevent interference with backdrop-blur
+  const header = document.querySelector("header");
+  if (header) {
+    header.style.removeProperty("filter");
+    header.style.removeProperty("opacity");
+  }
+});
+</script>
+
 <header
   class="pointer-events-auto fixed bottom-4 left-0 z-50 flex w-full flex-row items-center justify-center gap-2 md:bottom-auto md:top-0"
 >
   <nav
     id="nav-container"
-    class="relative md:mx-auto flex w-fit md:w-[95%] max-w-5xl items-center justify-between gap-2 md:gap-4 rounded-full bg-black/10 dark:bg-white/10 p-2 md:p-4 shadow-xl backdrop-blur-sm transition-all duration-500 ease-in-out md:mt-4"
+    class="relative md:mx-auto flex w-fit md:w-[95%] max-w-5xl items-center justify-between gap-2 md:gap-4 rounded-full border border-white/20 bg-linear-to-br from-black/10 to-black/5 p-2 md:p-4 shadow-2xl shadow-black/20 backdrop-blur-sm transition-all duration-500 ease-in-out md:mt-4 dark:border-white/10 dark:bg-linear-to-br dark:from-white/10 dark:to-white/5 dark:shadow-black/60"
   >
     <span
       id="nav-indicator"
-      class="pointer-events-none absolute rounded-full bg-black/15 transition-all duration-300 ease-in-out dark:bg-white/15"
+      class="pointer-events-none absolute rounded-full bg-black/15 shadow-[inset_0_2px_8px_rgba(0,0,0,0.3)] transition-all duration-300 ease-in-out dark:bg-white/15 dark:shadow-[inset_0_2px_8px_rgba(0,0,0,0.4)]"
     ></span>
     <a
       href="/"
@@ -51,7 +69,7 @@ const navItems = [
               data-nav-item
               data-active={isActive ? "true" : undefined}
               class:list={[
-                "relative z-10 inline-flex whitespace-nowrap flex-col md:flex-row w-10 h-10 md:w-fit items-center justify-center gap-1 md:gap-2 rounded-full px-0 md:py-2 md:px-3 text-[10px] md:text-sm no-underline transition-colors",
+                "relative z-10 inline-flex whitespace-nowrap flex-col md:flex-row w-10 h-10 md:w-fit items-center justify-center gap-1 md:gap-2 rounded-full px-0 md:py-2 md:px-3 text-[10px] md:text-sm no-underline transition-all",
                 isActive
                   ? "text-[#687afc] md:text-foreground dark:text-[#b8c1ec] md:dark:text-foreground"
                   : "",
@@ -69,7 +87,7 @@ const navItems = [
     </div>
   </nav>
   <div
-    class="rounded-full bg-black/10 p-2 shadow-xl backdrop-blur-sm dark:bg-white/10 md:hidden"
+    class="rounded-full border border-white/20 bg-linear-to-br from-black/10 to-black/5 p-2 shadow-2xl shadow-black/20 backdrop-blur-sm md:hidden dark:border-white/10 dark:bg-linear-to-br dark:from-white/10 dark:to-white/5 dark:shadow-black/60"
   >
     <ModeToggle client:load />
   </div>
@@ -116,12 +134,13 @@ const navItems = [
       items.find((item) => item.hasAttribute("data-active")) || null;
 
     const PAD = 4; // expand indicator by 4px on each side
+    const BORDER_WIDTH = 1; // account for container border
 
     function moveTo(el: HTMLElement) {
       const containerRect = container!.getBoundingClientRect();
       const elRect = el.getBoundingClientRect();
-      indicator!.style.left = `${elRect.left - containerRect.left - PAD}px`;
-      indicator!.style.top = `${elRect.top - containerRect.top - PAD}px`;
+      indicator!.style.left = `${elRect.left - containerRect.left - PAD - BORDER_WIDTH}px`;
+      indicator!.style.top = `${elRect.top - containerRect.top - PAD - BORDER_WIDTH}px`;
       indicator!.style.width = `${elRect.width + PAD * 2}px`;
       indicator!.style.height = `${elRect.height + PAD * 2}px`;
       indicator!.style.opacity = "1";

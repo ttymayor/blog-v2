@@ -121,7 +121,7 @@ export default function FlipCard({ avatarSrc }: FlipCardProps) {
       >
         {/* Front face */}
         <div
-          className="dark:bg-card absolute inset-0 flex flex-col items-center justify-center rounded-xl bg-[#eeeeee] p-6 shadow-2xl"
+          className="absolute inset-0 flex flex-col items-center justify-center rounded-2xl border border-white/20 bg-linear-to-br from-black/10 to-black/5 p-10 shadow-2xl shadow-black/20 backdrop-blur-sm dark:border-white/10 dark:bg-linear-to-br dark:from-white/10 dark:to-white/5 dark:shadow-black/60"
           style={{ backfaceVisibility: "hidden" }}
         >
           <div className="flex items-center gap-6">
@@ -138,15 +138,14 @@ export default function FlipCard({ avatarSrc }: FlipCardProps) {
               <p className="text-muted-foreground mt-1 text-base">
                 Web Developer．Student
               </p>
-              <div className="mt-1 flex items-center gap-2 text-sm">
-                <span className="text-muted-foreground">Work with</span>
-                <ClaudeIcon className="size-5" />
-                <GeminiIcon className="size-5" />
-              </div>
+              <div className="mt-1 flex items-center gap-2 text-base"></div>
               <div className="mt-2 flex items-center gap-2">
                 <NextJsIcon className="text-card-foreground size-5" />
                 <LaravelIcon className="text-card-foreground size-5" />
                 <VueIcon className="text-card-foreground size-5" />
+                <span className="text-muted-foreground">Work with</span>
+                <ClaudeIcon className="size-5" />
+                <GeminiIcon className="size-5" />
               </div>
             </div>
           </div>
@@ -157,7 +156,7 @@ export default function FlipCard({ avatarSrc }: FlipCardProps) {
 
         {/* Back face */}
         <div
-          className="dark:bg-card absolute inset-0 flex flex-col justify-center gap-4 rounded-xl bg-[#eeeeee] px-8 shadow-lg"
+          className="absolute inset-0 flex flex-col justify-center gap-4 rounded-2xl border border-white/20 bg-linear-to-br from-black/10 to-black/5 p-10 shadow-2xl shadow-black/20 backdrop-blur-sm dark:border-white/10 dark:bg-linear-to-br dark:from-white/10 dark:to-white/5 dark:shadow-black/60"
           style={{
             backfaceVisibility: "hidden",
             transform: "rotateY(180deg)",

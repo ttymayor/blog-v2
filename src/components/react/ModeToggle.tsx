@@ -2,6 +2,7 @@ import * as React from "react";
 import { Moon, Sun } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
+import { motion } from "motion/react";
 
 export function ModeToggle() {
   const [theme, setThemeState] = React.useState<"light" | "dark">("dark");
@@ -54,11 +55,24 @@ export function ModeToggle() {
     <Button
       variant="ghost"
       size="icon-lg"
-      className="cursor-pointer rounded-full hover:bg-black/10 dark:hover:bg-white/10"
+      className="cursor-pointer rounded-full border border-transparent transition-all hover:border-white/20 hover:bg-black/15 hover:shadow-[inset_0_2px_8px_rgba(0,0,0,0.3)] dark:hover:border-white/10 dark:hover:bg-white/15 dark:hover:shadow-[inset_0_2px_8px_rgba(0,0,0,0.4)]"
       onClick={toggleTheme}
     >
-      <Sun className="h-[1.2rem] w-[1.2rem] scale-100 rotate-0 transition-all dark:scale-0 dark:-rotate-90" />
-      <Moon className="absolute h-[1.2rem] w-[1.2rem] scale-0 rotate-90 transition-all dark:scale-100 dark:rotate-0" />
+      <motion.div
+        initial={{ scale: 0.5 }}
+        animate={{ scale: theme === "light" ? 1 : 0 }}
+        transition={{ duration: 0.3, ease: "easeOut" }}
+      >
+        <Sun className="h-[1.2rem] w-[1.2rem]" />
+      </motion.div>
+      <motion.div
+        className="absolute"
+        initial={{ scale: 0.5 }}
+        animate={{ scale: theme === "dark" ? 1 : 0 }}
+        transition={{ duration: 0.3, ease: "easeOut" }}
+      >
+        <Moon className="h-[1.2rem] w-[1.2rem]" />
+      </motion.div>
       <span className="sr-only">Toggle theme</span>
     </Button>
   );
