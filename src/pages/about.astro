@@ -1,7 +1,6 @@
 ---
 import BaseLayout from "@/layouts/BaseLayout.astro";
 
-import MarqueeDemo from "@/components/MarqueeDemo.astro";
 import hackerClubImg from "@/assets/events/hacker_club.png";
 import Calendar from "@lucide/astro/icons/calendar";
 import MapPin from "@lucide/astro/icons/map-pin";
@@ -14,6 +13,8 @@ import thuHackerClub from "@/assets/projects/thu-hacker-club.png";
 import ExternalLink from "@lucide/astro/icons/external-link";
 import { TtyBadge } from "@/components/ui/ttyBadge";
 import FlipCard from "@/components/react/FlipCard";
+import HeroScrollSection from "@/components/react/HeroScrollSection";
+import ProfileAvatar from "@/components/react/ProfileAvatar";
 import avatar from "@/assets/avatar.jpg";
 
 const projects = [
@@ -41,6 +42,39 @@ const projects = [
     repo: "https://github.com/ttymayor/thu-hacker-club",
     image: thuHackerClub,
   },
+];
+
+const CDN = "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons";
+
+const techStacks = [
+  { name: "Astro", icon: "astro/astro-original" },
+  { name: "React", icon: "react/react-original" },
+  { name: "Next.js", icon: "nextjs/nextjs-original" },
+  { name: "PHP", icon: "php/php-original" },
+  { name: "Laravel", icon: "laravel/laravel-original" },
+  { name: "Python", icon: "python/python-original" },
+  { name: "Flask", icon: "flask/flask-original" },
+  { name: "C++", icon: "cplusplus/cplusplus-original" },
+  { name: "TypeScript", icon: "typescript/typescript-original" },
+  { name: "Vue.js", icon: "vuejs/vuejs-original" },
+  { name: "MongoDB", icon: "mongodb/mongodb-original" },
+  { name: "MariaDB", icon: "mariadb/mariadb-original" },
+  { name: "MySQL", icon: "mysql/mysql-original" },
+  { name: "Docker", icon: "docker/docker-original" },
+  { name: "Golang", icon: "go/go-original-wordmark" },
+  { name: "Google Cloud", icon: "googlecloud/googlecloud-original" },
+  { name: "Vercel", icon: "vercel/vercel-original" },
+  { name: "Cloudflare", icon: "cloudflare/cloudflare-original" },
+  { name: "Ubuntu", icon: "ubuntu/ubuntu-original" },
+  { name: "Git", icon: "git/git-original" },
+  { name: "pnpm", icon: "pnpm/pnpm-original" },
+  { name: "VS Code", icon: "vscode/vscode-original" },
+  { name: "Bash", icon: "bash/bash-original" },
+  { name: "GitHub", icon: "github/github-original" },
+  { name: "Tailwind CSS", icon: "tailwindcss/tailwindcss-original" },
+  { name: "Markdown", icon: "markdown/markdown-original" },
+  { name: "Hugo", icon: "hugo/hugo-original" },
+  { name: "Figma", icon: "figma/figma-original" },
 ];
 
 const slides = [
@@ -148,22 +182,51 @@ function formatRoleDate(role: SingleRole | RangeRole) {
   <TtyBadge variant={"outline"}>outline</TtyBadge>
   <TtyBadge variant={"tag"}>tag</TtyBadge>
   <TtyBadge variant={"category"}>category</TtyBadge> -->
-  <section class="min-h-dvh flex flex-col items-center justify-center py-12">
+  <HeroScrollSection client:load>
     <FlipCard client:load avatarSrc={avatar.src} />
+  </HeroScrollSection>
+  <div class="relative z-10 pointer-events-none">
+    <div class="h-48 bg-gradient-to-b from-transparent to-background"></div>
+    <div class="bg-background pointer-events-auto">
+      <div class="max-w-4xl mx-auto px-4 w-full flex flex-col gap-16 pb-16">
+  <section>
+    <ProfileAvatar
+      client:load
+      src={avatar.src}
+      alt="Avatar"
+      name="tantuyu"
+      description="I'm a <span class='font-bold text-foreground/90'>Full Stack Developer</span>. Love to build cool things that can help people. Give me a theme, and I'll work it out."
+    />
   </section>
   <section
-    id="marquee-section"
-    class="min-h-[80dvh] flex flex-col items-center justify-center bg-[#ecefff] dark:bg-[#1e2238]"
+    id="tech-stacks-section"
+    class="flex flex-col overflow-x-clip"
   >
     <h2 class="text-3xl font-bold mb-8">Tech Stacks</h2>
-    <MarqueeDemo />
+    <div class="grid grid-cols-8 sm:grid-cols-10 md:grid-cols-12 lg:grid-cols-14 gap-2 py-8">
+        {
+          techStacks.map((item) => (
+            <div class="tech-stack-item group relative aspect-square p-2 rounded-md transition-all cursor-default flex items-center justify-center hover:border hover:border-white/20 hover:bg-linear-to-br hover:from-black/10 hover:to-black/5 hover:shadow-lg hover:shadow-black/10 hover:backdrop-blur-sm dark:hover:border-white/10 dark:hover:from-white/10 dark:hover:to-white/5 dark:hover:shadow-black/30">
+              <img
+                src={`${CDN}/${item.icon}.svg`}
+                alt={item.name}
+                class="size-8 rounded-none"
+                loading="lazy"
+                decoding="async"
+              />
+              <span class="tooltip absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-2 py-1 text-xs font-medium text-foreground bg-card border border-border rounded shadow-lg opacity-0 pointer-events-none group-hover:opacity-100 transition-opacity whitespace-nowrap z-10 max-w-[200px] text-center">
+                {item.name}
+              </span>
+            </div>
+          ))
+        }
+    </div>
   </section>
   <section
-    class="min-h-[80dvh] flex flex-col items-center justify-center py-12"
+    class="flex flex-col"
   >
     <h2 class="text-3xl font-bold mb-8">Slides</h2>
-    <div class="max-w-5xl mx-auto px-4 w-full">
-      <div class="grid gap-6 md:grid-cols-2">
+    <div class="grid gap-6 md:grid-cols-2">
         {
           slides.map((slide) => (
             <div class="p-6 bg-card border border-border rounded-xl shadow-sm hover:shadow-md transition-shadow">
@@ -203,14 +266,12 @@ function formatRoleDate(role: SingleRole | RangeRole) {
           ))
         }
       </div>
-    </div>
   </section>
   <section
-    class="min-h-[80dvh] flex flex-col items-center justify-center py-12 bg-[#ecefff] dark:bg-[#1e2238]"
+    class="flex flex-col"
   >
     <h2 class="text-3xl font-bold mb-8">Projects</h2>
-    <div class="max-w-5xl mx-auto px-4">
-      <div class="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+    <div class="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
         {
           projects.map((project) => (
             <div class="flex flex-col rounded-xl border border-border bg-card shadow-sm transition-shadow hover:shadow-md">
@@ -285,11 +346,10 @@ function formatRoleDate(role: SingleRole | RangeRole) {
           ))
         }
       </div>
-    </div>
   </section>
   <section
     id="event"
-    class="min-h-[80dvh] flex flex-col items-center justify-center px-4 py-12 max-w-5xl mx-auto"
+    class="flex flex-col py-16"
   >
     <h2 class="text-3xl font-bold mb-8">Events</h2>
     <div class="grid gap-6 md:grid-cols-2">
@@ -336,9 +396,9 @@ function formatRoleDate(role: SingleRole | RangeRole) {
       }
     </div>
   </section>
-  <section id="dev-rule" class="relative dark:bg-[#1e2238] h-[calc(80dvh*4)]">
+  <section id="dev-rule" class="relative h-[calc(80dvh*4)]">
     <div
-      class="sticky top-[10dvh] flex h-[80dvh] items-center justify-center select-none"
+      class="sticky top-[10dvh] flex h-[80dvh] items-center select-none"
     >
       <div class="flex flex-row items-baseline gap-4 md:gap-6">
         <span class="text-xl font-bold md:text-4xl">開發原則</span>
@@ -369,6 +429,9 @@ function formatRoleDate(role: SingleRole | RangeRole) {
       </div>
     </div>
   </section>
+      </div>
+    </div>
+  </div>
 
   <script>
     let cleanup: (() => void) | null = null;
@@ -474,13 +537,5 @@ function formatRoleDate(role: SingleRole | RangeRole) {
 
   .ticket:hover .ticket-right {
     transform: translateX(4px) rotate(3deg);
-  }
-
-  #marquee-section {
-    --background: #ecefff;
-  }
-
-  :global(.dark) #marquee-section {
-    --background: #1e2238;
   }
 </style>

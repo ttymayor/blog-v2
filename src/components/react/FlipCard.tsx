@@ -135,15 +135,14 @@ export default function FlipCard({ avatarSrc }: FlipCardProps) {
               <h2 className="text-card-foreground text-2xl font-bold">
                 tantuyu
               </h2>
-              <p className="text-muted-foreground mt-1 text-base">
+              <p className="text-muted-foreground mt-1 text-sm md:text-base">
                 Web Developer．Student
               </p>
-              <div className="mt-1 flex items-center gap-2 text-base"></div>
-              <div className="mt-2 flex items-center gap-2">
+              <div className="mt-2 flex items-center gap-2 text-sm">
                 <NextJsIcon className="text-card-foreground size-5" />
                 <LaravelIcon className="text-card-foreground size-5" />
                 <VueIcon className="text-card-foreground size-5" />
-                <span className="text-muted-foreground">Work with</span>
+                <span className="text-muted-foreground">with</span>
                 <ClaudeIcon className="size-5" />
                 <GeminiIcon className="size-5" />
               </div>
