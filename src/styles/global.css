@@ -174,7 +174,7 @@
     overflow-wrap: break-word;
     line-height: 1.7;
     text-autospace: normal;
-    /* 
+    /*
     --sb-track-color: transparent;
     --sb-thumb-color: #9f9f9f;
     --sb-size: 8px; */
@@ -184,12 +184,12 @@
     @apply bg-blue-300/50 dark:bg-blue-200/30;
   }
 
-  h1,
-  h2,
-  h3,
-  h4,
-  h5,
-  h6 {
+  .prose h1,
+  .prose h2,
+  .prose h3,
+  .prose h4,
+  .prose h5,
+  .prose h6 {
     margin: 0 0 0.5rem 0;
     line-height: 1.2;
   }

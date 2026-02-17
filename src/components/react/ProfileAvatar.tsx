@@ -1,6 +1,6 @@
 import { motion, useMotionValue } from "motion/react";
 import { useEffect, useRef, useState, useMemo } from "react";
-import { Gamepad2, Tv, Eye, Trophy, Music } from "lucide-react";
+import { Gamepad2, Tv, Eye, Trophy, Music, BadgeCheck } from "lucide-react";
 import {
   useLanyard,
   type DiscordStatusType,
@@ -156,8 +156,8 @@ function SpotifyDialogContent({ spotify }: { spotify: SpotifyData }) {
   const elapsed = total * progress;
 
   return (
-    <div className="flex flex-col gap-4">
-      <div className="flex items-center gap-4">
+    <div className="flex min-w-0 flex-col gap-4">
+      <div className="flex min-w-0 items-center gap-4">
         <img
           src={spotify.album_art_url}
           alt={spotify.song}
@@ -181,7 +181,7 @@ function SpotifyDialogContent({ spotify }: { spotify: SpotifyData }) {
         </span>
         <div className="bg-border h-1.5 flex-1 overflow-hidden rounded-full">
           <div
-            className="h-full rounded-full bg-[#1DB954] transition-[width] duration-1000 ease-linear"
+            className="h-full rounded-full bg-white transition-[width] duration-1000 ease-linear"
             style={{ width: `${progress * 100}%` }}
           />
         </div>
@@ -278,22 +278,24 @@ function ActivityIconButton({
 }) {
   const Icon = icon;
   return (
-    <button
-      type="button"
-      onClick={onClick}
-      className="group/act relative flex cursor-pointer items-center justify-center transition-opacity hover:opacity-70"
-    >
-      {svgIcon ? (
-        svgIcon
-      ) : imageUrl ? (
-        <img src={imageUrl} alt={label} className="size-6 rounded" />
-      ) : (
-        <Icon className="text-muted-foreground size-6" />
-      )}
-      <span className="bg-card text-foreground ring-border pointer-events-none absolute bottom-full left-1/2 mb-2 -translate-x-1/2 rounded px-2 py-1 text-xs font-medium whitespace-nowrap opacity-0 shadow-lg ring-1 transition-opacity group-hover/act:opacity-100">
+    <div className="group relative">
+      <button
+        type="button"
+        onClick={onClick}
+        className="flex cursor-pointer items-center justify-center"
+      >
+        {svgIcon ? (
+          svgIcon
+        ) : imageUrl ? (
+          <img src={imageUrl} alt={label} className="size-6 rounded" />
+        ) : (
+          <Icon className="text-muted-foreground size-6" />
+        )}
+      </button>
+      <span className="bg-card text-foreground ring-border pointer-events-none absolute bottom-full left-1/2 mb-2 -translate-x-1/2 rounded px-2 py-1 text-xs font-medium whitespace-nowrap opacity-0 shadow-lg ring-1 transition-opacity group-hover:opacity-100">
         {label}
       </span>
-    </button>
+    </div>
   );
 }
 
@@ -322,29 +324,11 @@ function CustomStatusBadge({ activity }: { activity: DiscordActivity }) {
 // === Verified Badge ===
 function VerifiedBadge() {
   return (
-    <span className="group relative">
-      <svg
-        className="inline-block size-6 flex-shrink-0 cursor-default md:size-7"
-        viewBox="0 0 24 24"
-        fill="none"
-      >
-        <path
-          d="M12,1 14.3,3.3 17.5,2.5 18.4,5.6 21.5,6.5 20.7,9.7 23,12 20.7,14.3 21.5,17.5 18.4,18.4 17.5,21.5 14.3,20.7 12,23 9.7,20.7 6.5,21.5 5.6,18.4 2.5,17.5 3.3,14.3 1,12 3.3,9.7 2.5,6.5 5.6,5.6 6.5,2.5 9.7,3.3Z"
-          fill="#5865F2"
-        />
-        <path
-          d="M9.5 12.5l2 2 4-4"
-          stroke="white"
-          strokeWidth="2"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          fill="none"
-        />
-      </svg>
-      <span className="border-border bg-card text-foreground pointer-events-none absolute bottom-full left-1/2 z-10 mb-2 -translate-x-1/2 rounded border px-2 py-1 text-xs font-medium whitespace-nowrap opacity-0 shadow-lg transition-opacity group-hover:opacity-100">
-        我的網站，我就是驗證
-      </span>
-    </span>
+    <BadgeCheck
+      fill="#5865F2"
+      strokeWidth={1.25}
+      className="size-6 md:size-7"
+    />
   );
 }
 
@@ -446,10 +430,8 @@ export default function ProfileAvatar({
         {/* Name + Activity Icons + Description */}
         <div className="min-w-0 flex-1">
           <div className="mb-4 flex flex-wrap items-center gap-2">
-            <h1 className="flex flex-shrink-0 items-center gap-2 text-3xl font-bold md:text-4xl">
-              {name}
-              <VerifiedBadge />
-            </h1>
+            <h1 className="mb-0 text-3xl font-bold md:text-4xl">{name}</h1>
+            <VerifiedBadge />
             {(hasSpotify || displayActivities.length > 0) && (
               <div className="flex items-center gap-1.5">
                 {hasSpotify && (
