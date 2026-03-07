@@ -18,7 +18,7 @@ const { post } = Astro.props;
   >
     <CardHeader client:load>
       <CardTitle client:load>
-        <div class="flex flex-row gap-2">
+        <div class="flex flex-row gap-2 items-center">
           {
             post.category && (
               <TtyBadge variant={"category"}>{post.category}</TtyBadge>

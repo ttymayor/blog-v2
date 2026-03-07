@@ -55,7 +55,7 @@ export function ModeToggle() {
     <Button
       variant="ghost"
       size="icon-lg"
-      className="cursor-pointer rounded-full border border-transparent transition-all hover:border-white/20 hover:bg-black/15 hover:shadow-[inset_0_2px_8px_rgba(0,0,0,0.3)] dark:hover:border-white/10 dark:hover:bg-white/15 dark:hover:shadow-[inset_0_2px_8px_rgba(0,0,0,0.4)]"
+      className="cursor-pointer rounded-full transition-all hover:bg-black/15 dark:hover:bg-white/15"
       onClick={toggleTheme}
     >
       <motion.div

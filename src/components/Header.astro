@@ -3,50 +3,50 @@ import { Image } from "astro:assets";
 import AvatarImage from "@/assets/avatar.jpg";
 import { SITE_TITLE } from "@/consts";
 import { ModeToggle } from "@/components/react/ModeToggle";
-import { PenTool, User } from "@lucide/astro";
+import { PenTool, User, Home } from "@lucide/astro";
 
 const pathname = Astro.url.pathname.replace(import.meta.env.BASE_URL, "");
 
 const navItems = [
+  { href: "/", label: "首頁", Icon: Home, isHome: true },
   { href: "/blog", label: "文章", Icon: PenTool },
   { href: "/about", label: "關於", Icon: User },
 ];
 ---
 
 <script>
-import { animate } from "motion/mini"
+  import { animate } from "motion/mini";
 
-animate("header", {
-  opacity: [0.5, 1],
-  filter: ["blur(10px)", "blur(0px)"],
-}, {
-  delay: 0.3,
-}).finished.then(() => {
-  // Clear inline styles after animation to prevent interference with backdrop-blur
-  const header = document.querySelector("header");
-  if (header) {
-    header.style.removeProperty("filter");
-    header.style.removeProperty("opacity");
-  }
-});
+  animate(
+    "header",
+    {
+      opacity: [0.5, 1],
+      filter: ["blur(10px)", "blur(0px)"],
+    },
+    {
+      delay: 0.3,
+    },
+  ).finished.then(() => {
+    // Clear inline styles after animation to prevent interference with backdrop-blur
+    const header = document.querySelector("header");
+    if (header) {
+      header.style.removeProperty("filter");
+      header.style.removeProperty("opacity");
+    }
+  });
 </script>
 
 <header
-  class="pointer-events-auto fixed bottom-4 left-0 z-50 flex w-full flex-row items-center justify-center gap-2 md:bottom-auto md:top-0"
+  class="pointer-events-auto fixed bottom-0 left-0 z-50 flex w-full flex-row items-center justify-center md:bottom-auto md:top-0"
 >
   <nav
     id="nav-container"
-    class="relative md:mx-auto flex w-fit md:w-[95%] max-w-5xl items-center justify-between gap-2 md:gap-4 rounded-full border border-white/20 bg-linear-to-br from-black/10 to-black/5 p-2 md:p-4 shadow-2xl shadow-black/20 backdrop-blur-sm transition-all duration-500 ease-in-out md:mt-4 dark:border-white/10 dark:bg-linear-to-br dark:from-white/10 dark:to-white/5 dark:shadow-black/60"
+    class="relative flex w-full items-center justify-around border-t border-white/20 bg-linear-to-br from-black/10 to-black/5 p-2 shadow-2xl backdrop-blur-md transition-all duration-500 ease-in-out dark:border-white/10 dark:bg-linear-to-br dark:from-white/10 dark:to-white/5 dark:shadow-black/60 md:mx-auto md:mt-4 md:w-[95%] md:max-w-5xl md:justify-between md:rounded-full md:border md:p-4"
   >
-    <span
-      id="nav-indicator"
-      class="pointer-events-none absolute rounded-full bg-black/15 shadow-[inset_0_2px_8px_rgba(0,0,0,0.3)] transition-all duration-300 ease-in-out dark:bg-white/15 dark:shadow-[inset_0_2px_8px_rgba(0,0,0,0.4)]"
-    ></span>
+    <!-- Desktop Logo (Hidden on Mobile) -->
     <a
       href="/"
-      data-nav-item
-      data-active={pathname === "" || pathname === "/" ? "true" : undefined}
-      class="relative z-10 flex shrink-0 items-center gap-3 transition-opacity"
+      class="hidden md:flex relative z-10 shrink-0 items-center gap-3 transition-opacity"
     >
       <Image
         inferSize
@@ -54,134 +54,45 @@ animate("header", {
         alt="Avatar"
         class="h-10 w-10 rounded-full object-cover"
       />
-      <h2 class="m-0 hidden text-[1em] font-bold md:block">
+      <h2 class="m-0 text-[1em] font-bold">
         {SITE_TITLE}
       </h2>
     </a>
 
-    <div class="flex flex-row gap-2 md:gap-4">
+    <div
+      class="flex flex-1 flex-row justify-around md:flex-none md:justify-end md:gap-4 items-center"
+    >
       {
-        navItems.map(({ href, label, Icon }) => {
-          const isActive = pathname.startsWith(href.replace("/", ""));
+        navItems.map(({ href, label, Icon, isHome }) => {
+          const isActive = isHome
+            ? pathname === "" || pathname === "/"
+            : pathname.startsWith(href.replace("/", ""));
+
           return (
             <a
               href={href}
               data-nav-item
               data-active={isActive ? "true" : undefined}
               class:list={[
-                "relative z-10 inline-flex whitespace-nowrap flex-col md:flex-row w-10 h-10 md:w-fit items-center justify-center gap-1 md:gap-2 rounded-full px-0 md:py-2 md:px-3 text-[10px] md:text-sm no-underline transition-all",
+                "relative z-10 inline-flex whitespace-nowrap flex-col md:flex-row items-center justify-center gap-1 md:gap-2 rounded-full no-underline transition-all",
+                "w-16 h-12 md:w-fit md:h-fit md:py-2 md:px-3",
+                isHome ? "md:hidden" : "",
                 isActive
                   ? "text-[#687afc] md:text-foreground dark:text-[#b8c1ec] md:dark:text-foreground"
-                  : "",
+                  : "text-foreground/60 md:text-foreground/80 hover:text-foreground",
               ]}
             >
-              <Icon class="size-4 md:size-5" />
+              <Icon class="size-5 md:size-5" />
               <span class="text-[10px] md:text-sm">{label}</span>
             </a>
           );
         })
       }
-      <div class="hidden md:block">
+      <div
+        class="flex flex-col items-center justify-center w-16 h-12 md:w-fit md:h-fit"
+      >
         <ModeToggle client:load />
       </div>
     </div>
   </nav>
-  <div
-    class="rounded-full border border-white/20 bg-linear-to-br from-black/10 to-black/5 p-2 shadow-2xl shadow-black/20 backdrop-blur-sm md:hidden dark:border-white/10 dark:bg-linear-to-br dark:from-white/10 dark:to-white/5 dark:shadow-black/60"
-  >
-    <ModeToggle client:load />
-  </div>
 </header>
-
-<script>
-  let currentActive: HTMLAnchorElement | null = null;
-  let cleanups: (() => void)[] = [];
-
-  function initNavIndicator() {
-    // Clean up previous listeners
-    cleanups.forEach((fn) => fn());
-    cleanups = [];
-
-    const container = document.getElementById("nav-container");
-    const indicator = document.getElementById("nav-indicator");
-    if (!container || !indicator) return;
-
-    const isDesktop = window.matchMedia("(min-width: 768px)").matches;
-    const allItems =
-      container.querySelectorAll<HTMLAnchorElement>("[data-nav-item]");
-    // On desktop, exclude the home link from the indicator system
-    const items = Array.from(allItems).filter(
-      (item) => !isDesktop || item.getAttribute("href") !== "/",
-    );
-
-    // Update data-active based on current pathname
-    const pathname = window.location.pathname.replace(/\/$/, "");
-    allItems.forEach((item) => {
-      const href = item.getAttribute("href") || "";
-      const isActive =
-        href === "/"
-          ? pathname === "" || pathname === "/"
-          : pathname.startsWith(href);
-      if (isActive) {
-        item.setAttribute("data-active", "true");
-      } else {
-        item.removeAttribute("data-active");
-      }
-    });
-
-    // Only pick active from filtered items
-    currentActive =
-      items.find((item) => item.hasAttribute("data-active")) || null;
-
-    const PAD = 4; // expand indicator by 4px on each side
-    const BORDER_WIDTH = 1; // account for container border
-
-    function moveTo(el: HTMLElement) {
-      const containerRect = container!.getBoundingClientRect();
-      const elRect = el.getBoundingClientRect();
-      indicator!.style.left = `${elRect.left - containerRect.left - PAD - BORDER_WIDTH}px`;
-      indicator!.style.top = `${elRect.top - containerRect.top - PAD - BORDER_WIDTH}px`;
-      indicator!.style.width = `${elRect.width + PAD * 2}px`;
-      indicator!.style.height = `${elRect.height + PAD * 2}px`;
-      indicator!.style.opacity = "1";
-    }
-
-    function moveToActive() {
-      if (currentActive) {
-        moveTo(currentActive);
-      } else {
-        indicator!.style.opacity = "0";
-      }
-    }
-
-    // Set initial position without transition
-    indicator.style.transition = "none";
-    moveToActive();
-    indicator.offsetHeight;
-    indicator.style.transition = "";
-
-    items.forEach((item) => {
-      const onEnter = () => moveTo(item);
-      const onClick = () => {
-        // Update active immediately on click
-        items.forEach((i) => i.removeAttribute("data-active"));
-        item.setAttribute("data-active", "true");
-        currentActive = item;
-        moveTo(item);
-      };
-      item.addEventListener("mouseenter", onEnter);
-      item.addEventListener("click", onClick);
-      cleanups.push(() => {
-        item.removeEventListener("mouseenter", onEnter);
-        item.removeEventListener("click", onClick);
-      });
-    });
-
-    const onLeave = () => moveToActive();
-    container.addEventListener("mouseleave", onLeave);
-    cleanups.push(() => container.removeEventListener("mouseleave", onLeave));
-  }
-
-  initNavIndicator();
-  document.addEventListener("astro:page-load", initNavIndicator);
-</script>
