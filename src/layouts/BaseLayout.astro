@@ -8,6 +8,7 @@ import { SITE_DESCRIPTION, SITE_TITLE } from "@/consts";
 import "@/styles/global.css";
 import "sonner/dist/styles.css";
 import { Toaster } from "@/components/ui/sonner";
+import { Font } from "astro:assets";
 ---
 
 <html lang="en" class="scroll-smooth">
@@ -53,6 +54,9 @@ import { Toaster } from "@/components/ui/sonner";
     </script>
     <ClientRouter />
     <BaseHead title={SITE_TITLE} description={SITE_DESCRIPTION} />
+    <Font cssVariable="--font-geist" preload />
+    <Font cssVariable="--font-geist-mono" preload />
+    <Font cssVariable="--font-geist-pixel-grid" preload />
   </head>
   <body>
     <Header transition:persist transition:name="header" />

@@ -96,6 +96,8 @@
 }
 
 @theme inline {
+  --font-sans: var(--font-geist);
+  --font-mono: var(--font-geist-mono);
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-card: var(--card);
@@ -137,29 +139,6 @@
 }
 
 @layer base {
-  @font-face {
-    font-family: "Geist";
-    src: url("/fonts/Geist/Geist[wght].woff2") format("woff2-variations");
-    font-weight: 100 900;
-    font-style: normal;
-    font-display: swap;
-  }
-  @font-face {
-    font-family: "Geist Mono";
-    src: url("/fonts/GeistMono/GeistMono[wght].woff2")
-      format("woff2-variations");
-    font-weight: 100 900;
-    font-style: normal;
-    font-display: swap;
-  }
-  @font-face {
-    font-family: "GeistPixel Grid";
-    src: url("/fonts/GeistPixel/GeistPixel-Grid.woff2") format("woff2");
-    font-weight: normal;
-    font-style: normal;
-    font-display: swap;
-  }
-
   * {
     @apply border-border outline-ring/50;
   }

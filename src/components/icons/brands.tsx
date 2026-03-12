@@ -132,8 +132,8 @@ export function GeminiIcon({ className }: { className?: string }) {
           y1="15.5"
           y2="12"
         >
-          <stop stop-color="#08B962" />
-          <stop offset="1" stop-color="#08B962" stop-opacity="0" />
+          <stop stopColor="#08B962" />
+          <stop offset="1" stopColor="#08B962" stopOpacity="0" />
         </linearGradient>
         <linearGradient
           gradientUnits="userSpaceOnUse"
@@ -143,8 +143,8 @@ export function GeminiIcon({ className }: { className?: string }) {
           y1="5.5"
           y2="11"
         >
-          <stop stop-color="#F94543" />
-          <stop offset="1" stop-color="#F94543" stop-opacity="0" />
+          <stop stopColor="#F94543" />
+          <stop offset="1" stopColor="#F94543" stopOpacity="0" />
         </linearGradient>
         <linearGradient
           gradientUnits="userSpaceOnUse"
@@ -154,8 +154,8 @@ export function GeminiIcon({ className }: { className?: string }) {
           y1="13.5"
           y2="12"
         >
-          <stop stop-color="#FABC12" />
-          <stop offset=".46" stop-color="#FABC12" stop-opacity="0" />
+          <stop stopColor="#FABC12" />
+          <stop offset=".46" stopColor="#FABC12" stopOpacity="0" />
         </linearGradient>
       </defs>
     </svg>

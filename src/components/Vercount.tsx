@@ -30,8 +30,7 @@ function SpringCounter({ value }: { value: number }) {
   return (
     <span
       ref={ref}
-      className={`inline-block cursor-default tabular-nums transition-[filter] duration-700 ${isInView ? "blur-none" : "blur"}`}
-      style={{ fontFamily: '"Geist Mono", monospace' }}
+      className={`inline-block cursor-default font-mono tabular-nums transition-[filter] duration-700 ${isInView ? "blur-none" : "blur"}`}
     >
       0
     </span>
