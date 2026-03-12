@@ -2,15 +2,52 @@
 title: '快還要更快的 Astro 6.0'
 description: ''
 pubDate: '2026-03-11'
-tags: ['astro']
-category: ''
-draft: true
+tags: ['Astro']
+category: 'Astro'
 ---
 
-## Before 6.0
+## After 6.0
 
-### Dev 和 Production 跑的是不同東西
+### Dev 和 Production 跑是終於是同個東西
 
-在開發環境上，預設使用的是 Node.js，但如果要 build 並運行在其他平台上就容易出現不同的實做方法，導致容易出發 Bug。
+以往在開發環境上，預設使用的是 Node.js，但如果要 build 並運行在其他平台上就容易出現不同的實做方法，導致容易觸發 Bug。
 
-在更新之後
+在更新之後，本地開發將會與部屬後的生成內容幾乎一致。
+
+### Live Content Collections
+
+即時內容不再重新建立（rebuild），而是 CMS 或 API 一更新，內容會在發出請求時（request-time）即時抓取最新資料，完全無需重新建置與佈署。
+
+### Font Provider
+
+在 6.0 終於將自訂字體的功能統一實作一套屬於自己的做法，而非上個版本有好幾種官方提供的建議作法。
+
+### Content Security Policy
+
+CSP 在 6.0 中，將配置簡化並強化實作，會自動為腳本與樣式計算並套用 Hash（雜湊值），讓網站更安全，大幅減少被 XSS 攻擊的風險。
+
+### 實驗性功能
+
+#### Rust Compiler
+
+Welcome to Rust. 沒錯 6.0 的 Astro 預設使用的是 Go-based Compiler，而官方認為 Rust 在編譯上會更快因此有了 Rust-based Compiler 的實驗性功能 `@astrojs/compiler-rs`。
+
+你可以透過 `npm install @astrojs/compiler-rs` 來安裝並使用這個實驗性功能。
+
+```mjs
+import { defineConfig } from 'astro/config';
+
+export default defineConfig({
+  experimental: {
+    rustCompiler: true,
+  },
+});
+```
+
+#### 新的渲染策略：佇列
+
+據官方所說，Queued Rendering 較以往使用的遞迴渲染將提供**最高達兩倍**的渲染提升，並預計在 7.0 版本中會成為預設的渲染策略。
+
+#### 路由快取
+
+新增了 SSR 快取實作，並且僅需使用 Astro 統一的 API（如 Astro.cache）即可控制快取，並透過配置 Cache Provider（例如內建的記憶體快取）來決定儲存位置，無須再為不同部署平台撰寫程式碼。
