@@ -1,0 +1,68 @@
+---
+title: 'Hashgate'
+description: ''
+pubDate: '2026-04-01'
+tags: ['picoCTF', 'Web']
+category: 'WriteUp'
+---
+
+分類：Web  
+難度：Medium
+
+### 工具
+
+1. [Burp Suite](https://portswigger.net/burp)
+2. [Hash Identifier](https://hashes.com/en/tools/hash_identifier)
+
+### 過程
+
+1. 開啟實例後就就是一個簡單的 Login 頁面
+2. F12 檢查一下有沒有資訊，發現了一組帳密就在該頁的資源中被註解了。
+
+```html
+<!-- Email: guest@picoctf.org Password: guest -->
+```
+
+3. 嘗試提交登入後，就發現被導向到
+
+```
+http://crystal-peak.picoctf.net:65261/profile/user/e93028bdc1aacdfb3687181f2031765d
+```
+
+頁面提示
+
+```
+Access level: Guest (ID: 3000). Insufficient privileges to view classified data. Only top-tier users can access the flag.
+```
+
+4. 可以發現後面 User 後面有一串 Hash 值，嘗試用工具 [Hash Identifier](https://hashes.com/en/tools/hash_identifier) 偵測一下是什麼雜湊。
+
+```
+e93028bdc1aacdfb3687181f2031765d
+```
+
+5. 得到是 MD5，這邊可以嘗試逆向雜湊後確實是 3000，並且題目提示有 20 人在公司內部，所以通靈一下猜測 3000~3020 之間
+6. 嘗試將 3000~3020 拿去雜湊寫到 hashes.txt。
+
+```bash
+for i in $(seq 3000 3030); do echo -n $i | md5sum | awk '{print $1}'; done > hashes.txt
+```
+
+7. 開啟 Burp Suite 的 Intruder，將 hashes.txt 複製內容後，並貼上於 Payload，對 User 進行爆破。
+8. 結果發現有一項回應是 200，並看看 response，就發現了 flag。
+
+### 詳細說明怎麼使用 Burp Suite Intruder 進行爆破
+
+1. 開啟 Proxy 和 Browser
+2. 嘗試在瀏覽器請求 http://crystal-peak.picoctf.net:65261/profile/user/e93028bdc1aacdfb3687181f2031765d
+3. 這時 Burp Suite 攔截到了請求，點擊右鍵選擇 Send to Intruder 或者 Ctrl + I
+4. 到 Burp Suite 的 Intruder 頁面
+5. 預設使用 Sniper attack
+6. 注意到請求內容的第一行有  
+    `GET /profile/user/e93028bdc1aacdfb3687181f2031765d HTTP/1.1`
+7. 嘗試將 `e93028bdc1aacdfb3687181f2031765d` 頭尾加上 `§` 變成 `§e93028bdc1aacdfb3687181f2031765d§`
+8. 現在往右側看 Payload 預設選擇 Simple list
+9. 先複製經過 MD5 雜湊後的 3000~3020
+10. 點擊 Paste
+11. 按下最顯眼的 Start attack
+12. 稍等片刻後，會發現有一項比較特別的回應，點擊進去看看 response，就發現了 flag。

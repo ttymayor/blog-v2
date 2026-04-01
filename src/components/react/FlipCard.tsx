@@ -8,6 +8,7 @@ import {
   GitHubIcon,
   GeminiIcon,
 } from "@/components/icons/brands";
+import { Separator } from "../ui/separator";
 
 interface FlipCardProps {
   avatarSrc: string;
@@ -130,7 +131,7 @@ export default function FlipCard({ avatarSrc }: FlipCardProps) {
               alt="avatar"
               className="size-20 shrink-0 rounded-full border object-cover"
             />
-            <div className="h-16 w-px shrink-0 bg-[#6a7282]" />
+            <Separator orientation="vertical" />
             <div className="min-w-0">
               <h2 className="text-card-foreground text-2xl font-bold">
                 tantuyu

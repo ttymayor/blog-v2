@@ -1,0 +1,49 @@
+---
+title: 'No FA'
+description: ''
+pubDate: '2026-04-01'
+tags: ['picoCTF', 'Web']
+category: 'WriteUp'
+---
+
+分類：Web  
+難度：Medium
+
+### 工具
+
+1. [SHA256 Decrypt](https://md5decrypt.net/en/Sha256/)
+2. [Flask Session Decrypt](https://www.kirsle.net/wizards/flask-session.cgi)
+
+### 過程
+
+1. 首先看看題目給的資源給了一個目標網站與源碼和洩漏的資料。
+2. 從洩漏的資料可以看到有 admin 的用戶且 2FA 是開啟的。
+3. 接著看看源碼，發現是以 Flask 內建的 Session 生成。
+
+```py
+# Generate OTP
+otp = str(random.randint(1000, 9999))
+session['otp_secret'] = otp
+session['otp_timestamp'] = time.time()
+session['username'] = username
+session['logged'] = 'false'
+```
+
+4. 接著借助網路資源可以找到 Flask Session Decrypt 的工具，並使用 Burp Suite 攔截以 admin 登入後的封包可以看到 Session 存在 Cookie，並拿去 Decrypt。
+
+```
+.eJwty0kKgCAUANC7_LWEQw55mZD8ieCE2iq6ey3aPng3pBoCerBwujQQCNTZ9oFHx_nhxoz5bcaMY7rcwDKtJZWUC7koJQVbOYFrYC8u45ecz7HA8wJGaxxb.ac0d-w.4LZboQ9z2H3t8-nXhzOTPxtgO1I
+```
+
+就會拿到
+
+```json
+{
+    "logged": "false",
+    "otp_secret": "9188",
+    "otp_timestamp": 1775050235.6653142,
+    "username": "admin"
+}
+```
+
+otp_secret 就是 4 碼的 OTP 填入後就會導向到 Home，Flag 就顯示出來了。

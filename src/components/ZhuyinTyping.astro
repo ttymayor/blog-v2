@@ -67,6 +67,8 @@ const { text, speed = 180, zhuyinSpeed = 90, class: className } = Astro.props;
 </style>
 
 <script>
+  import { prepareWithSegments } from "@chenglou/pretext";
+
   const zhuyinMap: Record<string, string> = {
     還: "ㄏㄞˊ",
     沒: "ㄇㄟˊ",
@@ -97,11 +99,15 @@ const { text, speed = 180, zhuyinSpeed = 90, class: className } = Astro.props;
     "🍵": "🍵",
     "🌙": "🌙",
     "😴": "😴",
-    " ": " ", 
+    " ": " ",
     "，": "，",
   };
 
-  const segmenter = new Intl.Segmenter("zh", { granularity: "grapheme" });
+  const FONT = '16px "Geist", "Noto Sans TC", sans-serif';
+
+  function toGraphemes(text: string): string[] {
+    return prepareWithSegments(text, FONT).segments;
+  }
 
   class ZhuyinTyper {
     private element: HTMLElement;
@@ -124,10 +130,6 @@ const { text, speed = 180, zhuyinSpeed = 90, class: className } = Astro.props;
       return base + Math.random() * base * 0.8 - base * 0.4;
     }
 
-    private toGraphemes(text: string): string[] {
-      return [...segmenter.segment(text)].map((s) => s.segment);
-    }
-
     async type() {
       this.stop();
       this.cancelled = false;
@@ -137,7 +139,7 @@ const { text, speed = 180, zhuyinSpeed = 90, class: className } = Astro.props;
       // Initial 1s pause before typing starts
       await this.sleep(1000);
 
-      const chars = this.toGraphemes(this.text);
+      const chars = toGraphemes(this.text);
 
       for (const char of chars) {
         if (this.cancelled) return;
@@ -145,7 +147,7 @@ const { text, speed = 180, zhuyinSpeed = 90, class: className } = Astro.props;
         const zhuyin = zhuyinMap[char];
 
         if (zhuyin && zhuyin !== char) {
-          const zhuyinChars = this.toGraphemes(zhuyin);
+          const zhuyinChars = toGraphemes(zhuyin);
           for (let j = 0; j < zhuyinChars.length; j++) {
             if (this.cancelled) return;
             this.textElement.textContent = result + zhuyinChars.slice(0, j + 1).join("");
