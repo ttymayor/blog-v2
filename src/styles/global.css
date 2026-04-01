@@ -223,8 +223,7 @@
     @apply my-0 mt-1;
   }
   .prose pre {
-    @apply my-4 rounded-lg p-4 md:p-6;
-    font-family: "Geist Mono", monospace;
+    @apply my-4 rounded-lg p-4;
   }
   .prose pre > code {
     all: unset;
