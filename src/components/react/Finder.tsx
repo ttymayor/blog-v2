@@ -429,7 +429,7 @@ export function Finder() {
                           className={`group flex flex-col items-center gap-2 rounded-lg p-3 transition-colors ${
                             selectedIndex === i
                               ? "bg-blue-500/20"
-                              : "hover:bg-white/[0.05]"
+                              : "hover:bg-white/5"
                           }`}
                         >
                           <img
