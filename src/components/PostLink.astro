@@ -10,10 +10,10 @@ interface Props {
 const { post } = Astro.props;
 ---
 
-<a href={`/blog/${post.id}/`}>
+<a href={`/blog/${post.id}/`} class="group block h-full">
   <Card
     client:load
-    className="hover:border-accent h-full shadow-xl transition-all hover:-translate-x-[4px] hover:-translate-y-[4px] hover:shadow-2xl"
+    className="group-hover:border-accent h-full shadow-xl transition-all group-hover:-translate-x-[4px] group-hover:-translate-y-[4px] group-hover:shadow-2xl"
   >
     <!-- <CardHeader client:load> -->
     <CardTitle className="px-6" client:load>
