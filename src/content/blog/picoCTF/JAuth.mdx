@@ -1,0 +1,29 @@
+---
+title: 'JAuth'
+description: ''
+pubDate: '2026-04-04'
+tags: ['picoCTF', 'Web']
+category: 'WriteUp'
+---
+
+- 分類：Web
+- 難度：Medium
+- 題目連結：https://play.picoctf.org/practice/challenge/236
+
+### 工具
+
+- [JWT](https://jwt.io/)
+
+### 過程
+
+> 這是一題關於 JWT 的 CTF 題目。若不清楚 JWT，簡單來說 JWT 是一個用來傳遞身分驗證的資訊，通常會存於 Cookie 中，若要提取或修改可以按下 F12 或是 Burp Suite 等工具。
+
+該題教我們 JWT 若在伺服器端上沒被做加密處理以及判斷，使用者可以任意修改 JWT 甚至是將加密演算法改成 None 來繞過驗證。
+
+1. 開啟 F12 找到 Cookie 中的 JWT
+2. 將 JWT 複製到 [JWT](https://jwt.io/) Decode 再 Encode
+3. 將 `role` 欄位得 `user` 改成 `admin`
+4. 將 `alg` 改成 `none`
+5. 將新的 JWT 貼到 Cookie 中，重新整理後 Flag 就出來了
+
+同時可以看到 JWT 結構就是 `Header.Payload.Signature` 如果沒有了 Signature 也就是 `alg` 為 `none` 的話，就沒有辦法做加密，若不清楚可以參考 [JWT](https://jwt.io/)。
