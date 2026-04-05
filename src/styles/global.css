@@ -207,7 +207,7 @@
   }
   .prose ul,
   .prose ol {
-    @apply my-4 ml-6 list-outside marker:text-gray-500;
+    @apply my-4 ml-6 list-outside marker:text-gray-500/75 marker:transition-colors marker:duration-200;
   }
   .prose ul {
     @apply list-disc;
@@ -217,6 +217,12 @@
   }
   .prose li {
     @apply pb-1;
+  }
+  .prose li:hover::marker {
+    color: #745525;
+  }
+  .dark .prose li:hover::marker {
+    color: #d0ae7d;
   }
   .prose li ul,
   .prose li ol {
