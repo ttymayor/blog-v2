@@ -1,0 +1,292 @@
+---
+title: 'Git 怎麼運作'
+description: ''
+pubDate: '2026-04-09T16:13:03.420Z'
+tags: []
+category: 'Git'
+---
+
+## 前言
+
+Git 在我開發中已經是不可或缺的一個工具，從最初的不理解到不能分離也有段時間了。但是對於 Git 本身背後的運行原理，就無從得知了，所以想知道 Git 背後到底發生了什麼？
+
+> 你是否有過在使用 Git 時，不小心把一些「不重要開發過程產生的檔案 node_moudles」或是不小心把「Scrapy 爬蟲的執行結果」給暫存呢？或是使用 GUI 點了 Stage All 等等操作。
+> 總而言之，你是否把一堆垃圾不小心 `git add .` 過？
+
+此時，你的 Git 在大叫，你的電腦也要瘋掉。有想過為什麼嗎？所以這讓我好奇 Git 到底發生什麼事情。
+
+## Git Intro
+
+> Hey Claude! 一句話介紹 Git 工具是什麼？  
+> Git 是一個分散式版本控制系統，讓開發者能追蹤程式碼的變更歷史、協作開發，並在需要時回復到任意版本。
+
+以使用者（也就是開發者們）來說，Git 運作分成四個主要區域，`工作目錄 Working Directory`、`暫存區 Staging Area`、`本地倉庫 Local Repository` 以及 `遠端倉庫 Remote Repository`
+
+- 工作目錄 Working Directory：即是我們平常新增修改刪除檔案的地方，我們通常用 VS Code 或其他編輯器來開發。
+- 暫存區 Staging Area：使用 `git add` 會把當前我們選定的檔案變更放進該區域，我們可以控制哪些檔案變更需要一並提交。
+- 本地倉庫 Local Repository：使用完 `git add` 後，可執行 `git commit`，此時就會把暫存區 Staging Area 的快照正式記錄成一比提交（commit），保存在你電腦上的本地倉庫裡
+- 遠端倉庫 Remote Repository：執行 `git push` 可將本地提交上傳到 GitHub 等遠端平台，讓其他開發人員一起協作。
+
+以上是一個紀錄並上傳同步的一個簡易流程。並同時介紹四個主要區域
+
+## How Git Works
+
+但今天不是要來了解 Git 怎麼使用，而是 Git 怎麼發生！
+
+首先 Git 核心以 SHA-1 雜湊值命名的物件資料庫（`.git/objects`）。它將檔案內容（Blob）與目錄結構（Tree）分開儲存，並透過 Commit 物件記錄版本快照。
+
+先不管 SHA-1 雜湊是什麼，簡單來說，就是將任意長度的資料轉換為 160 位元（40 個十六進位字元）很像亂碼的雜湊函數。大概樣子就是：`6bf83de540f7d12cc3b683a83d69432e03d84509`
+
+這裡有三個更重要的名詞：**Blob**、**Tree** 以及 **Commit**
+
+- Blob（Binary Large Object）：儲存檔案內容，不包含檔名
+- Tree：紀錄目錄結構，包含檔名、檔案模式及對應的 Blob 或其他 Tree 的 SHA-1 雜湊值
+- Commit：紀錄特定時間點的 Tree 根目錄、提交者、時間與父提交（Parent Commit），構成版本歷史
+
+另外還有 Tag 但暫時不提它。
+
+### Blob 檔案內容
+
+這裡有個特色，當使用者使用 Git 版控時，暫存某檔案，就會產生 Blob
+
+```bash
+echo "Hello Git World!" > hello.txt && git add hello.txt
+```
+
+我們來檢查 Blob 是否存在
+
+```bash
+find .git/objects -type f
+```
+
+```
+.git/objects/ea/701271a58054773256b0ff0dbf2fde425f19d6
+```
+
+> 該目錄 `.git/objects/ea/701271a58054773256b0ff0dbf2fde425f19d6` 的規則取 SHA-1 雜湊值的前 2 個字元作為子資料夾名稱，剩下的 38 個字元作為檔案名稱。  
+> 所以原本的 `ea701271a58054773256b0ff0dbf2fde425f19d6` 會被 Git 設計成 `ea` 是資料夾，裡面放剩下 38 個字元 `701271a58054773256b0ff0dbf2fde425f19d6` 當作檔案。
+
+總而言之我們發現了一個物件存在。我們來看看他是不是我們所說的 Blob。使用 `git cat-file -t`（`-t` 為 type）
+
+```bash
+git cat-file -t ea701271a58054773256b0ff0dbf2fde425f19d6
+```
+
+```
+blob
+```
+
+沒錯！就是 Blob，它就是「檔案內容」，那我要怎麼知道這個 Blob 就是剛剛的 `Hello Git World!`。使用 `git cat-file -p`（`-p` 為 pretty-print）
+
+```bash
+git cat-file -p ea701271a58054773256b0ff0dbf2fde425f19d6
+```
+```
+Hello Git World!
+```
+
+### Commit 提交物件
+
+剛剛使用了 `git add hello.txt` 暫存了檔案，我們嘗試 Commit 提交 
+
+```bash
+git commit -m "feat: add hello.txt file"
+```
+
+```
+[main (root-commit) 2eb27da] feat: add hello.txt file
+ 1 file changed, 1 insertion(+)
+ create mode 100644 hello.txt`
+```
+
+可以看到成功提交了。我們再來看看 `.git/objects/` 有沒有酷東西。
+
+```bash
+find .git/objects -type f
+```
+
+```
+.git/objects/ea/701271a58054773256b0ff0dbf2fde425f19d6
+.git/objects/2e/b27dad5e006d6ec89843016df7c96acae0aade
+.git/objects/e4/97723a6beb377202329333c7fa5b074f298fb7
+```
+
+發現多了兩個物件呢。先來看看 `2eb27dad5e006d6ec89843016df7c96acae0aade`
+
+```bash
+git cat-file -t 2eb27dad5e006d6ec89843016df7c96acae0aade
+```
+
+```
+commit
+```
+
+發現是 Commit Object 嘗試看看內容
+
+```bash
+git cat-file -p 2eb27dad5e006d6ec89843016df7c96acae0aade
+```
+
+```
+tree e497723a6beb377202329333c7fa5b074f298fb7
+author tantuyu <hi@ttymayor.com> 1775754653 +0800
+committer tantuyu <hi@ttymayor.com> 1775754653 +0800
+
+feat: add hello.txt file
+```
+
+有趣的東西出現了
+
+1. `tree e497723a6beb377202329333c7fa5b074f298fb7` 等等介紹 Tree 物件
+2. `author` `committer` 作者與提交者和時間戳與時區資訊
+3. `feat: add hello.txt file` 就是剛剛的 commit message！
+
+Commit 就這樣結束了？還沒！如果我在這裡更動 `hello.txt` 暫存並再提交一次呢？
+
+```bash
+echo "I am tantuyu" >> hello.txt && git add hello.txt && git commit -m "feat: add introduce tantuyu"
+```
+
+```
+[main 824e801] feat: add introduce tantuyu
+ 1 file changed, 1 insertion(+)
+```
+
+接著這裡有 `[main 824e801]` 824e801 就是該 Commit 的開頭前 7 位，所以我們也可以藉由這前 7 位看看物件長怎樣
+
+```bash
+git cat-file -p 824e801
+```
+
+```
+tree 2fdbbbb5ae0ee6f96a15dbc4a1e7af70c30055ed
+parent 2eb27dad5e006d6ec89843016df7c96acae0aade
+author ttymayor <lionhuang914903@gmail.com> 1775755814 +0800
+committer ttymayor <lionhuang914903@gmail.com> 1775755814 +0800
+
+feat: add introduce tantuyu
+```
+
+有趣的事情又發生了，有個 parent 欄位，而且還發現了後面接的 `2eb27dad5e006d6ec89843016df7c96acae0aade` Hash 就是上一筆我們提交的 Commit。
+
+我們把它們串起來
+
+```
+2eb27da (parent) <- 824e801 (current)
+```
+
+神奇的 Git 主要功能被發現了！
+
+### Tree 目錄結構
+
+那什麼是 Tree？
+
+我們來看看最初沒看的另一筆 `e497723a6beb377202329333c7fa5b074f298fb7`
+
+```bash
+git cat-file -t e497723a6beb377202329333c7fa5b074f298fb7
+```
+
+```
+tree
+```
+
+沒錯，最後一個就是 Tree，那內容呢？
+
+```bash
+git cat-file -p e497723a6beb377202329333c7fa5b074f298fb7
+```
+
+```
+100644 blob ea701271a58054773256b0ff0dbf2fde425f19d6    hello.txt
+```
+
+此時它回傳了另一個 Blob 物件
+
+所以 Tree Object 會紀錄其他檔案內容（或者其他目錄，如有其他子資料夾）
+
+由於剛剛 commit 第二次了，我們來看看現在 `.git/objects/` 有甚麼變化，同時再介紹一個指令
+
+```bash
+git cat-file --batch-all-objects --batch-check
+```
+
+```
+2eb27dad5e006d6ec89843016df7c96acae0aade commit 197
+2fdbbbb5ae0ee6f96a15dbc4a1e7af70c30055ed tree 37
+7a140b73e9afa2016f1bb763bd849c1e84fe69a3 blob 29
+824e8015006c615ec78ff4e09e86252c6bb9dd56 commit 248
+e497723a6beb377202329333c7fa5b074f298fb7 tree 37
+ea701271a58054773256b0ff0dbf2fde425f19d6 blob 16
+```
+
+這裡顯示了完整的雜湊值以及 Object Type，數字則是**壓縮前**的原始內容大小，單位是 bytes
+
+檢查了一下這些剛剛還有什麼沒看過內容的，發現是這個 `7a140b73e9afa2016f1bb763bd849c1e84fe69a3`，我們再來看看剛剛第二次暫存後，產生新的 Blob 內容
+
+```bash
+git cat-file -p 7a140b73e9afa2016f1bb763bd849c1e84fe69a3
+```
+
+```
+Hello Git World!
+I am tantuyu
+```
+
+沒錯就是第二次提交的更動內容。
+
+### Tag 標籤物件
+
+Git 提供 Tag 來標記某個 commit，通常用來標記版本，比如：`v1.0.0` 等
+
+輕量標籤（Lightweight tag）當前最新的 commit 為 `git tag v1.0.0`，但是這並不會產生 Tag Object
+
+必須使用註解標籤（Annotated tag） `git tag -a v1.0.0 -m "release v1.0.0"` 就會產生獨立物件
+
+比如我在當前 commit 使用 `git tag -a v1.0.0 -m "release v1.0.0"`
+
+```bash
+git cat-file --batch-all-objects --batch-check
+```
+
+```
+...
+a252c3e1c8d81febaaf1e35d700a755fd73eecba tag 148
+...
+```
+
+確實發現了一個 Tag Object，來看看內容
+
+```bash
+git cat-file -p a252c3e1c8d81febaaf1e35d700a755fd73eecba
+```
+
+```
+object 824e8015006c615ec78ff4e09e86252c6bb9dd56
+type commit
+tag v1.0.0
+tagger tantuyu <hi@ttymayor.com> 1775757217 +0800
+
+release v1.0.0
+```
+
+此時會發現 `object 824e8015006c615ec78ff4e09e86252c6bb9dd56` 正是最後一次的 Commit Object 沒錯
+
+### 指向關係
+
+```
+tag -> commit -> tree -> blob
+```
+
+```
+tag
+└── commit
+    ├── parent commit (上一筆提交)
+    └── tree (根目錄)
+        ├── blob (檔案)
+        ├── blob (檔案)
+        └── tree (子目錄)
+            ├── blob (檔案)
+            └── tree (子子目錄)
+                └── blob (檔案)
+```
