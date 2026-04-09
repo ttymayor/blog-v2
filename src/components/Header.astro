@@ -3,38 +3,16 @@ import { Image } from "astro:assets";
 import AvatarImage from "@/assets/avatar.jpg";
 import { SITE_TITLE } from "@/consts";
 import { ModeToggle } from "@/components/react/ModeToggle";
-import { PenTool, User, Home } from "@lucide/astro";
+import { PenTool, User, House } from "@lucide/astro";
 
 const pathname = Astro.url.pathname.replace(import.meta.env.BASE_URL, "");
 
 const navItems = [
-  { href: "/", label: "首頁", Icon: Home, isHome: true },
+  { href: "/", label: "首頁", Icon: House, isHome: true },
   { href: "/blog", label: "文章", Icon: PenTool },
   { href: "/about", label: "關於", Icon: User },
 ];
 ---
-
-<script>
-  import { animate } from "motion/mini";
-
-  animate(
-    "header",
-    {
-      opacity: [0.5, 1],
-      filter: ["blur(10px)", "blur(0px)"],
-    },
-    {
-      delay: 0.3,
-    },
-  ).finished.then(() => {
-    // Clear inline styles after animation to prevent interference with backdrop-blur
-    const header = document.querySelector("header");
-    if (header) {
-      header.style.removeProperty("filter");
-      header.style.removeProperty("opacity");
-    }
-  });
-</script>
 
 <header
   class="pointer-events-auto fixed bottom-0 left-0 z-50 flex w-full flex-row items-center justify-center md:bottom-auto md:top-0"
@@ -46,7 +24,7 @@ const navItems = [
     <!-- Desktop Logo (Hidden on Mobile) -->
     <a
       href="/"
-      class="hidden md:flex relative z-10 shrink-0 items-center gap-3 transition-opacity"
+      class="hidden md:flex relative z-10 shrink-0 items-center gap-3 transition-all active:scale-98"
     >
       <Image
         inferSize
@@ -78,7 +56,7 @@ const navItems = [
                 "w-16 h-12 md:w-fit md:h-fit md:py-2 md:px-3",
                 isHome ? "md:hidden" : "",
                 isActive
-                  ? "text-[#687afc] md:text-foreground dark:text-[#b8c1ec] md:dark:text-foreground"
+                  ? "text-[#745525] md:text-foreground dark:text-[#d0ae7d] md:dark:text-foreground"
                   : "text-foreground/60 md:text-foreground/80 hover:text-foreground",
               ]}
             >
@@ -89,7 +67,7 @@ const navItems = [
         })
       }
       <div
-        class="flex flex-col items-center justify-center w-16 h-12 md:w-fit md:h-fit"
+        class="flex flex-col items-center justify-center w-16 h-12 md:hidden"
       >
         <ModeToggle client:load />
       </div>

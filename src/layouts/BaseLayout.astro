@@ -8,6 +8,7 @@ import { SITE_DESCRIPTION, SITE_TITLE } from "@/consts";
 import "@/styles/global.css";
 import "sonner/dist/styles.css";
 import { Toaster } from "@/components/ui/sonner";
+import PullCordLamp from "@/components/PullCordLamp";
 import { Font } from "astro:assets";
 
 interface Props {
@@ -72,5 +73,8 @@ const pageTitle = title ? `${title}｜${SITE_TITLE}` : SITE_TITLE;
     </main>
     <Footer transition:persist transition:name="footer" />
     <Toaster client:load />
+    <div class="hidden md:block">
+      <PullCordLamp client:only="react" transition:persist />
+    </div>
   </body>
 </html>
