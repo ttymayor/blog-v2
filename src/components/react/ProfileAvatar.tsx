@@ -161,7 +161,7 @@ function SpotifyDialogContent({ spotify }: { spotify: SpotifyData }) {
         <img
           src={spotify.album_art_url}
           alt={spotify.song}
-          className="size-16 flex-shrink-0 rounded-lg shadow-md"
+          className="size-16 shrink-0 rounded-lg shadow-md"
         />
         <div className="min-w-0 flex-1">
           <p className="text-foreground truncate text-base font-semibold">
@@ -211,7 +211,7 @@ function ActivityDialogContent({ activity }: { activity: DiscordActivity }) {
   return (
     <div className="flex flex-col gap-4">
       <div className="flex items-center gap-4">
-        <div className="relative flex-shrink-0">
+        <div className="relative shrink-0">
           {largeImage ? (
             <img
               src={largeImage}
@@ -405,7 +405,7 @@ export default function ProfileAvatar({
     <>
       <div className="flex flex-col gap-6 md:flex-row md:gap-8">
         {/* Avatar + Status */}
-        <div className="relative w-fit flex-shrink-0">
+        <div className="relative w-fit shrink-0">
           <div
             onClick={handleClick}
             className="h-24 w-24 cursor-pointer rounded-full shadow-lg md:h-32 md:w-32"

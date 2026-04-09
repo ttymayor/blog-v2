@@ -106,7 +106,7 @@ export default function FlipCard({ avatarSrc }: FlipCardProps) {
 
   return (
     <div
-      className="mx-auto w-full max-w-xl cursor-pointer px-4 select-none"
+      className="mx-auto w-full max-w-xl cursor-pointer px-4 transition-transform select-none active:scale-90"
       style={{ perspective: "1000px", aspectRatio: "1.66 / 1" }}
       onClick={handleClick}
       onMouseMove={handleMouseMove}
