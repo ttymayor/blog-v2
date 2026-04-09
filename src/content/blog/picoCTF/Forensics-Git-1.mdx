@@ -20,7 +20,7 @@ category: 'WriteUp'
 1. 該題提供一個 `.img.gz` 檔，將其解壓縮後得到一個 `.img` 檔。
 2. Windows 可直接使用 7-Zip 解壓縮對 `.img` 右鍵 -> 7-Zip -> 開啟壓縮檔，然後檢查 `2.img` 發現 `/home/ctf-player/Code/secrets/` 有個 `.git`
 
-然後嘗試在 Secrets 資料夾下使用 `git log`，就發現了 flag
+然後嘗試在 Secrets 資料夾下使用 `git log`
 
 ```bash
 git log
@@ -41,7 +41,7 @@ Date:   Wed Nov 19 09:20:05 2025 +0000
 
 ```
 
-使用 `git show 177789af0b300e043ea8f54ea57d6cee352291ae` 查看 flag
+發現曾有 commit 新增 flag，那就嘗試查看該 commit，使用 `git show 177789af0b300e043ea8f54ea57d6cee352291ae` 查看 flag
 
 ```bash
 git show 177789af0b300e043ea8f54ea57d6cee352291ae
