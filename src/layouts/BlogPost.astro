@@ -19,13 +19,16 @@ const {
   wordCount,
   lastModified,
   readMinutes,
+  slug,
 } = Astro.props;
+
+const ogImage = slug ? `/og/${slug}.png` : undefined;
 
 const modifiedDate = lastModified ? new Date(lastModified) : undefined;
 const readTime: Number = Math.round(readMinutes);
 ---
 
-<BaseLayout title={title}>
+<BaseLayout title={title} description={description} ogImage={ogImage}>
   <div class="hidden md:block md:h-22" aria-hidden="true"></div>
   <div class="max-w-5xl w-full mx-auto px-4 py-12">
     <div class="lg:flex lg:gap-4 lg:items-start relative">

@@ -13,9 +13,11 @@ import { Font } from "astro:assets";
 
 interface Props {
   title?: string;
+  description?: string;
+  ogImage?: string;
 }
 
-const { title } = Astro.props;
+const { title, description, ogImage } = Astro.props;
 const pageTitle = title ? `${title}｜${SITE_TITLE}` : SITE_TITLE;
 ---
 
@@ -61,7 +63,11 @@ const pageTitle = title ? `${title}｜${SITE_TITLE}` : SITE_TITLE;
       });
     </script>
     <ClientRouter />
-    <BaseHead title={pageTitle} description={SITE_DESCRIPTION} />
+    <BaseHead
+      title={pageTitle}
+      description={description ?? SITE_DESCRIPTION}
+      image={ogImage}
+    />
     <Font cssVariable="--font-geist" preload />
     <Font cssVariable="--font-geist-mono" preload />
     <Font cssVariable="--font-geist-pixel-grid" preload />

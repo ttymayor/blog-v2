@@ -27,6 +27,7 @@ const { Content, headings, remarkPluginFrontmatter } = await render(post);
 
 <BlogPost
   {...post.data}
+  slug={post.id}
   headings={headings}
   minutesRead={remarkPluginFrontmatter.minutesRead}
   wordCount={remarkPluginFrontmatter.wordCount}
