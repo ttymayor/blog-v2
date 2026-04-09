@@ -3,13 +3,12 @@
 import { mkdirSync, writeFileSync, existsSync } from "fs";
 import { join } from "path";
 import { input, checkbox } from "@inquirer/prompts";
+import { analyzePostMeta } from "./lib/post-meta.mjs";
 
-const AVAILABLE_TAGS = [
-  "astro", "react", "typescript", "javascript", "css", "tailwind",
-  "devops", "linux", "tools", "notes", "life"
-];
-
-const CATEGORIES = ["tech", "life", "notes", "tutorial"];
+const { tags: TAG_STATS, categories: CAT_STATS } = analyzePostMeta();
+const AVAILABLE_TAGS = TAG_STATS.map((t) => t.name);
+const CATEGORIES = CAT_STATS.map((c) => c.name);
+const DEFAULT_CATEGORY = CATEGORIES[0] ?? "tech";
 
 function toSlug(title) {
   return title
@@ -29,12 +28,18 @@ const title = await input({ message: "Post title:", validate: (v) => v.trim() !=
 const description = await input({ message: "Description (optional):" });
 const category = await input({
   message: `Category (${CATEGORIES.join(" / ")}):`,
-  default: "tech",
+  default: DEFAULT_CATEGORY,
 });
-const tags = await checkbox({
+const selectedTags = await checkbox({
   message: "Select tags:",
-  choices: AVAILABLE_TAGS.map((t) => ({ name: t, value: t })),
+  choices: TAG_STATS.map((t) => ({ name: `${t.name} (${t.count})`, value: t.name })),
 });
+const extraTagsInput = await input({ message: "Additional tags (comma separated, optional):" });
+const extraTags = extraTagsInput
+  .split(",")
+  .map((t) => t.trim())
+  .filter(Boolean);
+const tags = [...new Set([...selectedTags, ...extraTags])];
 
 const slugInput = await input({
   message: "Slug:",
