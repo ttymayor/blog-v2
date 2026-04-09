@@ -1,0 +1,102 @@
+---
+title: 'Forensics Git 2'
+description: ''
+pubDate: '2026-04-09T02:00:00+08:00'
+tags: ['picoCTF', 'Forensics']
+category: 'WriteUp'
+---
+
+- 分類：Forensics
+- 難度：Medium
+- 題目連結：https://play.picoctf.org/practice/challenge/707
+
+### 工具
+
+- [7-Zip](https://www.7-zip.org/)
+- [Git](https://git-scm.com/)
+
+### 過程
+
+1. 該題提供一個 `.img.gz` 檔，將其解壓縮後得到一個 `.img` 檔。
+2. Windows 可直接使用 7-Zip 解壓縮對 `.img` 右鍵 -> 7-Zip -> 開啟壓縮檔，然後檢查 `2.img` 發現 `/home/ctf-player/Code/killer-chat-app/` 是一個 git 過的目錄。
+3. 解壓縮該目錄出來後嘗試使用 git 指令
+
+```bash
+git log
+fatal: your current branch 'master' does not have any commits yet
+```
+
+看起來是還沒有 commit 過。但這樣真的沒有資訊了嗎？還好我對於 Git 的原理還算略知一二。
+
+這裡嘗試 `git cat-file --batch-all-objects --batch-check` 看看有沒有什麼有趣的東西，發現好多物件喔。
+
+```bash
+git cat-file --batch-all-objects --batch-check
+01533f718556a0e59f1467dae4fa462eed82c2a1 commit 238
+201c707b43219a63c1d3499b29c7d539af079861 tree 99
+2151ef0ccc15aed1ab88e1afdc7484aaeff211c4 commit 244
+22f7d0c9bd045563ae33bfacfbe46fe406a5b318 tree 99
+26b809e0c41d8421f1126ed3a4eb06ad66e6d90a commit 242
+2c0a9b2b15dce92f800393d5030c7454efc278ae commit 189
+5827632e046a80a1e0d7b4fc5c7800dd539baeaf commit 239
+5eb896e3ccd51175f66480cdb247fc45f3e8ac2d tree 68
+66273877d2ff3f51a14473b7200aae5a798ff64f blob 140
+6b1ebe10826d5c1efc58ae475c0a0af10f580b77 tree 33
+6bf83de540f7d12cc3b683a83d69432e03d84509 tree 99
+7178644433e7cb6da3adf028f1c80d382a18e7b6 blob 188
+71fd2fafcd5ebd62fbf857769c92a91225ab3954 blob 25
+a0c13fe974d95661f24e32bc0d79f54f05ea13c5 tree 99
+aa1cc01687b4ec94faf9916c3fc6efd83f23b816 blob 134
+c931ae0868411e5f23656a2436e78a4c4699e18c tree 99
+d4666b9472fad7cd75d05b641e402347d9aac605 tree 66
+d7b4a371ebd23e682ffebc7ec355690fdc94fbd1 blob 25
+e80b38b3322a5ba32ac07076ef5eeb4a59449875 commit 246
+ead27e2bd5a0fc22868ffb629a768f82dfcda11c tree 99
+f150f0b963ab3ee95ba5656212abd76d7f2fed2e blob 142
+```
+
+這裡我就想知道 commit 內容，於是我查看幾個 commit（從上到下）使用 `git cat-file -p <hash>`
+
+```bash
+git cat-file -p 01533f718556a0e59f1467dae4fa462eed82c2a1
+tree c931ae0868411e5f23656a2436e78a4c4699e18c
+parent 2151ef0ccc15aed1ab88e1afdc7484aaeff211c4
+author ctf-player <ctf-player@example.com> 1763549240 +0000
+committer ctf-player <ctf-player@example.com> 1763549240 +0000
+
+Add random chat log
+
+```
+
+看起來只是混淆我們的一筆 commit，再看看下一筆
+
+```bash
+git cat-file -p 2151ef0ccc15aed1ab88e1afdc7484aaeff211c4
+tree 6bf83de540f7d12cc3b683a83d69432e03d84509
+parent e80b38b3322a5ba32ac07076ef5eeb4a59449875
+author ctf-player <ctf-player@example.com> 1763549240 +0000
+committer ctf-player <ctf-player@example.com> 1763549240 +0000
+
+Remove secret hideout log
+
+```
+
+> `Remove secret hideout log`
+
+這裡就發現了奇怪的 commit message，於是就嘗試查看該 commit 與上次 commit 的差異。換句話說就是該次與 parent commit 的差異，因為本次 commit 移除了秘密。所以使用 `git diff <base> <compare>`
+
+```bash
+git diff e80b38b 2151ef0
+diff --git a/logs/3.txt b/logs/3.txt
+deleted file mode 100644
+index 7178644..0000000
+--- a/logs/3.txt
++++ /dev/null
+@@ -1,3 +0,0 @@
+-Rex: Meet at the old arcade basement for the secret hideout.
+-Jay: Ask Rusty at the door and use password picoCTF{g17_r35cu3_16ac6bf3}.
+-Rex: Bring the decoder map so we can plan the route.
+
+```
+
+flag 就出現了。

@@ -1,0 +1,40 @@
+---
+title: 'Forensics Git 0'
+description: ''
+pubDate: '2026-04-09T01:00:00+08:00'
+tags: ['picoCTF', 'Forensics']
+category: 'WriteUp'
+---
+
+- 分類：Forensics
+- 難度：Medium
+- 題目連結：https://play.picoctf.org/practice/challenge/705
+
+### 工具
+
+- [7-Zip](https://www.7-zip.org/)
+- [Git](https://git-scm.com/)
+
+### 過程
+
+1. 該題提供一個 `.img.gz` 檔，將其解壓縮後得到一個 `.img` 檔。
+2. Windows 可直接使用 7-Zip 解壓縮對 `.img` 右鍵 -> 7-Zip -> 開啟壓縮檔，然後檢查 `2.img` 發現 `/home/ctf-player/Code/secrets/` 有個 `notes.txt` 與 `.git`
+
+```txt
+The picoCTF flag format is 'picoCTF{}' where there is some leetspeak phrase in between the curly braces
+```
+
+然後嘗試在 Secrets 資料夾下使用 `git log`，就發現了 flag
+
+```bash
+git log
+```
+
+```
+commit 327681bb38cf467cec328eec9707b240e3e74ced (HEAD -> master)
+Author: ctf-player <ctf-player@example.com>
+Date:   Wed Nov 19 08:49:27 2025 +0000
+
+    Wrap this phrase in the flag format: g17_1n_7h3_d15k_041217d8
+
+```
