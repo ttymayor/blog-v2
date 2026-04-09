@@ -23,7 +23,7 @@ function toSlug(title) {
 const now = new Date();
 const year = now.getFullYear().toString();
 const month = (now.getMonth() + 1).toString().padStart(2, "0");
-const pubDate = `${year}-${month}-${now.getDate().toString().padStart(2, "0")}`;
+const pubDate = now.toISOString();
 
 const title = await input({ message: "Post title:", validate: (v) => v.trim() !== "" || "Title is required" });
 const description = await input({ message: "Description (optional):" });

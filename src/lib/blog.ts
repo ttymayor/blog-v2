@@ -20,13 +20,12 @@ export async function getPosts(): Promise<BlogPost[]> {
 
   return posts
     .filter((post) => !post.data.draft || import.meta.env.DEV)
-    .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf())
+    .sort((a, b) => b.data.pubDate.localeCompare(a.data.pubDate))
     .map((post) => ({
       id: post.id,
       title: post.data.title,
       description: post.data.description,
-      pubDate: post.data.pubDate.toISOString(),
-      updatedDate: post.data.updatedDate?.toISOString(),
+      pubDate: post.data.pubDate,
       heroImage: post.data.heroImage?.src,
       tags: post.data.tags,
       category: post.data.category,

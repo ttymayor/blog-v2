@@ -11,7 +11,6 @@ import ModifiedDateButton from "@/components/ModifiedDateButton";
 const {
   title,
   description,
-  updatedDate,
   heroImage,
   headings,
   category,
@@ -22,8 +21,7 @@ const {
   readMinutes,
 } = Astro.props;
 
-// Use lastModified from git if available, otherwise fall back to manual updatedDate
-const modifiedDate = lastModified ? new Date(lastModified) : updatedDate;
+const modifiedDate = lastModified ? new Date(lastModified) : undefined;
 const readTime: Number = Math.round(readMinutes);
 ---
 

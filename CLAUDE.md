@@ -31,7 +31,6 @@ tags: string[]
 category?: string
 draft?: boolean      # excluded in production
 pin?: boolean        # pinned to top of listing
-updatedDate?: date
 heroImage?: image
 ```
 

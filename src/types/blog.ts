@@ -3,7 +3,6 @@ export interface BlogPost {
   title: string;
   description: string;
   pubDate: string;
-  updatedDate?: string;
   heroImage?: string;
   tags: string[];
   category?: string;
