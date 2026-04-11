@@ -58,6 +58,8 @@ const imageURL = new URL(imageSrc, Astro.site ?? Astro.url);
 <meta property="og:title" content={title} />
 <meta property="og:description" content={description} />
 <meta property="og:image" content={imageURL} />
+<meta property="og:locale" content="zh_TW" />
+<meta property="og:site_name" content={SITE_TITLE} />
 
 <!-- Twitter -->
 <meta property="twitter:card" content="summary_large_image" />
