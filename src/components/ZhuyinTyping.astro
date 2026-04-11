@@ -1,41 +1,4 @@
 ---
-// Zhuyin (Bopomofo) mapping for Traditional Chinese characters
-const zhuyinMap: Record<string, string> = {
-  // Common characters in greetings
-  還: "ㄏㄞˊ",
-  沒: "ㄇㄟˊ",
-  入: "ㄖㄨˋ",
-  睡: "ㄕㄨㄟˋ",
-  嗎: "ㄇㄚ˙",
-  早: "ㄗㄠˇ",
-  上: "ㄕㄤˋ",
-  好: "ㄏㄠˇ",
-  午: "ㄨˇ",
-  安: "ㄢ",
-  喝: "ㄏㄜ",
-  點: "ㄉㄧㄢˇ",
-  水: "ㄕㄨㄟˇ",
-  記: "ㄐㄧˋ",
-  得: "ㄉㄜ˙",
-  休: "ㄒㄧㄡ",
-  息: "ㄒㄧˊ",
-  晚: "ㄨㄢˇ",
-  祝: "ㄓㄨˋ",
-  你: "ㄋㄧˇ",
-  有: "ㄧㄡˇ",
-  個: "ㄍㄜˋ",
-  夢: "ㄇㄥˋ",
-  // Emojis and symbols (no conversion needed)
-  "🥱": "🥱",
-  "👋": "👋",
-  "🌤️": "🌤️",
-  "🍵": "🍵",
-  "🌙": "🌙",
-  "😴": "😴",
-  " ": " ",
-  "，": "，",
-};
-
 interface Props {
   text: string;
   speed?: number;
@@ -93,6 +56,9 @@ const { text, speed = 180, zhuyinSpeed = 90, class: className } = Astro.props;
     有: "ㄧㄡˇ",
     個: "ㄍㄜ˙",
     夢: "ㄇㄥˋ",
+    吃: "ㄔ",
+    的: "ㄉㄜ˙",
+    餐: "ㄘㄢ",
     "🥱": "🥱",
     "👋": "👋",
     "🌤️": "🌤️",
