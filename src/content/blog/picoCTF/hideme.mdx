@@ -1,0 +1,112 @@
+---
+title: 'hideme'
+description: ''
+pubDate: '2026-04-12T22:00:00Z'
+tags: ['picoCTF', 'Forensics']
+category: 'WriteUp'
+---
+
+- 分類：Forensics
+- 難度：Medium
+- 題目連結：https://play.picoctf.org/practice/challenge/350
+
+### 工具
+
+- system：Kali
+- binwalk
+- exiftool
+
+### 過程
+
+1. 題目給了一張圖片，但很顯然不會是圖片那麼簡單，我先嘗試了 exiftool
+
+```bash
+exiftool flag.png
+```
+
+```
+ExifTool Version Number         : 13.50
+File Name                       : flag.png
+Directory                       : .
+File Size                       : 43 kB
+File Modification Date/Time     : 2023:03:16 11:16:12+08:00
+File Access Date/Time           : 2026:04:12 22:30:18+08:00
+File Inode Change Date/Time     : 2026:04:12 22:30:08+08:00
+File Permissions                : -rw-r--r--
+File Type                       : PNG
+File Type Extension             : png
+MIME Type                       : image/png
+Image Width                     : 512
+Image Height                    : 504
+Bit Depth                       : 8
+Color Type                      : RGB with Alpha
+Compression                     : Deflate/Inflate
+Filter                          : Adaptive
+Interlace                       : Noninterlaced
+Warning                         : [minor] Trailer data after PNG IEND chunk
+Image Size                      : 512x504
+Megapixels                      : 0.258
+```
+
+注意到了 `Warning                         : [minor] Trailer data after PNG IEND chunk` 這行，所以嘗試了 binwalk
+
+```bash
+binwalk flag.png
+```
+
+```
+DECIMAL       HEXADECIMAL     DESCRIPTION
+--------------------------------------------------------------------------------
+0             0x0             PNG image, 512 x 504, 8-bit/color RGBA, non-interlaced
+41            0x29            Zlib compressed data, compressed
+39739         0x9B3B          Zip archive data, at least v1.0 to extract, name: secret/
+39804         0x9B7C          Zip archive data, at least v2.0 to extract, compressed size: 2869, uncompressed size: 3024, name: secret/flag.png
+42908         0xA79C          End of Zip archive, footer length: 22
+```
+
+binwalk 發現了 zip 檔，所以嘗試了 `binwalk -e` 生成了 `_flag.png.extracted` 資料夾
+
+```bash
+binwalk -e flag.png
+```
+
+```
+DECIMAL       HEXADECIMAL     DESCRIPTION
+--------------------------------------------------------------------------------
+41            0x29            Zlib compressed data, compressed
+39739         0x9B3B          Zip archive data, at least v1.0 to extract, name: secret/
+39804         0x9B7C          Zip archive data, at least v2.0 to extract, compressed size: 2869, uncompressed size: 3024, name: secret/flag.png
+
+WARNING: One or more files failed to extract: either no utility was found or it's unimplemented
+```
+
+有個 WARNING 先不管它，先來看看有什麼東西
+
+```bash
+ls -la _flag.png.extracted
+```
+
+```
+total 60
+drwxr-xr-x 3 tantuyu tantuyu  4096 Apr 12 22:31 .
+drwxr-xr-x 5 tantuyu tantuyu  4096 Apr 12 22:39 ..
+-rw-r--r-- 1 tantuyu tantuyu     0 Apr 12 22:31 29
+-rw-r--r-- 1 tantuyu tantuyu 42889 Apr 12 22:31 29.zlib
+-rw-r--r-- 1 tantuyu tantuyu  3191 Apr 12 22:31 9B3B.zip
+drwxr-xr-x 2 tantuyu tantuyu  4096 Mar 16  2023 secret
+```
+
+發現有個 secret 資料夾，我們再看看裡面有什麼
+
+```bash
+ls -la _flag.png.extracted/secret
+```
+
+```
+total 12
+drwxr-xr-x 2 tantuyu tantuyu 4096 Mar 16  2023 .
+drwxr-xr-x 3 tantuyu tantuyu 4096 Apr 12 22:31 ..
+-rw-r--r-- 1 tantuyu tantuyu 3024 Mar 16  2023 flag.png
+```
+
+看起來又是一張圖片，點開來用 GUI 顯示圖片，發現了 flag
