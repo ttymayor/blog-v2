@@ -19,6 +19,11 @@ export default defineConfig({
   site: "https://v2.ttymayor.com",
   fonts: [
     {
+      name: "Noto Serif TC",
+      cssVariable: "--font-serif",
+      provider: fontProviders.google(),
+    },
+    {
       name: "Geist",
       cssVariable: "--font-geist",
       provider: fontProviders.google(),

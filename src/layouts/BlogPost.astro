@@ -4,7 +4,7 @@ import { Image } from "astro:assets";
 import FormattedDate from "@/components/FormattedDate.astro";
 import { Separator } from "@/components/ui/separator";
 import TableOfContents from "@/components/mdx/TableOfContents.astro";
-import { Clock, FileText } from "@lucide/astro";
+import { Calendar, Clock, FileText } from "@lucide/astro";
 import { Badge } from "@/components/ui/badge";
 import ModifiedDateButton from "@/components/ModifiedDateButton";
 
@@ -45,23 +45,23 @@ const readTime: Number = Math.round(readMinutes);
           )
         }
         <div class="prose">
-          <div class="flex flex-row items-center justify-between gap-2 mb-4">
-            <div class="flex flex-row items-center gap-2">
-              {category && <Badge variant={"default"}>{category}</Badge>}
-              <h1 class="font-bold m-0">{title}</h1>
-            </div>
-            {
-              modifiedDate && (
-                <ModifiedDateButton
-                  client:load
-                  date={modifiedDate.toISOString()}
-                />
-              )
-            }
+          <div class="flex flex-col gap-2 mb-2">
+            {category && <Badge variant={"default"}>{category}</Badge>}
+            <h1 class="font-bold m-0 text-[clamp(1.75rem,4vw,2.25rem)]">
+              {title}
+            </h1>
           </div>
           <div
             class="flex flex-row items-center gap-2 text-muted-foreground text-sm flex-wrap"
           >
+            {
+              modifiedDate && (
+                <div class="flex items-center gap-1.5">
+                  <Calendar class="size-4" />
+                  <span>{modifiedDate.toISOString().split("T")[0]}</span>
+                </div>
+              )
+            }
             {
               minutesRead && (
                 <div class="flex items-center gap-1.5">
@@ -79,15 +79,19 @@ const readTime: Number = Math.round(readMinutes);
               )
             }
           </div>
-          <Separator className="mt-8 mb-10" client:load />
+          <Separator className="mt-6 mb-6" client:load />
           <slot />
           {
             tags && tags.length > 0 && (
               <>
-                <Separator className="mt-10 mb-6" client:load />
+                <Separator className="mt-6 mb-6" client:load />
                 <div class="flex flex-wrap gap-2">
                   {tags.map((tag: string) => (
-                    <Badge client:load variant={"secondary"} className="rounded-xs">
+                    <Badge
+                      client:load
+                      variant={"secondary"}
+                      className="rounded-xs"
+                    >
                       {tag}
                     </Badge>
                   ))}

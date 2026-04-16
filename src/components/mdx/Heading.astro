@@ -10,7 +10,7 @@ interface Props {
 const { level, class: className, id, ...props } = Astro.props;
 const Tag: "h1" | "h2" | "h3" | "h4" | "h5" | "h6" = `h${level}`;
 
-const baseStyles = "group scroll-m-20 tracking-tight font-bold text-foreground";
+const baseStyles = "group scroll-m-28 tracking-tight font-bold text-foreground";
 
 const levelStyles: Record<number, string> = {
   1: "text-4xl mb-8 mt-12",
@@ -27,16 +27,11 @@ const levelStyles: Record<number, string> = {
   class:list={cn(baseStyles, levelStyles[level], className)}
   {...props}
 >
-  <slot />
-  {
-    id && (
-      <a
-        href={`#${id}`}
-        class=" ml-2 opacity-0 group-hover:opacity-100 transition-opacity text-muted-foreground hover:text-foreground no-underline font-normal"
-        aria-label="Link to this section"
-      >
-        #
-      </a>
-    )
-  }
+  <a
+    href={`#${id}`}
+    class="no-underline text-foreground group"
+    aria-label="Link to this section"
+  >
+    <slot />
+  </a>
 </Tag>
