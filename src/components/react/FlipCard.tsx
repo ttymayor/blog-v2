@@ -106,7 +106,7 @@ export default function FlipCard({ avatarSrc }: FlipCardProps) {
 
   return (
     <div
-      className="mx-auto w-full max-w-xl cursor-pointer px-4 transition-transform select-none active:scale-90"
+      className="mx-auto w-full max-w-xl cursor-pointer px-4 transition-transform select-none active:scale-97"
       style={{ perspective: "1000px", aspectRatio: "1.66 / 1" }}
       onClick={handleClick}
       onMouseMove={handleMouseMove}
@@ -117,13 +117,14 @@ export default function FlipCard({ avatarSrc }: FlipCardProps) {
         className="relative h-full w-full"
         style={{
           transformStyle: "preserve-3d",
+          WebkitTransformStyle: "preserve-3d",
           transition: "none",
         }}
       >
         {/* Front face */}
         <div
           className="absolute inset-0 flex flex-col items-center justify-center rounded-2xl border border-white/20 bg-linear-to-br from-black/10 to-black/5 p-10 shadow-2xl shadow-black/20 backdrop-blur-sm dark:border-white/10 dark:bg-linear-to-br dark:from-white/10 dark:to-white/5 dark:shadow-black/60"
-          style={{ backfaceVisibility: "hidden" }}
+          style={{ backfaceVisibility: "hidden", WebkitBackfaceVisibility: "hidden", transform: "translateZ(0)" }}
         >
           <div className="flex items-center gap-6">
             <img
@@ -159,7 +160,8 @@ export default function FlipCard({ avatarSrc }: FlipCardProps) {
           className="absolute inset-0 flex flex-col justify-center gap-4 rounded-2xl border border-white/20 bg-linear-to-br from-black/10 to-black/5 p-10 shadow-2xl shadow-black/20 backdrop-blur-sm dark:border-white/10 dark:bg-linear-to-br dark:from-white/10 dark:to-white/5 dark:shadow-black/60"
           style={{
             backfaceVisibility: "hidden",
-            transform: "rotateY(180deg)",
+            WebkitBackfaceVisibility: "hidden",
+            transform: "rotateY(180deg) translateZ(0)",
           }}
         >
           <div className="text-card-foreground flex items-center gap-3 text-base">
