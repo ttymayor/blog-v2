@@ -290,3 +290,9 @@ tag
             └── tree (子子目錄)
                 └── blob (檔案)
 ```
+
+## 結論
+
+所以回到最初的問題：為什麼把 `node_moudles` 等，不重要的大型垃圾不小心 `git add` 電腦會卡呢？
+
+因為 Blob 在 `git add` 的時候就會生成了，幾乎每個檔案都要被讀取內容、計算 SHA-1、zlib 壓縮，再寫入 `.git/objects/` 導致 CPU + I/O 的密集操作。`node_modules` 動輒數萬個檔案，重複數萬次，Git Objects 被塞滿垃圾，自然就卡頓了。
