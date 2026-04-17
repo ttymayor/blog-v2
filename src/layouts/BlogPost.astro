@@ -7,6 +7,7 @@ import TableOfContents from "@/components/mdx/TableOfContents.astro";
 import { Calendar, Clock, FileText } from "@lucide/astro";
 import { Badge } from "@/components/ui/badge";
 import ModifiedDateButton from "@/components/ModifiedDateButton";
+import PostActions from "@/components/PostActions";
 
 const {
   title,
@@ -20,12 +21,17 @@ const {
   lastModified,
   readMinutes,
   slug,
+  body,
 } = Astro.props;
 
 const ogImage = slug ? `/og/${slug}.png` : undefined;
 
 const modifiedDate = lastModified ? new Date(lastModified) : undefined;
 const readTime: Number = Math.round(readMinutes);
+
+const articleUrl = new URL(Astro.url.pathname, Astro.site).href;
+const aiPrompt = `請幫我了解並討論這篇文章：「${title}」\n${articleUrl}`;
+const encodedPrompt = encodeURIComponent(aiPrompt);
 ---
 
 <BaseLayout title={title} description={description} ogImage={ogImage}>
@@ -45,11 +51,14 @@ const readTime: Number = Math.round(readMinutes);
           )
         }
         <div class="prose">
-          <div class="flex flex-col gap-2 mb-2">
-            {category && <Badge variant={"default"}>{category}</Badge>}
-            <h1 class="font-bold m-0 text-[clamp(1.75rem,4vw,2.25rem)]">
-              {title}
-            </h1>
+          <div class="flex flex-row justify-between mb-2">
+            <div class="flex flex-col gap-2">
+              {category && <Badge variant={"default"}>{category}</Badge>}
+              <h1 class="font-bold m-0 text-[clamp(1.75rem,4vw,2.25rem)]">
+                {title}
+              </h1>
+            </div>
+            <PostActions body={body ?? ""} encodedPrompt={encodedPrompt} client:load />
           </div>
           <div
             class="flex flex-row items-center gap-2 text-muted-foreground text-sm flex-wrap"
