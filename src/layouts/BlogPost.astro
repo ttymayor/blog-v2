@@ -1,12 +1,10 @@
 ---
 import BaseLayout from "@/layouts/BaseLayout.astro";
 import { Image } from "astro:assets";
-import FormattedDate from "@/components/FormattedDate.astro";
 import { Separator } from "@/components/ui/separator";
 import TableOfContents from "@/components/mdx/TableOfContents.astro";
 import { Calendar, Clock, FileText } from "@lucide/astro";
 import { Badge } from "@/components/ui/badge";
-import ModifiedDateButton from "@/components/ModifiedDateButton";
 import PostActions from "@/components/PostActions";
 
 const {
@@ -40,8 +38,7 @@ const encodedPrompt = encodeURIComponent(aiPrompt);
     <div class="lg:flex lg:gap-4 lg:items-start relative">
       <article
         id="content"
-        class="bg-card border shadow-2xl p-4 rounded-xl md:p-8 flex-1 min-w-0 max-w-4xl"
-        data-scroll
+        class="bg-card border shadow-2xl p-4 rounded-xl md:p-8 flex-1 min-w-0 max-w-4xl z-0"
       >
         {
           heroImage && (
@@ -54,11 +51,18 @@ const encodedPrompt = encodeURIComponent(aiPrompt);
           <div class="flex flex-row justify-between mb-2">
             <div class="flex flex-col gap-2">
               {category && <Badge variant={"default"}>{category}</Badge>}
-              <h1 class="font-bold m-0 text-[clamp(1.75rem,4vw,2.25rem)]">
+              <h1
+                id="article-title"
+                transition:name={`post-title-${slug.replace(/\//g, "-")}`}
+              >
                 {title}
               </h1>
             </div>
-            <PostActions body={body ?? ""} encodedPrompt={encodedPrompt} client:load />
+            <PostActions
+              body={body ?? ""}
+              encodedPrompt={encodedPrompt}
+              client:load
+            />
           </div>
           <div
             class="flex flex-row items-center gap-2 text-muted-foreground text-sm flex-wrap"

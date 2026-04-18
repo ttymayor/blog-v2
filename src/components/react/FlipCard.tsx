@@ -124,7 +124,11 @@ export default function FlipCard({ avatarSrc }: FlipCardProps) {
         {/* Front face */}
         <div
           className="absolute inset-0 flex flex-col items-center justify-center rounded-2xl border border-white/20 bg-linear-to-br from-black/10 to-black/5 p-10 shadow-2xl shadow-black/20 backdrop-blur-sm dark:border-white/10 dark:bg-linear-to-br dark:from-white/10 dark:to-white/5 dark:shadow-black/60"
-          style={{ backfaceVisibility: "hidden", WebkitBackfaceVisibility: "hidden", transform: "translateZ(0)" }}
+          style={{
+            backfaceVisibility: "hidden",
+            WebkitBackfaceVisibility: "hidden",
+            transform: "translateZ(0)",
+          }}
         >
           <div className="flex items-center gap-6">
             <img

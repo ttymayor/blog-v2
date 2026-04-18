@@ -41,13 +41,11 @@ const { post } = Astro.props;
             )
           }
         </div>
-        <h3 class="mb-0 flex items-center gap-2 text-lg font-bold">
+        <h3
+          class="mb-0 flex items-center gap-2 text-lg font-bold"
+          transition:name={`post-title-${post.id.replace(/\//g, "-")}`}
+        >
           {post.title}
-          {
-            post.draft && import.meta.env.DEV && (
-              <span class="text-muted-foreground font-mono text-sm">draft</span>
-            )
-          }
         </h3>
       </div>
     </CardTitle>

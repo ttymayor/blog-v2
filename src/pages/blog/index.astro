@@ -2,6 +2,7 @@
 import BaseLayout from "@/layouts/BaseLayout.astro";
 import BlogIndex from "@/components/blog/BlogIndex.astro";
 import { getPosts } from "@/lib/blog";
+import PostBrowser from "@/components/react/blog/PostBrowser";
 
 const posts = await getPosts();
 
@@ -15,6 +16,8 @@ const allCategories = [
 <BaseLayout title="Blog">
   <div class="hidden md:block md:h-22" aria-hidden="true"></div>
   <div class="max-w-5xl w-full mx-auto px-4 py-12">
-    <BlogIndex posts={posts} allTags={allTags} allCategories={allCategories} />
+    <!-- <BlogIndex posts={posts} allTags={allTags} allCategories={allCategories} /> -->
+
+    <PostBrowser client:idle posts={posts} />
   </div>
 </BaseLayout>

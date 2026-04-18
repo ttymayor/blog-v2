@@ -3,6 +3,11 @@ import BaseLayout from "@/layouts/BaseLayout.astro";
 import LatestPosts from "@/components/LatestPosts.astro";
 import ZhuyinTyping from "@/components/ZhuyinTyping.astro";
 import { ArrowRight } from "@lucide/astro";
+import PostList from "@/components/react/blog/PostList";
+import { getPosts } from "@/lib/blog";
+
+const posts = await getPosts();
+const latestPosts = posts.slice(0, 5);
 ---
 
 <BaseLayout description="涉世未深、少不更事的年輕人" ogImage="/og/index.png">
@@ -65,7 +70,8 @@ import { ArrowRight } from "@lucide/astro";
           >瞧<ArrowRight /></a
         >
       </div>
-      <LatestPosts />
+      <!-- <LatestPosts /> -->
+      <PostList posts={latestPosts} />
     </section>
   </div>
 </BaseLayout>

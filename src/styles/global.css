@@ -112,7 +112,7 @@
 @theme inline {
   --font-sans: var(--font-geist);
   --font-mono: var(--font-geist-mono);
-  --font-serif: var(--font-serif);
+  --font-serif: "Noto Serif TC", serif;
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-card: var(--card);
@@ -166,12 +166,7 @@
     text-align: left;
     word-wrap: break-word;
     overflow-wrap: break-word;
-    line-height: 1.7;
     text-autospace: normal;
-    /*
-    --sb-track-color: transparent;
-    --sb-thumb-color: #9f9f9f;
-    --sb-size: 8px; */
   }
 
   ::selection {
@@ -337,4 +332,10 @@
     clip-path: inset(50%);
     white-space: nowrap;
   }
+}
+
+#article-title {
+  font-weight: bold;
+  margin: 0;
+  font-size: clamp(1.75rem, 4vw, 2.25rem);
 }
