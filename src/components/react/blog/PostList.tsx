@@ -7,6 +7,7 @@ import {
   ItemGroup,
   ItemSeparator,
   ItemFooter,
+  ItemMedia,
 } from "@/components/ui/item";
 import { Badge } from "@/components/ui/badge";
 import { relativeTime } from "@/lib/utils";
@@ -27,6 +28,18 @@ export default function PostList({ posts }: PostListProps) {
           )}
           <Item asChild size="sm" className="rounded-2xl">
             <a href={`/blog/${post.id}`}>
+              {post.heroImage && (
+                <img
+                  src={post.heroImage}
+                  alt={post.title}
+                  className="h-16 object-cover"
+                  loading="lazy"
+                  decoding="async"
+                  style={{
+                    viewTransitionName: `post-hero-${post.id.replace(/\//g, "-")}`,
+                  }}
+                />
+              )}
               <ItemContent className="min-w-0">
                 <ItemTitle
                   className="font-serif text-lg font-bold"
