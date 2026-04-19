@@ -14,8 +14,7 @@ const navItems = [
   { href: "/about", label: "關於", Icon: User },
 ];
 
-// is blog post
-const isBlogPost = pathname.startsWith("blog/");
+const isBlogPost = /^blog\/.+/.test(pathname);
 ---
 
 <header
