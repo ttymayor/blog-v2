@@ -8,6 +8,7 @@ import {
   ItemSeparator,
   ItemFooter,
 } from "@/components/ui/item";
+import { Badge } from "@/components/ui/badge";
 
 const rtf = new Intl.RelativeTimeFormat("zh-TW", { numeric: "auto" });
 
@@ -38,7 +39,7 @@ export default function PostList({ posts }: PostListProps) {
             <a href={`/blog/${post.id}`}>
               <ItemContent className="min-w-0">
                 <ItemTitle
-                  className="font-serif text-lg"
+                  className="font-serif text-lg font-bold"
                   style={{
                     viewTransitionName: `post-title-${post.id.replace(/\//g, "-")}`,
                   }}
@@ -54,17 +55,23 @@ export default function PostList({ posts }: PostListProps) {
               <ItemFooter>
                 <div className="flex flex-wrap items-center gap-1.5">
                   {post.category && (
-                    <span className="text-muted-foreground text-xs">
+                    <Badge
+                      variant={"default"}
+                      style={{
+                        viewTransitionName: `post-category-${post.id.replace(/\//g, "-")}`,
+                      }}
+                    >
                       {post.category}
-                    </span>
+                    </Badge>
                   )}
                   {post.tags.slice(0, 3).map((tag) => (
-                    <span
+                    <Badge
+                      variant={"secondary"}
                       key={tag}
-                      className="bg-secondary text-secondary-foreground rounded px-1.5 py-0.5 text-xs"
+                      className="rounded-xs"
                     >
                       {tag}
-                    </span>
+                    </Badge>
                   ))}
                 </div>
                 <span className="text-muted-foreground shrink-0 text-xs">

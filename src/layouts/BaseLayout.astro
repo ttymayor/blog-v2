@@ -15,9 +15,10 @@ interface Props {
   title?: string;
   description?: string;
   ogImage?: string;
+  header?: boolean;
 }
 
-const { title, description, ogImage } = Astro.props;
+const { title, description, ogImage, header = true } = Astro.props;
 const pageTitle = title ? `${title}｜${SITE_TITLE}` : SITE_TITLE;
 ---
 
@@ -73,7 +74,7 @@ const pageTitle = title ? `${title}｜${SITE_TITLE}` : SITE_TITLE;
     <Font cssVariable="--font-geist-pixel-grid" preload />
   </head>
   <body>
-    <Header transition:persist transition:name="header" />
+    {header && <Header transition:persist />}
     <main class="p-0" transition:animate="fade">
       <slot />
     </main>
