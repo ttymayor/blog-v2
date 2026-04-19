@@ -14,24 +14,24 @@ const baseStyles = "group scroll-m-28 tracking-tight font-bold text-foreground";
 
 const levelStyles: Record<number, string> = {
   1: "text-4xl mb-8 mt-12",
-  2: "text-3xl mb-6 mt-10 border-b pb-2",
-  3: "text-2xl mb-4 mt-8",
-  4: "text-xl mb-4 mt-6",
-  5: "text-lg mb-2 mt-4",
-  6: "text-base mb-2 mt-4",
+  2: "text-3xl mb-6 mt-10 py-2",
+  3: "text-2xl mb-4 mt-8 py-2",
+  4: "text-xl mb-4 mt-6 py-2",
+  5: "text-lg mb-2 mt-4 py-2",
+  6: "text-base mb-2 mt-4 py-2",
 };
 ---
 
-<Tag
-  id={id}
-  class:list={cn(baseStyles, levelStyles[level], className)}
-  {...props}
+<a
+  href={`#${id}`}
+  class="no-underline text-foreground group"
+  aria-label="Link to this section"
 >
-  <a
-    href={`#${id}`}
-    class="no-underline text-foreground group"
-    aria-label="Link to this section"
+  <Tag
+    id={id}
+    class:list={cn(baseStyles, levelStyles[level], className)}
+    {...props}
   >
     <slot />
-  </a>
-</Tag>
+  </Tag>
+</a>
