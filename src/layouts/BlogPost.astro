@@ -3,10 +3,21 @@ import BaseLayout from "@/layouts/BaseLayout.astro";
 import { Image } from "astro:assets";
 import { Separator } from "@/components/ui/separator";
 import TableOfContents from "@/components/mdx/TableOfContents.astro";
-import { Calendar, Clock, FileText, Timer, Type, Undo2 } from "@lucide/astro";
+import {
+  Calendar,
+  Clock,
+  FileText,
+  Timer,
+  Type,
+  Undo2,
+  ChevronLeft,
+  ChevronRight,
+} from "@lucide/astro";
+import type { BlogPost as BlogPostType } from "@/types/blog";
 import { Badge } from "@/components/ui/badge";
 import PostActions from "@/components/PostActions";
 import { Button } from "@/components/ui/button";
+import { relativeTime } from "@/lib/utils";
 
 const {
   title,
@@ -22,6 +33,8 @@ const {
   readMinutes,
   slug,
   body,
+  prevPost,
+  nextPost,
 } = Astro.props;
 
 const ogImage = slug ? `/og/${slug}.png` : undefined;
@@ -32,17 +45,6 @@ const readTime: Number = Math.round(readMinutes);
 const articleUrl = new URL(Astro.url.pathname, Astro.site).href;
 const aiPrompt = `請幫我了解並討論這篇文章：「${title}」\n${articleUrl}`;
 const encodedPrompt = encodeURIComponent(aiPrompt);
-
-const rtf = new Intl.RelativeTimeFormat("zh-TW", { numeric: "auto" });
-
-function relativeTime(dateStr: string) {
-  const diff = new Date(dateStr).getTime() - Date.now();
-  const days = Math.round(diff / 86400000);
-  if (Math.abs(days) < 1) return rtf.format(Math.round(diff / 3600000), "hour");
-  if (Math.abs(days) < 30) return rtf.format(days, "day");
-  if (Math.abs(days) < 365) return rtf.format(Math.round(days / 30), "month");
-  return rtf.format(Math.round(days / 365), "year");
-}
 ---
 
 <BaseLayout title={title} description={description} ogImage={ogImage}>
@@ -158,6 +160,54 @@ function relativeTime(dateStr: string) {
             )
           }
         </div>
+
+        {
+          (prevPost || nextPost) && (
+            <>
+              <Separator className="mt-8 mb-6" client:load />
+              <nav class="grid grid-cols-2 gap-4 not-prose">
+                <div>
+                  {prevPost && (
+                    <a
+                      href={`/blog/${prevPost.id}`}
+                      class="flex flex-col gap-1 group"
+                    >
+                      <span class="text-muted-foreground text-xs flex items-center gap-1">
+                        <ChevronLeft class="size-3" />
+                        上一篇
+                      </span>
+                      <span
+                        class="text-sm font-medium group-hover:text-primary transition-colors line-clamp-2 font-serif"
+                        transition:name={`post-title-${prevPost.id.replace(/\//g, "-")}`}
+                      >
+                        {prevPost.title}
+                      </span>
+                    </a>
+                  )}
+                </div>
+                <div class="text-right">
+                  {nextPost && (
+                    <a
+                      href={`/blog/${nextPost.id}`}
+                      class="flex flex-col gap-1 items-end group"
+                    >
+                      <span class="text-muted-foreground text-xs flex items-center gap-1">
+                        下一篇
+                        <ChevronRight class="size-3" />
+                      </span>
+                      <span
+                        class="text-sm font-medium group-hover:text-primary transition-colors line-clamp-2 font-serif"
+                        transition:name={`post-title-${nextPost.id.replace(/\//g, "-")}`}
+                      >
+                        {nextPost.title}
+                      </span>
+                    </a>
+                  )}
+                </div>
+              </nav>
+            </>
+          )
+        }
       </article>
 
       <!-- Right: TOC -->

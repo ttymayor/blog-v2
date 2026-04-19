@@ -9,17 +9,7 @@ import {
   ItemFooter,
 } from "@/components/ui/item";
 import { Badge } from "@/components/ui/badge";
-
-const rtf = new Intl.RelativeTimeFormat("zh-TW", { numeric: "auto" });
-
-function relativeTime(dateStr: string) {
-  const diff = new Date(dateStr).getTime() - Date.now();
-  const days = Math.round(diff / 86400000);
-  if (Math.abs(days) < 1) return rtf.format(Math.round(diff / 3600000), "hour");
-  if (Math.abs(days) < 30) return rtf.format(days, "day");
-  if (Math.abs(days) < 365) return rtf.format(Math.round(days / 30), "month");
-  return rtf.format(Math.round(days / 365), "year");
-}
+import { relativeTime } from "@/lib/utils";
 
 interface PostListProps {
   posts: BlogPost[];

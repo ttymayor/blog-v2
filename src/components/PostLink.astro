@@ -2,6 +2,7 @@
 import type { BlogPost } from "@/types/blog";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { relativeTime } from "@/lib/utils";
 
 interface Props {
   post: BlogPost;
@@ -55,7 +56,7 @@ const { post } = Astro.props;
         {post.description || post.excerpt}
       </p>
       <p class="text-muted-foreground mt-2 shrink-0 font-mono text-sm">
-        {new Date(post.pubDate).toISOString().slice(0, 10).replaceAll("-", ".")}
+        {relativeTime(post.pubDate)}
       </p>
     </CardContent>
   </Card>

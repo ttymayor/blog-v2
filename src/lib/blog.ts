@@ -15,6 +15,18 @@ function extractExcerpt(body: string, maxLength = 100): string {
     .trimEnd() + "…";
 }
 
+export async function getAdjacentPosts(currentId: string): Promise<{
+  prevPost: BlogPost | null;
+  nextPost: BlogPost | null;
+}> {
+  const posts = await getPosts();
+  const index = posts.findIndex((p) => p.id === currentId);
+  return {
+    prevPost: posts[index + 1] ?? null, // older
+    nextPost: posts[index - 1] ?? null, // newer
+  };
+}
+
 export async function getPosts(): Promise<BlogPost[]> {
   const posts = await getCollection("blog");
 
