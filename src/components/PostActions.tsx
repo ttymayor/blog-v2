@@ -1,10 +1,7 @@
 import { toast } from "sonner";
 import { Copy, EllipsisVertical } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import {
-  ButtonGroup,
-  ButtonGroupSeparator,
-} from "@/components/ui/button-group";
+import { ButtonGroup } from "@/components/ui/button-group";
 import {
   DropdownMenu,
   DropdownMenuContent,

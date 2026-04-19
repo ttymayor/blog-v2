@@ -5,15 +5,13 @@ import { Separator } from "@/components/ui/separator";
 import TableOfContents from "@/components/mdx/TableOfContents.astro";
 import {
   Calendar,
-  Clock,
-  FileText,
   Timer,
   Type,
   Undo2,
   ChevronLeft,
   ChevronRight,
 } from "@lucide/astro";
-import type { BlogPost as BlogPostType } from "@/types/blog";
+import BlankBlock from "@/components/BlankBlock.astro";
 import { Badge } from "@/components/ui/badge";
 import PostActions from "@/components/PostActions";
 import { Button } from "@/components/ui/button";
@@ -48,7 +46,7 @@ const encodedPrompt = encodeURIComponent(aiPrompt);
 ---
 
 <BaseLayout title={title} description={description} ogImage={ogImage}>
-  <div class="hidden md:block md:h-22" aria-hidden="true"></div>
+  <BlankBlock />
 
   <div class="max-w-7xl w-full mx-auto px-4 py-12">
     <div class="flex gap-8">
@@ -70,12 +68,19 @@ const encodedPrompt = encodeURIComponent(aiPrompt);
       </div>
 
       <!-- Center: article -->
-
       <article id="content" class="min-w-0 flex-1 max-w-4xl mx-auto">
         {
           heroImage && (
             <div class="md:mb-8 mb-4">
-              <Image width={1020} height={510} src={heroImage} alt="" />
+              <Image
+                width={1020}
+                height={510}
+                src={heroImage}
+                alt=""
+                style={{
+                  viewTransitionName: `post-hero-${slug.replace(/\//g, "-")}`,
+                }}
+              />
             </div>
           )
         }
@@ -95,7 +100,7 @@ const encodedPrompt = encodeURIComponent(aiPrompt);
             }
             <h1
               id="article-title"
-              class="font-serif w-fit text-3xl md:text-4xl font-bold"
+              class="font-serif w-fit text-3xl md:text-4xl font-bold m-0 text-[clamp(1.75rem, 4vw, 2.25rem)]"
               transition:name={`post-title-${slug.replace(/\//g, "-")}`}
             >
               {title}
