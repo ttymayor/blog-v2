@@ -1,23 +1,14 @@
 ---
 import BaseLayout from "@/layouts/BaseLayout.astro";
-import BlogIndex from "@/components/blog/BlogIndex.astro";
 import { getPosts } from "@/lib/blog";
 import PostBrowser from "@/components/react/blog/PostBrowser";
 
 const posts = await getPosts();
-
-// Extract unique tags and categories
-const allTags = [...new Set(posts.flatMap((post) => post.tags))].sort();
-const allCategories = [
-  ...new Set(posts.map((post) => post.category).filter(Boolean)),
-].sort() as string[];
 ---
 
 <BaseLayout title="Blog">
   <div class="hidden md:block md:h-22" aria-hidden="true"></div>
   <div class="max-w-5xl w-full mx-auto px-4 py-12">
-    <!-- <BlogIndex posts={posts} allTags={allTags} allCategories={allCategories} /> -->
-
     <PostBrowser client:idle posts={posts} />
   </div>
 </BaseLayout>
