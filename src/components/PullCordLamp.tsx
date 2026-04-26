@@ -214,7 +214,6 @@ export default function PullCordLamp() {
   return (
     <div
       ref={mountRef}
-      aria-label="Pull cord to toggle theme"
       style={{
         position: "fixed",
         top: 0,

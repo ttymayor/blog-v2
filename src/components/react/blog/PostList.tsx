@@ -18,7 +18,7 @@ interface PostListProps {
 
 export default function PostList({ posts }: PostListProps) {
   return (
-    <ItemGroup>
+    <div className="group/item-group flex flex-col">
       {posts.map((post, i) => (
         <div key={post.id}>
           {i > 0 && (
@@ -85,6 +85,6 @@ export default function PostList({ posts }: PostListProps) {
           </Item>
         </div>
       ))}
-    </ItemGroup>
+    </div>
   );
 }
