@@ -2,13 +2,17 @@
 import BaseLayout from "@/layouts/BaseLayout.astro";
 import { getPosts } from "@/lib/blog";
 import PostBrowser from "@/components/react/blog/PostBrowser";
+import BlankBlock from "@/components/BlankBlock.astro";
 
 const posts = await getPosts();
 ---
 
 <BaseLayout title="Blog">
-  <div class="hidden md:block md:h-22" aria-hidden="true"></div>
+  <BlankBlock />
   <div class="max-w-5xl w-full mx-auto px-4 py-12">
-    <PostBrowser client:idle posts={posts} />
+    <PostBrowser
+      client:load
+      posts={posts}
+    />
   </div>
 </BaseLayout>

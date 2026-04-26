@@ -18,17 +18,15 @@ const isBlogPost = /^blog\/.+/.test(pathname);
 ---
 
 <header
-  class={cn(
-    "pointer-events-auto fixed bottom-0 left-0 z-50 flex w-full flex-row items-center justify-center md:bottom-auto md:top-0 group",
-    isBlogPost ? "lg:h-6 lg:items-start" : "",
-  )}
+  id="site-header"
+  data-blog-post={isBlogPost ? "" : undefined}
+  class="pointer-events-auto fixed bottom-0 left-0 z-50 flex w-full flex-row items-center justify-center md:bottom-auto md:top-0 group"
 >
   <nav
     id="nav-container"
     class={cn(
       "relative flex w-full items-center justify-around border-t border-white/20 bg-card p-2 shadow-2xl transition-all duration-300 ease-in-out dark:border-white/10 dark:bg-linear-to-br dark:from-white/10 dark:to-white/5 dark:shadow-black/60 md:mx-auto md:mt-4 md:w-[95%] md:max-w-5xl md:justify-between md:rounded-full md:border md:p-4",
       "md:bg-linear-to-br md:from-black/10 md:to-black/5 md:backdrop-blur-lg",
-      isBlogPost ? "lg:-translate-y-full lg:group-hover:translate-y-0" : "",
     )}
     transition:name="header"
   >
@@ -85,3 +83,51 @@ const isBlogPost = /^blog\/.+/.test(pathname);
     </div>
   </nav>
 </header>
+
+<script>
+  function initHeaderScroll() {
+    const header = document.getElementById("site-header");
+    if (!header || !("blogPost" in header.dataset)) return;
+
+    const nav = document.getElementById("nav-container");
+    if (!nav) return;
+
+    let scrolled = false;
+
+    const update = () => {
+      const shouldScroll = window.scrollY > 30;
+      if (shouldScroll === scrolled) return;
+      scrolled = shouldScroll;
+      header.classList.toggle("header-scrolled", scrolled);
+    };
+
+    window.addEventListener("scroll", update, { passive: true });
+    update();
+  }
+
+  initHeaderScroll();
+  document.addEventListener("astro:page-load", initHeaderScroll);
+</script>
+
+<style is:global>
+  @media (min-width: 1024px) {
+    #site-header {
+      transition:
+        height 0.3s ease,
+        align-items 0s;
+    }
+
+    #site-header.header-scrolled {
+      height: 1.5rem;
+      align-items: flex-start;
+    }
+
+    #site-header.header-scrolled #nav-container {
+      transform: translateY(-100%);
+    }
+
+    #site-header.header-scrolled:hover #nav-container {
+      transform: translateY(0);
+    }
+  }
+</style>

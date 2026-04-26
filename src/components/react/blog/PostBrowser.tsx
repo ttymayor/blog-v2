@@ -12,7 +12,7 @@ import {
   PaginationEllipsis,
 } from "@/components/ui/pagination";
 
-const PAGE_SIZE = 10;
+const PAGE_SIZE = 15;
 
 interface PostBrowserProps {
   posts: BlogPost[];
@@ -26,10 +26,11 @@ export default function PostBrowser({ posts }: PostBrowserProps) {
   useEffect(() => {
     const timer = setTimeout(() => {
       const q = search.toLowerCase();
-      const filtered = posts.filter((post) =>
-        post.title.toLowerCase().includes(q) ||
-        post.tags.some((tag) => tag.toLowerCase().includes(q)) ||
-        (post.category?.toLowerCase().includes(q) ?? false),
+      const filtered = posts.filter(
+        (post) =>
+          post.title.toLowerCase().includes(q) ||
+          post.tags.some((tag) => tag.toLowerCase().includes(q)) ||
+          (post.category?.toLowerCase().includes(q) ?? false),
       );
       setFilteredPosts(filtered);
       setPage(1);
@@ -61,7 +62,11 @@ export default function PostBrowser({ posts }: PostBrowserProps) {
 
   return (
     <div className="flex flex-col gap-4">
-      <Filter search={search} setSearch={setSearch} totalPosts={filteredPosts.length} />
+      <Filter
+        search={search}
+        setSearch={setSearch}
+        totalPosts={filteredPosts.length}
+      />
       <PostList posts={pagePosts} />
       {totalPages > 1 && (
         <Pagination>

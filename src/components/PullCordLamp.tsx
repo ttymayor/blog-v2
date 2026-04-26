@@ -39,7 +39,7 @@ export default function PullCordLamp() {
     const anchor = new THREE.Vector3(0, HEIGHT / 2, 0);
 
     // Rest length of the cord
-    const REST_LENGTH = 90;
+    const REST_LENGTH = 110;
     const MIN_LENGTH = REST_LENGTH - 80;
     const MAX_LENGTH = REST_LENGTH + 55;
     const MAX_OFFSET_X = 25;
@@ -221,7 +221,7 @@ export default function PullCordLamp() {
         right: 16,
         width: 80,
         height: 180,
-        zIndex: 60,
+        zIndex: 0,
         pointerEvents: "auto",
       }}
     />

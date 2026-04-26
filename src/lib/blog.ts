@@ -1,18 +1,21 @@
 import { getCollection } from "astro:content";
 import type { BlogPost } from "@/types/blog";
 
-function extractExcerpt(body: string, maxLength = 100): string {
-  return body
-    .replace(/^---[\s\S]*?---/, "")
-    .replace(/^>.*$/gm, "")
-    .replace(/```[\s\S]*?```/g, "")
-    .replace(/!?\[.*?\]\(.*?\)/g, "")
-    .replace(/#{1,6}\s+/g, "")
-    .replace(/[*_~`]/g, "")
-    .replace(/\n+/g, " ")
-    .trim()
-    .slice(0, maxLength)
-    .trimEnd() + "…";
+function extractExcerpt(body: string, maxLength = 300): string {
+  return (
+    body
+      .replace(/^---[\s\S]*?---/, "")
+      .replace(/^>.*$/gm, "")
+      .replace(/```[\s\S]*?```/g, "")
+      // [alt](url) --> alt
+      .replace(/!?\[(.*?)\]\(.*?\)/g, "$1")
+      .replace(/#{1,6}\s+/g, "")
+      .replace(/[*_~`]/g, "")
+      .replace(/\n+/g, " ")
+      .trim()
+      .slice(0, maxLength)
+      .trimEnd() + "…"
+  );
 }
 
 export async function getAdjacentPosts(currentId: string): Promise<{

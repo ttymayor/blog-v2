@@ -10,15 +10,16 @@ interface Props {
 const { level, class: className, id, ...props } = Astro.props;
 const Tag: "h1" | "h2" | "h3" | "h4" | "h5" | "h6" = `h${level}`;
 
-const baseStyles = "group scroll-m-28 tracking-tight font-bold text-foreground";
+const baseStyles =
+  "group scroll-m-28 tracking-tight font-bold text-foreground m-0 py-2";
 
 const levelStyles: Record<number, string> = {
-  1: "text-4xl mb-8 mt-12",
-  2: "text-3xl mb-6 mt-10 py-2",
-  3: "text-2xl mb-4 mt-8 py-2",
-  4: "text-xl mb-4 mt-6 py-2",
-  5: "text-lg mb-2 mt-4 py-2",
-  6: "text-base mb-2 mt-4 py-2",
+  1: "text-4xl",
+  2: "text-3xl",
+  3: "text-2xl",
+  4: "text-xl",
+  5: "text-lg",
+  6: "text-base",
 };
 ---
 

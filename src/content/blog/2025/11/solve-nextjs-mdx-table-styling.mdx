@@ -1,0 +1,160 @@
+---
+title: "如何解決 Next.js MDX 表格渲染問題"
+description: "Next.js 的 MDX 表格渲染問題的解決方法，包含套件安裝、配置、使用範例"
+pubDate: "2025-11-14T13:32:01+08:00"
+tags: ["Next.js", "MDX"]
+category: "Next.js"
+---
+
+## Next.js MDX 表格渲染問題
+
+Next.js 的 MDX 渲染器在處理表格時，會遇到一些問題。而官方在 GitHub 上似乎沒有提供他們的解決方案。有興趣可以參考 [這個 discussions](https://github.com/vercel/next.js/discussions/77266) 我看到的時候是 Unanswered。
+
+問題發生的時候我的環境如下（僅列出 MDX 相關的套件）：
+
+- `Next.js 16.0.3`
+- `@mdx-js/loader 3.1.1`
+- `@mdx-js/react 3.1.1`
+- `@next/mdx 16.0.3`
+- `@types/mdx 2.0.13`
+
+以上通常是若需要使用 MDX 的話，都會安裝的套件。請確保你已配置基本的 MDX 環境。
+
+## 解決方案
+
+可以嘗試安裝
+
+```sh
+npm install remark-gfm
+# or
+pnpm add remark-gfm
+# or
+yarn add remark-gfm
+# or
+bun add remark-gfm
+```
+
+### 步驟 1: 配置 next.config.ts
+
+安裝完成後，需要在 `next.config.ts` 中配置 `remarkPlugins`：
+
+```ts
+// next.config.ts
+import type { NextConfig } from "next";
+import createMDX from "@next/mdx";
+
+const nextConfig: NextConfig = {
+    pageExtensions: ["tsx", "jsx", "mdx", "ts", "js"],
+};
+
+const withMDX = createMDX({
+    extension: /\\.mdx$/,
+    options: {
+      remarkPlugins: [
+        "remark-gfm",
+      ],
+    },
+});
+
+export default withMDX(nextConfig);
+```
+
+### 步驟 2: 配置表格樣式組件
+
+雖然 `remark-gfm` 可以讓 MDX 識別表格語法，但還需要在 `mdx-components.tsx` 中自定義表格的樣式，否則表格會使用瀏覽器預設樣式。
+
+mdx-components.tsx
+
+```typescript
+import type { MDXComponents } from "mdx/types";
+
+const components: MDXComponents = {
+    table: ({ children }) => (
+      <div className="my-6 overflow-x-auto rounded-lg border border-gray-300 dark:border-gray-700">
+        <table className="w-full overflow-hidden rounded-lg border border-gray-300 dark:border-gray-700">
+          {children}
+        </table>
+      </div>
+    ),
+    thead: ({ children }) => (
+      <thead className="bg-gray-100 dark:bg-gray-800">{children}</thead>
+    ),
+    tbody: ({ children }) => <tbody>{children}</tbody>,
+    tr: ({ children }) => (
+      <tr className="hover:bg-gray-50 dark:hover:bg-gray-800/50">{children}</tr>
+    ),
+    th: ({ children, align, ...props }) => {
+      const alignClass =
+        align === "center"
+          ? "text-center"
+          : align === "right"
+            ? "text-right"
+            : "text-left";
+      return (
+        <th
+          className={`text-foreground border-r border-b border-gray-300 px-4 py-2 font-semibold first:border-l last:border-r dark:border-gray-700 ${alignClass}`}
+          {...props}
+        >
+          {children}
+        </th>
+      );
+    },
+    td: ({ children, align, ...props }) => {
+      const alignClass =
+        align === "center"
+          ? "text-center"
+          : align === "right"
+            ? "text-right"
+            : "text-left";
+      return (
+        <td
+          className={`text-foreground/90 border-r border-b border-gray-300 px-4 py-2 first:border-l last:border-r dark:border-gray-700 ${alignClass}`}
+          {...props}
+        >
+          {children}
+        </td>
+      );
+    },
+};
+
+export function useMDXComponents(): MDXComponents {
+    return components;
+}
+```
+
+## 使用範例
+
+配置完成後，就可以在 MDX 文件中使用表格了：
+
+### 基本表格
+
+```markdown
+| 欄位 1 | 欄位 2 | 欄位 3 |
+| :--- | :--: | ---: |
+| 資料 1 | 資料 2 | 資料 3 |
+| 資料 4 | 資料 5 | 資料 6 |
+| 資料 7 | 資料 8 | 資料 9 |
+```
+
+渲染結果：
+
+| 欄位 1 | 欄位 2 | 欄位 3 |
+| :--- | :--: | ---: |
+| 資料 1 | 資料 2 | 資料 3 |
+| 資料 4 | 資料 5 | 資料 6 |
+| 資料 7 | 資料 8 | 資料 9 |
+
+## 總結解決方案
+
+1. 安裝 `remark-gfm` 套件
+2. 在 `next.config.ts` 中配置 `remarkPlugins`
+3. 在 `mdx-components.tsx` 中自定義表格樣式組件
+
+## 參考資源
+
+- [remark-gfm 官方文檔](https://github.com/remarkjs/remark-gfm)
+- [Next.js MDX](https://nextjs.org/docs/app/building-your-application/configuring/mdx)
+- [Next.js MDX remark and rehype Plugins](https://nextjs.org/docs/app/guides/mdx#remark-and-rehype-plugins)
+- [Next.js MDX 表格渲染問題](https://github.com/vercel/next.js/discussions/77266)
+- [GitHub Flavored Markdown 規範](https://github.github.com/gfm/)
+- [MDX Tables Not Rendering in Next.js? Here's How to Solve It!](https://liupurnomo.com/next-mdx-table)

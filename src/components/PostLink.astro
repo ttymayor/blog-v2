@@ -2,7 +2,7 @@
 import type { BlogPost } from "@/types/blog";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { relativeTime } from "@/lib/utils";
+import RelativeTime from "@/components/react/RelativeTime";
 
 interface Props {
   post: BlogPost;
@@ -56,7 +56,7 @@ const { post } = Astro.props;
         {post.description || post.excerpt}
       </p>
       <p class="text-muted-foreground mt-2 shrink-0 font-mono text-sm">
-        {relativeTime(post.pubDate)}
+        <RelativeTime dateStr={post.pubDate} client:load />
       </p>
     </CardContent>
   </Card>

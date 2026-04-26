@@ -12,12 +12,7 @@ const tocHeadings = headings.filter((h) => h.depth >= 2 && h.depth <= 4);
 if (tocHeadings.length === 0) return null;
 ---
 
-<nav class="toc space-y-2 text-sm">
-  <p
-    class="font-bold mb-4 uppercase tracking-wider text-muted-foreground text-xs"
-  >
-    Table of Contents
-  </p>
+<nav class="toc text-sm">
   <ul class="pl-4">
     {
       tocHeadings.map((heading) => {
@@ -29,9 +24,10 @@ if (tocHeadings.length === 0) return null;
               href={`#${heading.slug}`}
               data-toc-link
               data-target={heading.slug}
-              class="toc-link border-l-gray-500 text-muted-foreground hover:text-foreground transition-colors block py-1.5"
+              class="toc-link text-muted-foreground hover:text-foreground block py-1.25"
             >
-              {heading.text}
+              <span class={`toc-bar depth-${heading.depth}`} />
+              <span class="toc-label">{heading.text}</span>
             </a>
           </li>
         );
@@ -93,11 +89,9 @@ if (tocHeadings.length === 0) return null;
     });
   }
 
-  // Initialize on page load
-  initTableOfContents();
-
   // Re-initialize after view transitions
-  // document.addEventListener("astro:page-load", initTableOfContents);
+  initTableOfContents();
+  document.addEventListener("astro:page-load", initTableOfContents);
 </script>
 
 <style>
@@ -129,11 +123,95 @@ if (tocHeadings.length === 0) return null;
     border-radius: 999px;
   }
 
-  .toc-link.active {
-    color: var(--foreground);
-    font-weight: 600;
-    border-left: 2px solid var(--primary);
+  /* ── Title ── */
+  .toc-title {
+    overflow: hidden;
+    max-height: 0;
+    opacity: 0;
+    margin-bottom: 0;
+    transition:
+      max-height 0.25s ease,
+      opacity 0.2s ease,
+      margin-bottom 0.25s ease;
+  }
+
+  .toc:hover .toc-title {
+    max-height: 2rem;
+    opacity: 1;
+    margin-bottom: 1rem;
+  }
+
+  /* ── Link container ── */
+  .toc-link {
+    display: flex;
+    align-items: center;
+    transition: color 0.15s;
+    border-left: 2px solid transparent;
     padding-left: 0.75rem;
     margin-left: -0.75rem;
+  }
+
+  /* ── Bar indicator (collapsed state) ── */
+  .toc-bar {
+    display: block;
+    flex-shrink: 0;
+    height: 2px;
+    border-radius: 999px;
+    background: currentColor;
+    opacity: 0.25;
+    margin-right: 20px;
+    transition:
+      opacity 0.2s ease,
+      width 0.25s ease;
+  }
+
+  .toc-bar.depth-2 {
+    width: 1.75rem;
+  }
+  .toc-bar.depth-3 {
+    width: 1.25rem;
+  }
+  .toc-bar.depth-4 {
+    width: 0.875rem;
+  }
+
+  .toc:hover .toc-bar {
+    width: 0;
+    opacity: 0;
+    margin-right: 0;
+  }
+
+  /* ── Label (expanded state) ── */
+  .toc-label {
+    display: block;
+    overflow: hidden;
+    max-width: 0;
+    height: 0.5rem;
+    opacity: 0;
+    white-space: nowrap;
+    transition:
+      max-width 0.25s ease,
+      height 0.25s ease,
+      opacity 0.2s ease 0.05s;
+  }
+
+  .toc:hover .toc-label {
+    max-width: 14rem;
+    height: 1.25rem;
+    opacity: 1;
+  }
+
+  /* ── Active state (bar) ── */
+  .toc-link.active .toc-bar {
+    opacity: 1;
+    height: 3px;
+    background: var(--primary);
+  }
+
+  /* ── Active state (text) ── */
+  .toc:hover .toc-link.active {
+    color: var(--foreground);
+    font-weight: 600;
+    border-left-color: var(--primary);
   }
 </style>

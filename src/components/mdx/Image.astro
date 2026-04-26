@@ -1,16 +1,45 @@
 ---
+import type { ImageMetadata } from "astro";
 import { Image as ImageComp } from "astro:assets";
-const props = Astro.props;
+interface Props {
+  src: string | ImageMetadata;
+  alt: string;
+  width?: number;
+  height?: number;
+}
+const { src, alt, width, height } = Astro.props;
+const isLocalImage = typeof src !== "string";
+const imageWidth = isLocalImage ? (src as ImageMetadata).width : width;
+const imageHeight = isLocalImage ? (src as ImageMetadata).height : height;
+const shouldHaveLightbox = !imageWidth || imageWidth >= 200;
+const fullSizeUrl = isLocalImage ? (src as ImageMetadata).src : (src as string);
 ---
 
 <div class="my-4 overflow-hidden rounded-md">
   <p class="m-0">
-    <ImageComp
-      src=""
-      alt=""
-      {...props}
-      class:list={"hover:scale-101 transition-all duration-300 ease-out"}
-      inferSize
-    />
+    {
+      shouldHaveLightbox ? (
+        <a
+          href={fullSizeUrl}
+          data-pswp-width={imageWidth}
+          data-pswp-height={imageHeight}
+          class="lightbox-trigger block"
+        >
+          <ImageComp
+            src={src as ImageMetadata}
+            alt={alt}
+            class="cursor-zoom-in"
+            loading="lazy"
+          />
+        </a>
+      ) : (
+        <ImageComp
+          src={src as ImageMetadata}
+          alt={alt}
+          class:list={"hover:scale-101 transition-all duration-300 ease-out"}
+          inferSize
+        />
+      )
+    }
   </p>
 </div>

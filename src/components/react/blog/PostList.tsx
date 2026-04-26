@@ -10,7 +10,7 @@ import {
   ItemMedia,
 } from "@/components/ui/item";
 import { Badge } from "@/components/ui/badge";
-import { relativeTime } from "@/lib/utils";
+import RelativeTime from "@/components/react/RelativeTime";
 
 interface PostListProps {
   posts: BlogPost[];
@@ -78,7 +78,7 @@ export default function PostList({ posts }: PostListProps) {
                   ))}
                 </div>
                 <span className="text-muted-foreground shrink-0 text-xs">
-                  {relativeTime(post.pubDate)}
+                  <RelativeTime dateStr={post.pubDate} />
                 </span>
               </ItemFooter>
             </a>
