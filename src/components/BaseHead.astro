@@ -56,3 +56,18 @@ const imageURL = new URL(imageSrc, Astro.site ?? Astro.url);
 <meta property="twitter:title" content={title} />
 <meta property="twitter:description" content={description} />
 <meta property="twitter:image" content={imageURL} />
+
+<!-- Google tag (gtag.js) -->
+<script
+  is:inline
+  async
+  src="https://www.googletagmanager.com/gtag/js?id=G-9JYZ6VS0KM"></script>
+<script is:inline>
+  window.dataLayer = window.dataLayer || [];
+  function gtag() {
+    dataLayer.push(arguments);
+  }
+  gtag("js", new Date());
+
+  gtag("config", "G-9JYZ6VS0KM");
+</script>
