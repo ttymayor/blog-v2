@@ -1,3 +1,4 @@
+import { SITE_TITLE } from "@/consts";
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import satori from "satori";
@@ -56,8 +57,6 @@ async function loadCjkFont(
   }
 }
 
-const SITE_NAME = "tantuyu";
-
 interface OgImageOptions {
   title: string;
   description?: string;
@@ -69,7 +68,7 @@ export async function renderOgImage({
   description,
   category,
 }: OgImageOptions): Promise<Buffer> {
-  const allText = [title, description ?? "", category ?? "", SITE_NAME].join(
+  const allText = [title, description ?? "", category ?? "", SITE_TITLE].join(
     " ",
   );
   const [cjkRegular, cjkBold] = await Promise.all([
@@ -162,7 +161,7 @@ export async function renderOgImage({
                       fontWeight: 700,
                       color: "#fafafa",
                     },
-                    children: SITE_NAME,
+                    children: SITE_TITLE,
                   },
                 },
                 {

@@ -143,13 +143,13 @@ const encodedPrompt = encodeURIComponent(aiPrompt);
           }
         </div>
 
-        <Separator className="mt-6 mb-6" client:load />
+        <Separator className="my-6" client:load />
         <div class="prose">
           <slot />
           {
             tags && tags.length > 0 && (
               <>
-                <Separator className="mt-6 mb-6" client:load />
+                <Separator client:load />
                 <div class="flex flex-wrap gap-2">
                   {tags.map((tag: string) => (
                     <Badge
@@ -169,7 +169,7 @@ const encodedPrompt = encodeURIComponent(aiPrompt);
         {
           (prevPost || nextPost) && (
             <>
-              <Separator className="mt-8 mb-6" client:load />
+              <Separator className="my-6" client:load />
               <nav class="grid grid-cols-2 gap-4 not-prose">
                 <div>
                   {prevPost && (
@@ -177,7 +177,7 @@ const encodedPrompt = encodeURIComponent(aiPrompt);
                       href={`/blog/${prevPost.id}`}
                       class="flex flex-col gap-1 group"
                     >
-                      <span class="text-muted-foreground text-xs flex items-center gap-1">
+                      <span class="text-muted-foreground text-xs flex items-center gap-1 group-hover:-translate-x-2 transition-all">
                         <ChevronLeft class="size-3" />
                         上一篇
                       </span>
@@ -196,7 +196,7 @@ const encodedPrompt = encodeURIComponent(aiPrompt);
                       href={`/blog/${nextPost.id}`}
                       class="flex flex-col gap-1 items-end group"
                     >
-                      <span class="text-muted-foreground text-xs flex items-center gap-1">
+                      <span class="text-muted-foreground text-xs flex items-center gap-1 group-hover:translate-x-2 transition-all">
                         下一篇
                         <ChevronRight class="size-3" />
                       </span>
