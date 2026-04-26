@@ -63,7 +63,11 @@ export default defineConfig({
       rehypePlugins: [rehypeKatex, rehypeSlug],
       gfm: true,
     }),
-    sitemap(),
+    sitemap({
+      filter: (page) =>
+        page !== 'https://v2.ttymayor.com/blog/2026/03/new-relationship/' &&
+        page !== 'https://v2.ttymayor.com/blog/2026/02/i-am-who-i-am/',
+      }),
     react(),
   ],
 
