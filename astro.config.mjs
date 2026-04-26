@@ -14,6 +14,8 @@ import tailwindcss from "@tailwindcss/vite";
 
 import react from "@astrojs/react";
 
+import partytown from "@astrojs/partytown";
+
 // https://astro.build/config
 export default defineConfig({
   site: "https://v2.ttymayor.com",
@@ -51,25 +53,21 @@ export default defineConfig({
       enabled: true,
     },
   },
-  integrations: [
-    mdx({
-      syntaxHighlight: "shiki",
-      remarkPlugins: [
-        remarkMath,
-        remarkGfm,
-        remarkReadingTime,
-        remarkModifiedTime,
-      ],
-      rehypePlugins: [rehypeKatex, rehypeSlug],
-      gfm: true,
-    }),
-    sitemap({
-      filter: (page) =>
-        page !== 'https://v2.ttymayor.com/blog/2026/03/new-relationship/' &&
-        page !== 'https://v2.ttymayor.com/blog/2026/02/i-am-who-i-am/',
-      }),
-    react(),
-  ],
+  integrations: [mdx({
+    syntaxHighlight: "shiki",
+    remarkPlugins: [
+      remarkMath,
+      remarkGfm,
+      remarkReadingTime,
+      remarkModifiedTime,
+    ],
+    rehypePlugins: [rehypeKatex, rehypeSlug],
+    gfm: true,
+  }), sitemap({
+    filter: (page) =>
+      page !== 'https://v2.ttymayor.com/blog/2026/03/new-relationship/' &&
+      page !== 'https://v2.ttymayor.com/blog/2026/02/i-am-who-i-am/',
+    }), react(), partytown()],
 
   vite: {
     plugins: [tailwindcss()],
