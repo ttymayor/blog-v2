@@ -1,6 +1,6 @@
 ---
 import BaseLayout from "@/layouts/BaseLayout.astro";
-import { Image } from "astro:assets";
+import { Image, getImage } from "astro:assets";
 import { Separator } from "@/components/ui/separator";
 import TableOfContents from "@/components/mdx/TableOfContents.astro";
 import {
@@ -35,7 +35,11 @@ const {
   nextPost,
 } = Astro.props;
 
-const ogImage = slug ? `/og/${slug}.png` : undefined;
+const ogImage = heroImage
+  ? (await getImage({ src: heroImage })).src
+  : slug
+    ? `/og/${slug}.png`
+    : undefined;
 
 const modifiedDate = lastModified ? new Date(lastModified) : undefined;
 const readTime: Number = Math.round(readMinutes);
