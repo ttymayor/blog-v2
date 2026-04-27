@@ -316,6 +316,15 @@
     border: none;
     border-top: 1px solid rgb(var(--gray-light));
   }
+  [data-footnote-ref] {
+    @apply scroll-m-30 underline underline-offset-2;
+  }
+  [data-footnote-ref]::before {
+    content: "[";
+  }
+  [data-footnote-ref]::after {
+    content: "]";
+  }
 
   @media (max-width: 720px) {
     main {
