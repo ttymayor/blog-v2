@@ -1,34 +1,115 @@
 ---
 import BaseLayout from "@/layouts/BaseLayout.astro";
-
 import FlipCard from "@/components/react/FlipCard";
 import HeroScrollSection from "@/components/react/HeroScrollSection";
 import ProfileAvatar from "@/components/react/ProfileAvatar";
 import avatar from "@/assets/avatar.jpg";
-import { Finder } from "@/components/react/Finder";
 ---
 
-<BaseLayout title="About" description="tantuyu 的個人網站" ogImage="/og/about.png">
+<BaseLayout
+  title="About"
+  description="tantuyu 的個人網站"
+  ogImage="/og/about.png"
+>
+  <!-- Hero: scroll-driven FlipCard -->
   <HeroScrollSection client:load>
     <FlipCard client:load avatarSrc={avatar.src} />
   </HeroScrollSection>
+
+  <!-- Fade out the hero -->
   <div class="relative z-10 pointer-events-none">
     <div class="h-48 bg-linear-to-b from-transparent to-background"></div>
-    <div class="bg-background pointer-events-auto">
-      <div class="max-w-4xl mx-auto px-4 w-full flex flex-col gap-16 pb-16">
-        <section>
-          <ProfileAvatar
-            client:load
-            src={avatar.src}
-            alt="Avatar"
-            name="tantuyu"
-            description="I'm a <span class='font-bold text-foreground/90'>Full Stack Developer</span>. Love to build cool things that can help people. Give me a theme, and I'll work it out."
-          />
-        </section>
-        <Finder client:load />
-      </div>
-    </div>
   </div>
+
+  <!-- Content -->
+  <div class="relative z-10 bg-background">
+    <!-- hatched top divider -->
+    <div
+      class="h-8 w-full border-t [background:repeating-linear-gradient(-45deg,transparent,transparent_8px,#94a3b815_8px,#94a3b815_10px)]"
+    >
+    </div>
+
+    <!-- Profile section -->
+    <section class="border-t w-full">
+      <div class="max-w-5xl mx-auto px-6 py-12">
+        <ProfileAvatar
+          client:load
+          src={avatar.src}
+          alt="tantuyu's avatar"
+          name="tantuyu"
+          description="I'm a <span class='font-semibold text-foreground/90'>Full Stack Developer</span> and student. I love building things that are actually useful — give me a problem and I'll work it out."
+        />
+      </div>
+    </section>
+
+    <!-- hatched divider -->
+    <div
+      class="h-6 w-full border-t [background:repeating-linear-gradient(-45deg,transparent,transparent_8px,#94a3b815_8px,#94a3b815_10px)]"
+    >
+    </div>
+
+    <!-- Bio section -->
+    <section class="border-t w-full">
+      <div
+        class="max-w-5xl mx-auto px-6 py-12 grid grid-cols-1 gap-12 md:grid-cols-2"
+      >
+        <div>
+          <h2
+            class="text-xs font-semibold uppercase tracking-widest text-muted-foreground mb-4"
+          >
+            About
+          </h2>
+          <ul class="text-sm text-foreground/80 leading-relaxed">
+            <li>在 Coding 👨‍💻 中，極度享受當下的時光</li>
+            <li>Linux 使用者，使用過 Ubuntu、Kali、Arch、Fedora（正在探索）</li>
+            <li>🔥Team Pixel（Pixel 7），預計入手 Pixel 11</li>
+            <li>
+              <strong class="text-foreground/90"
+                >打 CTF
+              </strong>但不怎麼強，有時間有朋友約就去打
+            </li>
+            <li>
+              喜歡看臺灣<strong class="text-foreground/90">喜劇、漫才</strong>
+            </li>
+          </ul>
+        </div>
+        <div>
+          <h2
+            class="text-xs font-semibold uppercase tracking-widest text-muted-foreground mb-4"
+          >
+            Stack
+          </h2>
+          <ul
+            class="grid grid-cols-2 gap-x-6 gap-y-2 text-sm text-foreground/80"
+          >
+            {
+              [
+                "Next.js",
+                "Astro",
+                "React",
+                "Vue",
+                "Laravel",
+                "TypeScript",
+                "Tailwind CSS",
+                "PostgreSQL",
+              ].map((item) => (
+                <li class="flex items-center gap-2">
+                  <span class="inline-block size-1 rounded-full bg-muted-foreground/60 shrink-0" />
+                  {item}
+                </li>
+              ))
+            }
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- hatched bottom divider -->
+    <!-- <div
+      class="h-6 w-full border-t [background:repeating-linear-gradient(-45deg,transparent,transparent_8px,#94a3b815_8px,#94a3b815_10px)]"
+    > -->
+  </div>
+  <!-- <div class="h-8 border-t w-full"></div> -->
 </BaseLayout>
 
 <style>
