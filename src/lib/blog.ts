@@ -45,6 +45,7 @@ export async function getPosts(): Promise<BlogPost[]> {
       tags: post.data.tags,
       category: post.data.category,
       draft: post.data.draft,
+      chatWithAI: post.data.chatWithAI,
       excerpt: post.data.description || extractExcerpt(post.body ?? ""),
     }));
 }

@@ -33,6 +33,7 @@ const {
   body,
   prevPost,
   nextPost,
+  chatWithAI,
 } = Astro.props;
 
 const ogImage = heroImage
@@ -44,9 +45,13 @@ const ogImage = heroImage
 const modifiedDate = lastModified ? new Date(lastModified) : undefined;
 const readTime: Number = Math.round(readMinutes);
 
-const articleUrl = new URL(Astro.url.pathname, Astro.site).href;
-const aiPrompt = `請幫我了解並討論這篇文章：「${title}」\n${articleUrl}`;
-const encodedPrompt = encodeURIComponent(aiPrompt);
+let aiPrompt = "";
+let encodedPrompt = "";
+if (chatWithAI) {
+  const articleUrl = new URL(Astro.url.pathname, Astro.site).href;
+  aiPrompt = `請幫我了解並討論這篇文章：「${title}」\n${articleUrl}`;
+  encodedPrompt = encodeURIComponent(aiPrompt);
+}
 ---
 
 <BaseLayout title={title} description={description} ogImage={ogImage}>
@@ -110,11 +115,15 @@ const encodedPrompt = encodeURIComponent(aiPrompt);
               {title}
             </h1>
           </div>
-          <PostActions
-            body={body ?? ""}
-            encodedPrompt={encodedPrompt}
-            client:load
-          />
+          {
+            chatWithAI && (
+              <PostActions
+                body={body ?? ""}
+                encodedPrompt={encodedPrompt}
+                client:load
+              />
+            )
+          }
         </div>
         <div
           class="flex flex-row items-center gap-4 text-muted-foreground text-xs flex-wrap mb-4"

@@ -14,6 +14,7 @@ const blog = defineCollection({
       category: z.string().optional(),
       draft: z.boolean().default(false),
       pin: z.boolean().default(false),
+      chatWithAI: z.boolean().default(true),
     }),
 });
 
