@@ -13,6 +13,7 @@ import H5 from "@/components/mdx/H5.astro";
 import H6 from "@/components/mdx/H6.astro";
 import { getAdjacentPosts } from "@/lib/blog";
 import Spoiler from "@/components/react/Spoiler";
+import YouTubeEmbed from "@/components/mdx/YouTubeEmbed.astro";
 
 export async function getStaticPaths() {
   const posts = await getCollection("blog");
@@ -52,6 +53,7 @@ const { prevPost, nextPost } = await getAdjacentPosts(post.id);
       h5: H5,
       h6: H6,
       Spoiler,
+      YouTubeEmbed,
     }}
   />
 </BlogPost>
