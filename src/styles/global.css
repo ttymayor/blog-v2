@@ -188,11 +188,6 @@
     font-family: "Noto Serif TC", serif;
   }
 
-  strong,
-  b {
-    font-weight: 700;
-  }
-
   .prose h1 {
     @apply text-3xl md:text-4xl;
   }
