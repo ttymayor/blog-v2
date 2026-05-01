@@ -12,6 +12,7 @@ function extractExcerpt(body: string, maxLength = 300): string {
       .replace(/#{1,6}\s+/g, "")
       .replace(/[*_~`]/g, "")
       .replace(/\n+/g, " ")
+      .replace(/<YouTubeEmbed id="(.*?)" \/>/g, "[Youtube 嵌入]")
       .trim()
       .slice(0, maxLength)
       .trimEnd() + "…"
