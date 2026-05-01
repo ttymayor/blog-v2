@@ -1,19 +1,16 @@
 import * as React from "react";
 import { Moon, Sun } from "lucide-react";
 
-import { Button } from "@/components/ui/button";
-import { motion } from "motion/react";
+import { IconSwap } from "@/components/react/IconSwap";
 
 export function ModeToggle() {
   const [theme, setThemeState] = React.useState<"light" | "dark">("dark");
 
-  // Initialize: read current theme from DOM
   React.useEffect(() => {
     const isDarkMode = document.documentElement.classList.contains("dark");
     setThemeState(isDarkMode ? "dark" : "light");
   }, []);
 
-  // Listen for external theme changes
   React.useEffect(() => {
     const handleThemeChange = (e: CustomEvent) => {
       setThemeState(e.detail.theme);
@@ -36,44 +33,23 @@ export function ModeToggle() {
     const newTheme = theme === "dark" ? "light" : "dark";
     const isDark = newTheme === "dark";
 
-    // Update DOM
     document.documentElement.classList[isDark ? "add" : "remove"]("dark");
-
-    // Update localStorage
     localStorage.setItem("theme", newTheme);
-
-    // Update local state
     setThemeState(newTheme);
 
-    // Dispatch event for other components
     document.dispatchEvent(
       new CustomEvent("themechange", { detail: { theme: newTheme } }),
     );
   };
 
   return (
-    <Button
-      variant="ghost"
-      size="icon-lg"
-      className="cursor-pointer rounded-full transition-all hover:bg-black/15 dark:hover:bg-white/15"
-      onClick={toggleTheme}
-    >
-      <motion.div
-        initial={{ scale: 0.5 }}
-        animate={{ scale: theme === "light" ? 1 : 0 }}
-        transition={{ duration: 0.3, ease: "easeOut" }}
-      >
-        <Sun className="h-[1.2rem] w-[1.2rem]" />
-      </motion.div>
-      <motion.div
-        className="absolute"
-        initial={{ scale: 0.5 }}
-        animate={{ scale: theme === "dark" ? 1 : 0 }}
-        transition={{ duration: 0.3, ease: "easeOut" }}
-      >
-        <Moon className="h-[1.2rem] w-[1.2rem]" />
-      </motion.div>
-      <span className="sr-only">Toggle theme</span>
-    </Button>
+    <IconSwap
+      iconA={<Sun className="h-[1.2rem] w-[1.2rem]" />}
+      iconB={<Moon className="h-[1.2rem] w-[1.2rem]" />}
+      state={theme === "light" ? "a" : "b"}
+      onToggle={toggleTheme}
+      ariaLabel="Toggle theme"
+      className="size-10 cursor-pointer rounded-full transition-all hover:bg-black/15 dark:hover:bg-white/15"
+    />
   );
 }

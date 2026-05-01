@@ -242,29 +242,6 @@ if (chatWithAI) {
         const copyIcon = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>`;
         const checkIcon = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>`;
 
-        function swapIcon(btn: HTMLButtonElement, html: string): Promise<void> {
-          return new Promise((resolve) => {
-            const span = btn.querySelector(".copy-btn-icon") as HTMLElement;
-            span.style.animation = "copy-icon-out 0.08s ease forwards";
-            span.addEventListener(
-              "animationend",
-              () => {
-                span.innerHTML = html;
-                span.style.animation = "copy-icon-in 0.1s ease forwards";
-                span.addEventListener(
-                  "animationend",
-                  () => {
-                    span.style.animation = "";
-                    resolve();
-                  },
-                  { once: true },
-                );
-              },
-              { once: true },
-            );
-          });
-        }
-
         document.querySelectorAll(".prose pre").forEach((pre) => {
           if (pre.parentElement?.classList.contains("code-wrapper")) return;
           const wrapper = document.createElement("div");
@@ -274,7 +251,7 @@ if (chatWithAI) {
 
           const btn = document.createElement("button");
           btn.className = "copy-btn";
-          btn.innerHTML = `<span class="copy-btn-icon">${copyIcon}</span>`;
+          btn.innerHTML = `<span class="t-icon-swap" data-state="a"><span class="t-icon" data-icon="a">${copyIcon}</span><span class="t-icon" data-icon="b">${checkIcon}</span></span>`;
           let copying = false;
           btn.addEventListener("click", async () => {
             if (copying) return;
@@ -285,11 +262,10 @@ if (chatWithAI) {
               return;
             }
             await navigator.clipboard.writeText(code.textContent || "");
-            btn.classList.add("copied");
-            await swapIcon(btn, checkIcon);
+            const swap = btn.querySelector(".t-icon-swap") as HTMLElement;
+            swap.dataset.state = "b";
             await new Promise<void>((r) => setTimeout(r, 2000));
-            btn.classList.remove("copied");
-            await swapIcon(btn, copyIcon);
+            swap.dataset.state = "a";
             copying = false;
           });
           wrapper.appendChild(btn);
@@ -327,35 +303,5 @@ if (chatWithAI) {
       document.addEventListener("astro:page-load", initPhotoSwipe);
     </script>
 
-    <style>
-      @keyframes copy-icon-out {
-        from {
-          transform: scale(1);
-          filter: blur(0px);
-          opacity: 1;
-        }
-        to {
-          transform: scale(0.3);
-          filter: blur(3px);
-          opacity: 0;
-        }
-      }
-      @keyframes copy-icon-in {
-        from {
-          transform: scale(0.3);
-          filter: blur(3px);
-          opacity: 0;
-        }
-        to {
-          transform: scale(1);
-          filter: blur(0px);
-          opacity: 1;
-        }
-      }
-      .copy-btn-icon {
-        display: flex;
-        align-items: center;
-      }
-    </style>
   </div>
 </BaseLayout>
