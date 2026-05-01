@@ -1,7 +1,7 @@
 export interface BlogPost {
   id: string;
   title: string;
-  description: string;
+  description?: string;
   pubDate: string;
   heroImage?: string;
   tags: string[];
