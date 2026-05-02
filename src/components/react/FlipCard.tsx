@@ -123,7 +123,7 @@ export default function FlipCard({ avatarSrc }: FlipCardProps) {
       >
         {/* Front face */}
         <div
-          className="absolute inset-0 flex flex-col items-center justify-center rounded-2xl border border-white/20 bg-linear-to-br from-black/10 to-black/5 p-10 shadow-2xl shadow-black/20 backdrop-blur-sm dark:border-white/10 dark:bg-linear-to-br dark:from-white/10 dark:to-white/5 dark:shadow-black/60"
+          className="from-card/60 to-card/20 dark:from-card dark:to-card/20 absolute inset-0 flex flex-col items-center justify-center rounded-2xl border border-white/20 bg-linear-to-b p-10 shadow-2xl shadow-black/20 backdrop-blur-sm dark:border-white/10 dark:bg-linear-to-b dark:shadow-black/60"
           style={{
             backfaceVisibility: "hidden",
             WebkitBackfaceVisibility: "hidden",
@@ -161,7 +161,7 @@ export default function FlipCard({ avatarSrc }: FlipCardProps) {
 
         {/* Back face */}
         <div
-          className="absolute inset-0 flex flex-col justify-center gap-4 rounded-2xl border border-white/20 bg-linear-to-br from-black/10 to-black/5 p-10 shadow-2xl shadow-black/20 backdrop-blur-sm dark:border-white/10 dark:bg-linear-to-br dark:from-white/10 dark:to-white/5 dark:shadow-black/60"
+          className="from-card/60 to-card/20 dark:from-card dark:to-card/20 absolute inset-0 flex flex-col justify-center gap-4 rounded-2xl border border-white/20 bg-linear-to-b p-10 shadow-2xl shadow-black/20 backdrop-blur-sm dark:border-white/10 dark:bg-linear-to-b dark:shadow-black/60"
           style={{
             backfaceVisibility: "hidden",
             WebkitBackfaceVisibility: "hidden",

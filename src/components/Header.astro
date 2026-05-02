@@ -25,8 +25,13 @@ const isBlogPost = /^blog\/.+/.test(pathname);
   <nav
     id="nav-container"
     class={cn(
-      "relative flex w-full items-center justify-around border-t border-white/20 bg-card p-2 shadow-2xl transition-all duration-300 ease-in-out dark:border-white/10 dark:bg-linear-to-br dark:from-white/10 dark:to-white/5 dark:shadow-black/60 md:mx-auto md:mt-4 md:w-[95%] md:max-w-5xl md:justify-between md:rounded-full md:border md:p-4",
-      "md:bg-linear-to-br md:from-black/10 md:to-black/5 md:backdrop-blur-lg",
+      "relative flex w-full items-center justify-around border-t p-2 shadow-xl transition-all duration-300 ease-in-out backdrop-blur-sm bg-linear-to-b from-card/95 via-card/90 to-card/95",
+      // small screen dark mode
+      "dark:border-white/15 dark:from-card/95 dark:via-card/90 dark:to-card/95",
+      // computer light mode
+      "md:border-white/5 md:mx-4 md:mt-4 md:w-full md:max-w-5xl md:justify-between md:rounded-full md:p-4 md:backdrop-blur-sm md:from-card/95 md:via-card/80 md:to-card/95",
+      // computer dark mode
+      "md:dark:border-white/15 md:dark:from-card/95 md:dark:via-card/80 md:dark:to-card/95"
     )}
     transition:name="header"
   >

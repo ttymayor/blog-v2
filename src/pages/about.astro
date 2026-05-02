@@ -1,12 +1,12 @@
 ---
 import BaseLayout from "@/layouts/BaseLayout.astro";
-import FlipCard from "@/components/react/FlipCard";
-import HeroScrollSection from "@/components/react/HeroScrollSection";
 import ProfileAvatar from "@/components/react/ProfileAvatar";
+import BlankBlock from "@/components/BlankBlock.astro";
 import avatar from "@/assets/avatar.jpg";
 import slideGitForensics from "@/assets/slides/20260423-git-and-forensics.png";
 import slideLinux101 from "@/assets/slides/20250925-linux.png";
 import slideUnUsefulTool from "@/assets/slides/20260430-un-useful-tool.png";
+import { SITE_TITLE } from "@/consts";
 
 type Slide = {
   title: string;
@@ -42,32 +42,17 @@ const slides: Slide[] = [
   description="tantuyu 的個人網站"
   ogImage="/og/about.png"
 >
-  <!-- Hero: scroll-driven FlipCard -->
-  <HeroScrollSection client:load>
-    <FlipCard client:load avatarSrc={avatar.src} />
-  </HeroScrollSection>
-
-  <!-- Fade out the hero -->
-  <div class="relative z-10 pointer-events-none">
-    <div class="h-48 bg-linear-to-b from-transparent to-background"></div>
-  </div>
-
+  <BlankBlock />
   <!-- Content -->
   <div class="relative z-10 bg-background">
-    <!-- hatched top divider -->
-    <div
-      class="h-8 w-full border-t [background:repeating-linear-gradient(-45deg,transparent,transparent_8px,#94a3b815_8px,#94a3b815_10px)]"
-    >
-    </div>
-
     <!-- Profile section -->
-    <section class="border-t w-full">
+    <section class="w-full">
       <div class="max-w-5xl mx-auto px-6 py-12">
         <ProfileAvatar
           client:load
           src={avatar.src}
           alt="tantuyu's avatar"
-          name="tantuyu"
+          name={SITE_TITLE}
           description="I'm a <span class='font-semibold text-foreground/90'>Full Stack Developer</span> and student. I love building things that are actually useful — give me a problem and I'll work it out."
         />
       </div>

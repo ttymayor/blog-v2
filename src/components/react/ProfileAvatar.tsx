@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
-import { Music } from "lucide-react";
 import { useLanyard, type SpotifyData } from "@/lib/lanyard";
+import FlipCard from "@/components/react/FlipCard";
 import {
   Dialog,
   DialogContent,
@@ -100,6 +100,7 @@ export default function ProfileAvatar({
 }: ProfileAvatarProps) {
   const lanyard = useLanyard();
   const [spotifyOpen, setSpotifyOpen] = useState(false);
+  const [cardOpen, setCardOpen] = useState(false);
 
   const hasSpotify = lanyard.listeningToSpotify && lanyard.spotify;
 
@@ -107,18 +108,23 @@ export default function ProfileAvatar({
     <>
       <div className="flex flex-col gap-6 md:flex-row md:gap-8">
         {/* Avatar */}
-        <div className="shrink-0">
+        <button
+          type="button"
+          className="shrink-0 cursor-pointer rounded-full transition-opacity hover:opacity-80 active:opacity-60"
+          onClick={() => setCardOpen(true)}
+        >
           <img
             src={src}
             alt={alt}
+            style={{ viewTransitionName: "site-avatar" }}
             className="h-16 w-16 rounded-full object-cover shadow-lg md:h-20 md:w-20"
           />
-        </div>
+        </button>
 
         {/* Name + Spotify + Description */}
         <div className="min-w-0 flex-1">
           <div className="mb-3 flex flex-wrap items-center gap-2.5">
-            <h1 className="mb-0 text-3xl font-bold md:text-4xl">{name}</h1>
+            <h1 className="mb-0 text-2xl font-bold">{name}</h1>
             {hasSpotify && (
               <button
                 type="button"
@@ -159,6 +165,17 @@ export default function ProfileAvatar({
           </DialogContent>
         </Dialog>
       )}
+
+      {/* FlipCard Dialog */}
+      <Dialog open={cardOpen} onOpenChange={setCardOpen}>
+        <DialogContent className="border-none bg-transparent p-0 shadow-none sm:max-w-xl [&>button]:hidden">
+          <DialogHeader className="sr-only">
+            <DialogTitle>名片</DialogTitle>
+            <DialogDescription>點擊卡片以翻轉</DialogDescription>
+          </DialogHeader>
+          <FlipCard avatarSrc={src} />
+        </DialogContent>
+      </Dialog>
     </>
   );
 }
