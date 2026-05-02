@@ -1,7 +1,8 @@
-import { toast } from "sonner";
-import { Copy, EllipsisVertical } from "lucide-react";
+import { useState } from "react";
+import { Copy, Check, EllipsisVertical } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ButtonGroup } from "@/components/ui/button-group";
+import { IconSwap } from "@/components/react/IconSwap";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -18,6 +19,8 @@ interface Props {
 }
 
 export default function PostActions({ body, encodedPrompt }: Props) {
+  const [copied, setCopied] = useState(false);
+
   const aiLinks = [
     {
       name: "Claude",
@@ -38,20 +41,28 @@ export default function PostActions({ body, encodedPrompt }: Props) {
 
   const handleCopy = async () => {
     await navigator.clipboard.writeText(body);
-    toast("已複製 Markdown", { icon: <Copy className="size-4" /> });
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
   };
 
   return (
-    <div className="mb-4 flex justify-end">
-      <ButtonGroup>
+    <div className="h-fit">
+      <ButtonGroup className="h-fit">
         <Button
           variant="outline"
           size="sm"
           onClick={handleCopy}
           aria-label="Copy as Markdown"
+          className="group/copy relative"
         >
-          <Copy className="size-3.5" />
-          <span className="hidden sm:inline">Copy</span>
+          <IconSwap
+            iconA={<Copy className="size-3.5" />}
+            iconB={<Check className="size-3.5" />}
+            state={copied ? "b" : "a"}
+          />
+          <span className="bg-primary text-primary-foreground pointer-events-none absolute bottom-full left-1/2 mb-1.5 -translate-x-1/2 rounded px-2 py-1 text-xs whitespace-nowrap opacity-0 transition-opacity group-hover/copy:opacity-100">
+            {copied ? "Copied!" : "Copy as Markdown"}
+          </span>
         </Button>
         <DropdownMenu>
           <DropdownMenuTrigger asChild>

@@ -1,6 +1,6 @@
 import * as React from "react";
 import { Moon, Sun } from "lucide-react";
-
+import { Button } from "@/components/ui/button";
 import { IconSwap } from "@/components/react/IconSwap";
 
 export function ModeToggle() {
@@ -43,13 +43,18 @@ export function ModeToggle() {
   };
 
   return (
-    <IconSwap
-      iconA={<Sun className="h-[1.2rem] w-[1.2rem]" />}
-      iconB={<Moon className="h-[1.2rem] w-[1.2rem]" />}
-      state={theme === "light" ? "a" : "b"}
-      onToggle={toggleTheme}
-      ariaLabel="Toggle theme"
-      className="size-10 cursor-pointer rounded-full transition-all hover:bg-black/15 dark:hover:bg-white/15"
-    />
+    <Button
+      variant="full-ghost"
+      size="icon"
+      aria-label="Toggle theme"
+      onClick={toggleTheme}
+      className="cursor-pointer rounded-full"
+    >
+      <IconSwap
+        iconA={<Sun className="h-[1.2rem] w-[1.2rem]" />}
+        iconB={<Moon className="h-[1.2rem] w-[1.2rem]" />}
+        state={theme === "light" ? "a" : "b"}
+      />
+    </Button>
   );
 }

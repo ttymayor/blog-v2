@@ -1,17 +1,7 @@
 @import "tailwindcss";
 @import "tw-animate-css";
-@import "locomotive-scroll/dist/locomotive-scroll.css";
 
 @plugin "tailwindcss-animate";
-
-@keyframes marquee {
-  0% {
-    transform: translateX(0);
-  }
-  100% {
-    transform: translateX(-50%);
-  }
-}
 
 @keyframes heading-highlight {
   0% {
@@ -158,6 +148,10 @@
     @apply border-border outline-ring/50;
   }
 
+  html {
+    scrollbar-gutter: stable;
+  }
+
   body {
     @apply bg-background text-foreground;
     font-family: "Geist", "Noto Sans TC", sans-serif;
@@ -166,6 +160,7 @@
     text-align: left;
     word-wrap: break-word;
     overflow-wrap: break-word;
+    margin-right: 0 !important;
     text-autospace: normal;
   }
 
@@ -191,135 +186,176 @@
   .prose h1 {
     @apply text-3xl md:text-4xl;
   }
+
   .prose h2 {
     @apply text-2xl md:text-3xl;
   }
+
   .prose h3 {
     @apply text-xl md:text-2xl;
   }
+
   .prose h4 {
     @apply md:text-xl;
   }
+
   .prose p {
     @apply text-base/7 tracking-wide;
   }
+
   .prose a {
     @apply text-blue-500 underline underline-offset-4 transition-all hover:text-blue-400 hover:no-underline dark:text-blue-200 dark:hover:text-blue-300;
   }
+
   .prose blockquote {
     @apply text-foreground/80 bg-card border-l-4 px-5 py-4 text-base;
   }
+
   .prose code {
     @apply rounded-lg border px-1 py-px font-mono text-[#745525] dark:text-[#d0ae7d];
   }
+
   .prose ul,
   .prose ol {
     @apply ml-6 list-outside text-base/7 marker:text-gray-500/75 marker:transition-colors marker:duration-200;
   }
+
   .prose ul {
     @apply list-disc;
   }
+
   .prose ol {
     @apply list-decimal;
   }
+
   .prose li:hover::marker {
     color: #745525;
   }
+
   .dark .prose li:hover::marker {
     color: #d0ae7d;
   }
+
   .prose pre {
     @apply overflow-x-auto rounded-lg p-4;
     scrollbar-width: thin;
     scrollbar-color: var(--muted-foreground) transparent;
   }
+
   .prose pre::-webkit-scrollbar {
     height: 6px;
   }
+
   .prose pre::-webkit-scrollbar-track {
     background: transparent;
   }
+
   .prose pre::-webkit-scrollbar-thumb {
     background: var(--muted-foreground);
     border-radius: 3px;
   }
+
   .prose pre::-webkit-scrollbar-thumb:hover {
     background: var(--foreground);
   }
+
   .prose .code-wrapper {
     @apply relative;
   }
+
   .prose .code-wrapper .copy-btn {
     @apply absolute top-2 right-2 z-10 flex size-8 cursor-pointer items-center justify-center rounded-md border border-white/10 bg-white/5 text-white/50 opacity-0 backdrop-blur-sm transition-all hover:bg-white/15 hover:text-white/80;
   }
+
   .prose .code-wrapper:hover .copy-btn {
     @apply opacity-100;
   }
+
   .prose .code-wrapper .copy-btn.copied {
     @apply opacity-100;
   }
+
   .prose pre > code {
     all: unset;
   }
+
   .prose table {
     @apply bg-background/50 w-full table-auto;
+
     thead {
       @apply [&_tr]:border-b;
     }
+
     tbody {
       @apply [&_tr:last-child]:border-0;
     }
+
     tr {
       @apply data-[state=selected]:bg-muted border-b transition-colors hover:bg-[#24292e];
     }
+
     th {
       @apply text-foreground h-10 px-2 text-left align-middle font-medium whitespace-nowrap [&:has([role=checkbox])]:pr-0;
     }
+
     td {
       @apply p-2 align-middle whitespace-nowrap [&:has([role=checkbox])]:pr-0;
     }
+
     caption {
       @apply text-muted-foreground mt-4 text-sm;
     }
   }
+
   .prose mark {
     @apply bg-[#eebbc3] p-0.5;
   }
+
   .prose hr {
     @apply h-0 shrink-0;
     border-top: 1px dashed var(--border);
   }
+
   .prose kbd {
     @apply bg-card pointer-events-none inline-flex h-5 w-fit min-w-5 items-center justify-center gap-1 rounded-sm border border-b-3 px-1 font-sans text-xs shadow-sm [&_svg:not([class*='size-'])]:size-3;
   }
+
   .prose mark {
     @apply bg-primary text-primary-foreground p-0;
   }
+
   textarea {
     width: 100%;
     font-size: 16px;
   }
+
   input {
     font-size: 16px;
   }
+
   img {
     max-width: 100%;
     height: auto;
     border-radius: 8px;
   }
+
   hr {
     border: none;
     border-top: 1px solid rgb(var(--gray-light));
   }
+
   [data-footnote-ref] {
     @apply scroll-m-30 underline underline-offset-2;
   }
+
   [data-footnote-ref]::before {
     content: "[";
   }
+
   [data-footnote-ref]::after {
     content: "]";
   }
+
   iframe {
     max-width: 100%;
   }
