@@ -9,6 +9,7 @@ import {
   GeminiIcon,
 } from "@/components/icons/brands";
 import { Separator } from "../ui/separator";
+import { cn } from "@/lib/utils";
 
 interface FlipCardProps {
   avatarSrc: string;
@@ -26,6 +27,8 @@ function easeOutCubic(t: number) {
 }
 
 export default function FlipCard({ avatarSrc }: FlipCardProps) {
+  const flipCardStyle =
+    "from-card/60 to-card/20 dark:from-card dark:to-card/20 backdrop-blur-sm bg-linear-to-b rounded-2xl border-t border-white/20 shadow-2xl shadow-black/20 dark:border-white/25 dark:shadow-black/60";
   const [flipped, setFlipped] = useState(false);
   const cardRef = useRef<HTMLDivElement>(null);
   const tiltRef = useRef({ x: 0, y: 0 });
@@ -123,7 +126,10 @@ export default function FlipCard({ avatarSrc }: FlipCardProps) {
       >
         {/* Front face */}
         <div
-          className="from-card/60 to-card/20 dark:from-card dark:to-card/20 absolute inset-0 flex flex-col items-center justify-center rounded-2xl border border-white/20 bg-linear-to-b p-10 shadow-2xl shadow-black/20 backdrop-blur-sm dark:border-white/10 dark:bg-linear-to-b dark:shadow-black/60"
+          className={cn(
+            flipCardStyle,
+            "absolute inset-0 flex flex-col items-center justify-center p-10",
+          )}
           style={{
             backfaceVisibility: "hidden",
             WebkitBackfaceVisibility: "hidden",
@@ -161,7 +167,10 @@ export default function FlipCard({ avatarSrc }: FlipCardProps) {
 
         {/* Back face */}
         <div
-          className="from-card/60 to-card/20 dark:from-card dark:to-card/20 absolute inset-0 flex flex-col justify-center gap-4 rounded-2xl border border-white/20 bg-linear-to-b p-10 shadow-2xl shadow-black/20 backdrop-blur-sm dark:border-white/10 dark:bg-linear-to-b dark:shadow-black/60"
+          className={cn(
+            flipCardStyle,
+            "absolute inset-0 flex flex-col justify-center gap-4 p-10",
+          )}
           style={{
             backfaceVisibility: "hidden",
             WebkitBackfaceVisibility: "hidden",
