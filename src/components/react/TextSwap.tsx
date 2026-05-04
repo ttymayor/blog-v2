@@ -31,7 +31,7 @@ export function TextSwap({ textA, textB, state: controlledState, className }: Te
       el.classList.remove("is-enter-start");
       busy.current = false;
     }, dur);
-  }, [target]);
+  }, [target, displayed]);
 
   return (
     <span className={`t-text-swap${className ? ` ${className}` : ""}`} ref={ref}>

@@ -6,7 +6,6 @@ import { input, checkbox } from "@inquirer/prompts";
 import { analyzePostMeta } from "./lib/post-meta.mjs";
 
 const { tags: TAG_STATS, categories: CAT_STATS } = analyzePostMeta();
-const AVAILABLE_TAGS = TAG_STATS.map((t) => t.name);
 const CATEGORIES = CAT_STATS.map((c) => c.name);
 const DEFAULT_CATEGORY = CATEGORIES[0] ?? "tech";
 

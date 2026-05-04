@@ -76,7 +76,6 @@ const { text, speed = 180, zhuyinSpeed = 90, class: className } = Astro.props;
   }
 
   class ZhuyinTyper {
-    private element: HTMLElement;
     private textElement: HTMLElement;
     public text: string;
     private speed: number;
@@ -85,7 +84,6 @@ const { text, speed = 180, zhuyinSpeed = 90, class: className } = Astro.props;
     private cancelled = false;
 
     constructor(element: HTMLElement) {
-      this.element = element;
       this.textElement = element.querySelector(".typing-text")!;
       this.text = element.dataset.text || "";
       this.speed = parseInt(element.dataset.speed || "180");

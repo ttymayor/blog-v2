@@ -4,12 +4,9 @@ import { Button } from "@/components/ui/button";
 import { IconSwap } from "@/components/react/IconSwap";
 
 export function ModeToggle() {
-  const [theme, setThemeState] = React.useState<"light" | "dark">("dark");
-
-  React.useEffect(() => {
-    const isDarkMode = document.documentElement.classList.contains("dark");
-    setThemeState(isDarkMode ? "dark" : "light");
-  }, []);
+  const [theme, setThemeState] = React.useState<"light" | "dark">(() =>
+    document.documentElement.classList.contains("dark") ? "dark" : "light",
+  );
 
   React.useEffect(() => {
     const handleThemeChange = (e: CustomEvent) => {

@@ -1,3 +1,4 @@
+import React from "react";
 import { SITE_TITLE } from "@/consts";
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
@@ -176,7 +177,7 @@ export async function renderOgImage({
           },
         ],
       },
-    },
+    } as React.ReactElement,
     {
       width: 1200,
       height: 630,

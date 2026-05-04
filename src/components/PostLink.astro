@@ -1,6 +1,6 @@
 ---
 import type { BlogPost } from "@/types/blog";
-import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
+import { Card, CardTitle, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import RelativeTime from "@/components/react/RelativeTime";
 
@@ -16,7 +16,6 @@ const { post } = Astro.props;
     client:load
     className="group-hover:border-accent h-full shadow-xl transition-all group-hover:scale-102 active:scale-98"
   >
-    <!-- <CardHeader client:load> -->
     <CardTitle className="px-6" client:load>
       <div class="flex flex-col gap-2">
         <div class="flex flex-wrap items-center gap-1.5">
@@ -50,7 +49,6 @@ const { post } = Astro.props;
         </h3>
       </div>
     </CardTitle>
-    <!-- </CardHeader> -->
     <CardContent client:load>
       <p class="text-muted-foreground line-clamp-2 text-sm">
         {post.description || post.excerpt}

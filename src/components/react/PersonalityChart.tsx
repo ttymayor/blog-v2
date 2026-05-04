@@ -3,20 +3,8 @@
 import { PolarAngleAxis, PolarGrid, Radar, RadarChart } from "recharts";
 import { useState } from "react";
 
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import {
-  ChartContainer,
-  ChartTooltip,
-  ChartTooltipContent,
-  type ChartConfig,
-} from "@/components/ui/chart";
+import { Card, CardContent } from "@/components/ui/card";
+import { ChartContainer, type ChartConfig } from "@/components/ui/chart";
 
 export const description = "A radar chart";
 
