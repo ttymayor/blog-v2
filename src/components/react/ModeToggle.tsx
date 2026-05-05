@@ -1,14 +1,17 @@
-import * as React from "react";
+import { useEffect, useState } from "react";
 import { Moon, Sun } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { IconSwap } from "@/components/react/IconSwap";
 
 export function ModeToggle() {
-  const [theme, setThemeState] = React.useState<"light" | "dark">(() =>
-    document.documentElement.classList.contains("dark") ? "dark" : "light",
+  const [theme, setThemeState] = useState<"light" | "dark">(() =>
+    typeof document !== "undefined" &&
+    document.documentElement.classList.contains("dark")
+      ? "dark"
+      : "light",
   );
 
-  React.useEffect(() => {
+  useEffect(() => {
     const handleThemeChange = (e: CustomEvent) => {
       setThemeState(e.detail.theme);
     };

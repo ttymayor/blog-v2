@@ -14,10 +14,14 @@ import H6 from "@/components/mdx/H6.astro";
 import { getAdjacentPosts } from "@/lib/blog";
 import Spoiler from "@/components/react/Spoiler";
 import YouTubeEmbed from "@/components/mdx/YouTubeEmbed.astro";
+import dayjs from "dayjs";
+import utc from "dayjs/plugin/utc";
+
+dayjs.extend(utc);
 
 export async function getStaticPaths() {
   const posts = await getCollection("blog");
-  return posts.map((post) => ({
+  return posts.map((post: { id: any; }) => ({
     params: { slug: post.id },
     props: post,
   }));
@@ -26,7 +30,7 @@ type Props = CollectionEntry<"blog">;
 
 const post = Astro.props;
 const { Content, headings, remarkPluginFrontmatter } = await render(post);
-
+const lastModified = dayjs(remarkPluginFrontmatter.lastModified).utc();
 const { prevPost, nextPost } = await getAdjacentPosts(post.id);
 ---
 
@@ -37,7 +41,7 @@ const { prevPost, nextPost } = await getAdjacentPosts(post.id);
   headings={headings}
   minutesRead={remarkPluginFrontmatter.minutesRead}
   wordCount={remarkPluginFrontmatter.wordCount}
-  lastModified={remarkPluginFrontmatter.lastModified}
+  lastModified={lastModified}
   readMinutes={remarkPluginFrontmatter.readMinutes}
   prevPost={prevPost}
   nextPost={nextPost}
