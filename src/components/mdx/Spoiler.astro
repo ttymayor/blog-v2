@@ -1,0 +1,14 @@
+---
+---
+<span class="spoiler" onclick="this.removeAttribute('data-hidden')" data-hidden="">
+  <slot />
+</span>
+
+<style>
+  .spoiler[data-hidden] {
+    filter: blur(6px);
+    cursor: pointer;
+    user-select: none;
+    transition: filter 0.3s;
+  }
+</style>
