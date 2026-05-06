@@ -62,9 +62,6 @@ function SpotifyDialogContent({ spotify }: { spotify: SpotifyData }) {
               .map((artist) => artist.trim())
               .join("、")}
           </p>
-          <p className="text-muted-foreground/70 truncate text-xs">
-            on Spotify
-          </p>
         </div>
       </div>
       <div className="flex items-center gap-2">
