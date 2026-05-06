@@ -1,5 +1,15 @@
 ---
+import { execSync } from "child_process";
 import { SITE_TITLE, SITE_DESCRIPTION } from "@/consts";
+import { GitBranch } from "@lucide/astro";
+
+const lastCommitHash = (() => {
+  try {
+    return execSync("git log -1 --format=%h", { cwd: process.cwd() }).toString().trim();
+  } catch {
+    return null;
+  }
+})();
 
 const navLinks = [
   { href: "/", label: "Home" },
@@ -112,15 +122,26 @@ const socialLinks = [
           &copy; {new Date().getFullYear()}
           {SITE_TITLE}
         </p>
-        <p class="text-xs text-muted-foreground">
-          Built with <a
-            href="https://astro.build"
-            target="_blank"
-            rel="noopener noreferrer"
-            class="hover:text-foreground transition-colors underline underline-offset-2"
-            >Astro</a
-          >
-        </p>
+        <div class="flex items-center gap-4">
+          {lastCommitHash && (
+            <a
+              href="/diff"
+              class="inline-flex items-center gap-2 text-xs text-muted-foreground/50 hover:text-muted-foreground transition-colors"
+            >
+              <GitBranch class="size-4" />
+              {lastCommitHash}
+            </a>
+          )}
+          <p class="text-xs text-muted-foreground">
+            Built with <a
+              href="https://astro.build"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="hover:text-foreground transition-colors underline underline-offset-2"
+              >Astro</a
+            >
+          </p>
+        </div>
       </div>
     </div>
 

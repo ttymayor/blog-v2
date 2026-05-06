@@ -1,0 +1,46 @@
+---
+import { execSync } from "child_process";
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import BlankBlock from "@/components/BlankBlock.astro";
+import DiffViewer from "@/components/react/DiffViewer";
+
+const commits = (() => {
+  try {
+    const DELIM = "\x1f";
+    const lines = execSync(
+      `git log --format="%H${DELIM}%h${DELIM}%s${DELIM}%an${DELIM}%ai" -5 --no-merges`,
+      { cwd: process.cwd() }
+    )
+      .toString()
+      .trim()
+      .split("\n")
+      .filter(Boolean);
+
+    return lines.map((line) => {
+      const [hash, shortHash, message, author, date] = line.split(DELIM);
+      const diff = execSync(`git show ${hash.trim()} --patch --no-color`, {
+        cwd: process.cwd(),
+        encoding: "utf8",
+        maxBuffer: 1024 * 1024 * 10,
+      });
+      return {
+        hash: hash.trim(),
+        shortHash: shortHash.trim(),
+        message: message.trim(),
+        author: author.trim(),
+        date: date.trim(),
+        diff,
+      };
+    });
+  } catch {
+    return [];
+  }
+})();
+---
+
+<BaseLayout title="Diff Viewer" description="Paste and view unified diffs with syntax highlighting">
+  <BlankBlock />
+  <div class="max-w-6xl w-full mx-auto px-4 py-12">
+    <DiffViewer client:only="react" commits={commits} />
+  </div>
+</BaseLayout>

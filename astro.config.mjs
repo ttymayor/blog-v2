@@ -69,6 +69,7 @@ export default defineConfig({
     filter: (page) =>
       page !== 'https://v2.ttymayor.com/blog/2026/03/new-relationship/' &&
       page !== 'https://v2.ttymayor.com/blog/2026/02/i-am-who-i-am/' &&
+      page !== 'https://v2.ttymayor.com/diff/' &&
       page !== 'https://v2.ttymayor.com/blog/2026/04/am-i-the-problem/',
   }),
   react(),
