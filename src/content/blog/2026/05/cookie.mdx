@@ -1,0 +1,142 @@
+---
+title: 'Cookie 是什麼？'
+description: '介紹 Cookie 的屬性，以及潛藏的資安風險。'
+pubDate: '2026-05-06T15:21:47.063Z'
+tags: ['資訊安全', '網頁開發']
+category: '開發'
+---
+
+> 從 Chrome 80 開始，若 Cookie 沒有明確設定 `SameSite` 屬性，瀏覽器預設將其視為 `SameSite=Lax`
+
+## 什麼是 Cookie？
+
+Cookies 是網頁用來記住狀態的機制（如登入、購物車），但同時也會帶來一些隱私與安全疑慮，SameSite 就是為了解決這些問題而生。
+
+### Domain 屬性
+
+`Domain` 屬性是用來指定 Cookie 的有效範圍，用來判斷要發送到哪些網域的 Cookie，若伺服器未定義該屬性，則預設使用該 Cookie 的當前網域作為預設值。
+
+- 若 `Domain` 屬性設定為 `example.com` 或者是 `.example.com`，那麼 Cookie 就會被發送到 `example.com` 和 `sub.example.com`
+- 若 `Domain` 屬性設定為 `www.example.com`，那麼 Cookie 就只會被發送到 `www.example.com`
+
+### Path 屬性
+
+而 `Path` 屬性用來指定 Cookie 的有效路徑，用來判斷要發送到哪些路徑的 Cookie，若伺服器未定義該屬性，則預設使用該 Cookie 的當前路徑作為預設值。
+
+- 若 `Path` 屬性設定為 `/`，那麼 Cookie 就會被發送到所有路徑
+- 若 `Path` 屬性設定為 `/blog`，那麼 Cookie 就只會被發送到 `/blog`、`/blog/post` 和 `/blog/post/1`
+
+#### 範例
+
+```http
+Set-Cookie: theme=dark; Domain=.example.com; Path=/blog
+```
+
+- 設定所有（子）網域，`example.com` 和 `sub.example.com`
+- 設定路徑為 `/blog`
+
+簡單來說，只要有符合條件的網域和路徑，就會被帶上這個 Cookie，那麼 Cookie 作用範圍就會是像這樣：
+
+- example.com/blog
+- example.com/blog/post/123
+- sub.example.com/blog
+- sub.example.com/blog/post/123
+
+### Secure 屬性
+
+`Secure` 屬性則是用來指定 Cookie 只會在 HTTPS 連線時被傳送，若伺服器未定義該屬性，則預設不傳送該 Cookie。
+
+```http
+Set-Cookie: theme=dark; Domain=.example.com; Path=/blog; Secure
+```
+
+### HttpOnly 屬性
+
+`HttpOnly` 屬性則是用來指定 Cookie 只會在 HTTP 請求中被傳送，若伺服器未定義該屬性，則預設不傳送該 Cookie。
+
+**簡單來說，就是讓 JavaScript 無法存取該 Cookie，可以避免 XSS 攻擊竊取 Cookie。**
+
+```http
+Set-Cookie: theme=dark; Domain=.example.com; Path=/blog; Secure; HttpOnly
+```
+
+### Expires / Max-Age 屬性
+
+`Expires` 屬性指定 Cookie 的過期時間。例如：`Expires=Wed, 6 May 2026 00:00:00 GMT`
+
+`Max-Age` 屬性指定 Cookie 的最大存活時間（秒）。例如：`Max-Age=86400`
+
+```http
+Set-Cookie: theme=dark; Domain=.example.com; Path=/blog; Secure; HttpOnly; Max-Age=86400
+```
+
+問題來了：這兩個屬性可以被同時設定，那伺服器要聽誰的？
+
+> 答案：<Spoiler>以 `Max-Age` 為主，而忽略 `Expires`，即使 `Expires` 時間比 `Max-Age` 還早到期，Cookie 仍然會依照 `Max-Age` 的時間存活，直到 `Max-Age` 倒數結束才過期。</Spoiler>
+
+問題又來了：如果沒有設定呢？
+
+> 答案：<Spoiler>該 Cookie 就會被視為 Session Cookie</Spoiler>
+
+### SameSite 屬性
+
+`SameSite` 屬性用來控制 Cookie 在跨站請求（cross-site）時是否被送出，減少 CSRF 攻擊面，共有三種設定：
+
+- `Strict` 完全不允許跨站帶上 Cookie。假設使用者在 `evil.com` 點了一個連結或發出請求到 `ttymayor.com`，即便有登入資訊在 `ttymayor.com`，瀏覽器也不會帶上 `ttymayor.com` 的 Cookie
+- `Lax`（預設值）只有在使用者主動點擊連結（頂層導航 + GET 請求）時，會帶上 Cookie，其他情況都不會帶上 Cookie
+- `None` 允許所有跨站請求帶上 Cookie，但必須搭配 Secure
+
+## 認識 First-party 與 Third-party
+
+首先，我們要先了解網頁的視角：**第一方（First-party）與第三方（Third-party）**。
+
+- 第一方：指的是用戶正在訪問的網站，比如你現在正在看我的網站
+- 第三方：指的是用戶正在訪問的網站所**嵌入**的其他網站，例如作者嵌入的廣告、社交插件，或者影片 iframe 等
+
+## 您可曾聽說過 CSRF
+
+### 跨站請求偽造（Cross-Site Request Forgery）
+
+舉一個實際的例子來說，假設以下情況：
+
+1. 假設你有一家銀行網站 `bank.com`，且你已經登入到該網站
+2. 同時也登入到一個惡意網站 `evil.com`
+3. 你點擊了 `evil.com` 網站上的連結，該連結會發送一個請求到 `bank.com`，該請求可能是「轉帳 100 萬」給這個惡意網站的帳戶
+4. 瀏覽器會自動帶上 `bank.com` 的 Cookie，`bank.com` 的網站會認為這個請求是來自於你的，你真的就會轉帳給惡意網站的帳戶了
+
+有發現嗎？這個原因就是因為銀行網站的 Cookie 被自動帶上了。SameSite 就是為了解決這個問題的第一防線。
+
+### 防禦方式
+
+防禦 CSRF 的方式開發者自有辦法。不過現在知道可以使用 SameSite 屬性來防禦 CSRF 攻擊。當然還有其他方式（比如：CSRF Token、檢查 Referer / Origin Header、Double Submit Cookie）這部分可以另外實作加強防禦。
+
+```http
+Set-Cookie: session=xxxxxxx; Domain=bank.com; Path=/; Secure; HttpOnly; Max-Age=3600; SameSite=Lax
+```
+
+設定 `SameSite=Lax` 可以做為第一道防線。不過你知道嗎？SameSite 其實被實作才大約 10 年而已。
+
+#### SameSite 歷史
+
+> 以下資訊由 Claude AI 總結
+
+- 2014 年 10 月：SameSite 的第一版草案發布，當時還叫做「First-Party Cookie」
+- 2016 年 1 月：名稱改為 Same-site cookie
+- 2016 年 5 月：Google 在 Chrome 51 正式推出 SameSite cookie
+- 2018 年 5 月：Firefox 60 加入支援
+- 2020 年 2 月：Chrome 宣布從此版本開始，沒有設定 SameSite 的 cookie 預設為 Lax
+- 2021 年 9 月：Safari 15 才完整支援
+
+## 題外話：請同意我存取 Cookie
+
+Cookie 同意橫幅（Cookie Consent Banner）和 SameSite 的安全性 cookie 是不同層面的東西。前者是隱私保護，後者是安全防護。
+
+通常會跟你解釋：
+
+- 必要 cookie：網站運作必須的（如登入狀態），不需經使用者同意。
+- 分析 cookie：如 Google Analytics，需經使用者同意。
+- 廣告 cookie：跨站追蹤投放廣告，需經使用者同意。
+
+## Reference
+
+- [使用 HTTP Cookie](https://developer.mozilla.org/zh-TW/docs/Web/HTTP/Guides/Cookies)
