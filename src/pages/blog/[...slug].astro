@@ -14,6 +14,7 @@ import H6 from "@/components/mdx/H6.astro";
 import { getAdjacentPosts } from "@/lib/blog";
 import Spoiler from "@/components/react/Spoiler";
 import YouTubeEmbed from "@/components/mdx/YouTubeEmbed.astro";
+import Pre from "@/components/mdx/Pre.astro";
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
 
@@ -58,6 +59,7 @@ const { prevPost, nextPost } = await getAdjacentPosts(post.id);
       h6: H6,
       Spoiler,
       YouTubeEmbed,
+      pre: Pre,
     }}
   />
 </BlogPost>

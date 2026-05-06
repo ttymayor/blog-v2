@@ -1,0 +1,210 @@
+---
+title: '語法高亮展示'
+description: '展示 rehype-prism-plus 帶來的 line numbers、line highlighting 與語言 badge 效果'
+pubDate: '2026-05-06T12:00:00+08:00'
+tags: ['Dev', 'Blog']
+draft: true
+---
+
+這篇文章用來展示 blog 的語法高亮功能，基於 [rehype-prism-plus](https://github.com/timlrx/rehype-prism-plus)。
+
+---
+
+## 基本高亮（無 meta）
+
+只加語言標籤，自動高亮，右上角顯示語言 badge。
+
+```javascript
+function greet(name) {
+  const message = `Hello, ${name}!`;
+  console.log(message);
+  return message;
+}
+
+greet('World');
+```
+
+```python
+def fibonacci(n: int) -> list[int]:
+    a, b = 0, 1
+    result = []
+    while a < n:
+        result.append(a)
+        a, b = b, a + b
+    return result
+
+print(fibonacci(100))
+```
+
+```sql
+SELECT
+  u.username,
+  COUNT(p.id) AS post_count,
+  MAX(p.created_at) AS last_post
+FROM users u
+LEFT JOIN posts p ON p.user_id = u.id
+WHERE u.active = 1
+GROUP BY u.id
+ORDER BY post_count DESC
+LIMIT 10;
+```
+
+---
+
+## 行號（showLineNumbers）
+
+在 code fence 加上 `showLineNumbers` meta。
+
+```bash showLineNumbers
+#!/usr/bin/env bash
+set -euo pipefail
+
+TARGET_DIR="$1"
+
+if [ ! -d "$TARGET_DIR" ]; then
+  echo "Error: directory not found" >&2
+  exit 1
+fi
+
+find "$TARGET_DIR" -name "*.log" -mtime +7 -delete
+echo "Cleanup done."
+```
+
+```typescript showLineNumbers
+interface User {
+  id: number;
+  name: string;
+  email: string;
+  role: 'admin' | 'editor' | 'viewer';
+}
+
+async function fetchUser(id: number): Promise<User> {
+  const res = await fetch(`/api/users/${id}`);
+  if (!res.ok) throw new Error(`HTTP ${res.status}`);
+  return res.json();
+}
+```
+
+---
+
+## 行高亮（Line Highlighting）
+
+用 `{n}` 或 `{n-m}` 指定要高亮的行，搭配左側藍線標示。
+
+```javascript {3,7-9}
+const express = require('express');
+const app = express();
+const PORT = process.env.PORT ?? 3000;
+
+app.get('/', (req, res) => {
+  res.send('Hello!');
+  res.on('finish', () => {
+    console.log(`${req.method} ${req.path} ${res.statusCode}`);
+  });
+});
+
+app.listen(PORT);
+```
+
+---
+
+## 行號 + 行高亮（組合使用）
+
+```python showLineNumbers {5-8,12}
+import hashlib
+import secrets
+
+def hash_password(password: str) -> tuple[str, str]:
+    salt = secrets.token_hex(16)
+    key = hashlib.pbkdf2_hmac(
+        'sha256', password.encode(), salt.encode(), 100_000
+    )
+    return salt, key.hex()
+
+def verify_password(password: str, salt: str, stored_hash: str) -> bool:
+    key = hashlib.pbkdf2_hmac('sha256', password.encode(), salt.encode(), 100_000)
+    return key.hex() == stored_hash
+```
+
+---
+
+## 更多語言
+
+```css showLineNumbers
+:root {
+  --prism-bg: #f6f8fa;
+  --prism-keyword: #d73a49;
+  --prism-string: #032f62;
+}
+
+.dark {
+  --prism-bg: #24292e;
+  --prism-keyword: #f97583;
+  --prism-string: #9ecbff;
+}
+
+pre {
+  background-color: var(--prism-bg);
+  border-radius: 0.5rem;
+  overflow-x: auto;
+}
+```
+
+```php showLineNumbers {9-11}
+<?php
+function sanitize(string $input): string {
+    $blacklist = ['or', 'and', '=', 'like', '--', 'union'];
+    $pattern = '/' . implode('|', array_map('preg_quote', $blacklist)) . '/i';
+    return preg_replace($pattern, '', $input);
+}
+
+$username = sanitize($_POST['username'] ?? '');
+$query = "SELECT * FROM users WHERE username='$username'";
+// 仍然有 SQL injection 風險
+// 請改用 prepared statements
+$stmt = $pdo->prepare("SELECT * FROM users WHERE username = ?");
+$stmt->execute([$username]);
+```
+
+```c showLineNumbers
+#include <stdio.h>
+#include <string.h>
+
+#define BUF_SIZE 64
+
+void vulnerable(const char *input) {
+    char buf[BUF_SIZE];
+    strcpy(buf, input);  // buffer overflow!
+    printf("buf: %s\n", buf);
+}
+
+int main(int argc, char *argv[]) {
+    if (argc < 2) return 1;
+    vulnerable(argv[1]);
+    return 0;
+}
+```
+
+---
+
+## 無語言（純文字）
+
+```
+flag{th1s_1s_4_pl4in_t3xt_bl0ck}
+```
+
+---
+
+## 行內程式碼
+
+行內的 `code` 用單引號包住，例如 `const x = 1`、`SELECT * FROM users`，樣式與 code block 分開。
+
+---
+
+
+```diff showLineNumbers {2-3}
+const a = 1;
+- a = 2;
++ a = 2;
+a = 3;
+```

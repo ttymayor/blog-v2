@@ -9,6 +9,7 @@ import remarkGfm from "remark-gfm";
 import rehypeSlug from "rehype-slug";
 import { remarkReadingTime } from "./src/lib/remark-reading-time.mjs";
 import { remarkModifiedTime } from "./src/lib/remark-modified-time.mjs";
+import rehypePrismPlus from "rehype-prism-plus";
 
 import tailwindcss from "@tailwindcss/vite";
 
@@ -54,14 +55,14 @@ export default defineConfig({
     },
   },
   integrations: [mdx({
-    syntaxHighlight: "shiki",
+    syntaxHighlight: false,
     remarkPlugins: [
       remarkMath,
       remarkGfm,
       remarkReadingTime,
       remarkModifiedTime,
     ],
-    rehypePlugins: [rehypeKatex, rehypeSlug],
+    rehypePlugins: [rehypeKatex, [rehypePrismPlus, { ignoreMissing: true }], rehypeSlug],
     gfm: true,
   }),
   sitemap({

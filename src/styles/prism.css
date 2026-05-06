@@ -1,0 +1,221 @@
+@layer base {
+  /* ── Prism theme tokens ── */
+  :root {
+    --prism-bg: #f6f8fa;
+    --prism-fg: #24292e;
+    --prism-comment: #6a737d;
+    --prism-keyword: #d73a49;
+    --prism-string: #032f62;
+    --prism-function: #6f42c1;
+    --prism-number: #005cc5;
+    --prism-class-name: #6f42c1;
+    --prism-tag: #22863a;
+    --prism-attr-name: #005cc5;
+    --prism-builtin: #6f42c1;
+    --prism-regex: #032f62;
+    --prism-operator: #d73a49;
+    --prism-punctuation: #24292e;
+    --prism-selector: #6f42c1;
+    --prism-property: #005cc5;
+    --prism-line-num: #959da5;
+    --prism-highlight-bg: rgba(0, 92, 197, 0.08);
+    --prism-highlight-border: #005cc5;
+    --prism-header-bg: #e9e9e9;
+  }
+
+  .dark {
+    --prism-bg: #24292e;
+    --prism-fg: #e1e4e8;
+    --prism-comment: #6a737d;
+    --prism-keyword: #f97583;
+    --prism-string: #9ecbff;
+    --prism-function: #b392f0;
+    --prism-number: #79b8ff;
+    --prism-class-name: #b392f0;
+    --prism-tag: #85e89d;
+    --prism-attr-name: #79b8ff;
+    --prism-builtin: #b392f0;
+    --prism-regex: #9ecbff;
+    --prism-operator: #f97583;
+    --prism-punctuation: #e1e4e8;
+    --prism-selector: #b392f0;
+    --prism-property: #79b8ff;
+    --prism-line-num: #6a737d;
+    --prism-highlight-bg: rgba(121, 184, 255, 0.08);
+    --prism-highlight-border: #79b8ff;
+    --prism-header-bg: #343b43;
+  }
+
+  /* ── Token colours ── */
+  .token.comment,
+  .token.prolog,
+  .token.doctype,
+  .token.cdata {
+    color: var(--prism-comment);
+    font-style: italic;
+  }
+
+  .token.keyword,
+  .token.atrule,
+  .token.rule,
+  .token.important {
+    color: var(--prism-keyword);
+  }
+
+  .token.string,
+  .token.char,
+  .token.attr-value {
+    color: var(--prism-string);
+  }
+
+  .token.function {
+    color: var(--prism-function);
+  }
+
+  .token.number,
+  .token.boolean {
+    color: var(--prism-number);
+  }
+
+  .token.class-name,
+  .token.constant,
+  .token.symbol {
+    color: var(--prism-class-name);
+  }
+
+  .token.tag {
+    color: var(--prism-tag);
+  }
+
+  .token.attr-name {
+    color: var(--prism-attr-name);
+  }
+
+  .token.builtin {
+    color: var(--prism-builtin);
+  }
+
+  .token.regex {
+    color: var(--prism-regex);
+  }
+
+  .token.operator,
+  .token.entity,
+  .token.url {
+    color: var(--prism-operator);
+  }
+
+  .token.punctuation {
+    color: var(--prism-punctuation);
+  }
+
+  .token.selector,
+  .token.pseudo-class,
+  .token.pseudo-element {
+    color: var(--prism-selector);
+  }
+
+  .token.property {
+    color: var(--prism-property);
+  }
+
+  .token.variable {
+    color: var(--prism-fg);
+  }
+
+  .token.inserted {
+    color: #28b84b;
+  }
+
+  .token.deleted {
+    color: #de2835;
+  }
+
+  /* ── rehype-prism-plus line layout ── */
+  .code-highlight {
+    display: block;
+    min-width: max-content;
+  }
+
+  .code-line {
+    display: block;
+    padding-left: 1rem;
+    padding-right: 1rem;
+    border-left: 2px solid transparent;
+  }
+
+  .highlight-line {
+    background-color: var(--prism-highlight-bg);
+    border-left-color: var(--prism-highlight-border);
+  }
+
+  .deleted.highlight-line {
+    background-color: rgba(239, 68, 68, 0.2);
+    border-left-color: #de2835;
+    border-style: dotted;
+  }
+  .inserted.highlight-line {
+    background-color: rgba(16, 185, 129, 0.2);
+    border-left-color: #28b84b;
+  }
+
+  .line-number::before {
+    display: inline-block;
+    width: 1.5rem;
+    margin-right: 1rem;
+    text-align: right;
+    color: var(--prism-line-num);
+    content: attr(line);
+    user-select: none;
+  }
+
+  /* ── Code block component ── */
+  .prose .code-block {
+    @apply overflow-hidden rounded-lg border-t border-t-white/25 shadow-lg;
+    background-color: var(--prism-bg);
+  }
+
+  .prose .code-header {
+    @apply flex items-center justify-between px-4 py-1;
+    background-color: var(--prism-header-bg);
+  }
+
+  .prose .lang-badge {
+    @apply text-muted-foreground pointer-events-none font-mono text-xs select-none;
+  }
+
+  .prose .copy-btn {
+    @apply text-foreground/40 hover:text-foreground/70 flex size-7 cursor-pointer items-center justify-center rounded-md transition-all;
+  }
+
+  .prose pre {
+    @apply overflow-x-auto rounded-none px-0 py-4;
+    background-color: var(--prism-bg);
+    color: var(--prism-fg);
+    scrollbar-width: thin;
+    scrollbar-color: var(--muted-foreground) transparent;
+  }
+
+  .prose pre::-webkit-scrollbar {
+    height: 6px;
+  }
+
+  .prose pre::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  .prose pre::-webkit-scrollbar-thumb {
+    background: var(--muted-foreground);
+    border-radius: 3px;
+  }
+
+  .prose pre::-webkit-scrollbar-thumb:hover {
+    background: var(--foreground);
+  }
+
+  .prose pre > code {
+    display: block;
+    min-width: max-content;
+    font-family: var(--font-mono);
+  }
+}
