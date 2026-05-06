@@ -10,6 +10,7 @@ import {
   Undo2,
   ChevronLeft,
   ChevronRight,
+  TriangleAlert,
 } from "@lucide/astro";
 import BlankBlock from "@/components/BlankBlock.astro";
 import { Badge } from "@/components/ui/badge";
@@ -42,8 +43,9 @@ const ogImage = heroImage
     ? `/og/${slug}.png`
     : undefined;
 
-const modifiedDate = lastModified ? new Date(lastModified) : undefined;
+const modifiedDate: Date | undefined = lastModified?.isValid?.() ? lastModified.toDate() : undefined;
 const readTime: Number = Math.round(readMinutes);
+const isOutdated = modifiedDate && !isNaN(modifiedDate.getTime()) && Date.now() - modifiedDate.getTime() > 180 * 24 * 60 * 60 * 1000;
 
 let aiPrompt = "";
 let encodedPrompt = "";
@@ -133,7 +135,7 @@ if (chatWithAI) {
             modifiedDate && (
               <div class="flex items-center gap-1.5">
                 <Calendar class="size-4" />
-                <span class="font-serif font-bold">
+                <span class="font-serif font-bold -translate-y-px">
                   <RelativeTime dateStr={pubDate} client:load />
                 </span>
               </div>
@@ -143,7 +145,7 @@ if (chatWithAI) {
             minutesRead && (
               <div class="flex items-center gap-1.5">
                 <Timer class="size-4" />
-                <span class="font-serif font-bold">{readTime} 分鐘</span>
+                <span class="font-serif font-bold -translate-y-px">{readTime} 分鐘</span>
               </div>
             )
           }
@@ -151,11 +153,21 @@ if (chatWithAI) {
             wordCount && (
               <div class="flex items-center gap-1.5">
                 <Type class="size-4" />
-                <span class="font-serif font-bold">約 {wordCount} 字</span>
+                <span class="font-serif font-bold -translate-y-px">約 {wordCount} 字</span>
               </div>
             )
           }
         </div>
+
+        <!-- Warning for outdated post -->
+        { isOutdated && (
+          <>
+            <div class="flex items-center gap-2 p-4 bg-card border rounded-md ">
+              <TriangleAlert class="size-3.5 text-yellow-500/50" />
+              <span class="text-muted-foreground text-sm font-serif font-bold -translate-y-px">此文章可能已經過時，內容僅供參考。</span>
+            </div>
+          </>
+        )}
 
         <Separator className="my-6" client:load />
         <div class="prose">
