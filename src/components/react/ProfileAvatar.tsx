@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useLayoutEffect, useRef } from "react";
 import { useLanyard, type SpotifyData } from "@/lib/lanyard";
 import FlipCard from "@/components/react/FlipCard";
 import {
@@ -8,6 +8,76 @@ import {
   DialogTitle,
   DialogDescription,
 } from "@/components/ui/dialog";
+
+// === Animated Bio ===
+function AnimatedBio({ words }: { words: string[] }) {
+  const [idx, setIdx] = useState(0);
+  const [visible, setVisible] = useState(true);
+  const [width, setWidth] = useState(0);
+  const measureRef = useRef<HTMLSpanElement>(null);
+
+  useLayoutEffect(() => {
+    if (measureRef.current) {
+      setWidth(measureRef.current.getBoundingClientRect().width);
+    }
+  }, [idx]);
+
+  useEffect(() => {
+    const id = setInterval(() => {
+      setVisible(false);
+      setTimeout(() => {
+        setIdx((i) => (i + 1) % words.length);
+        setVisible(true);
+      }, 300);
+    }, 3000);
+    return () => clearInterval(id);
+  }, []);
+
+  return (
+    <span className="text-foreground/70 text-sm">
+      是一個
+      <span
+        style={{
+          display: "inline-block",
+          width: width > 0 ? width : "auto",
+          transition: "width 0.3s ease",
+          position: "relative",
+          marginInline: "0.3rem",
+        }}
+      >
+        <span
+          style={{
+            opacity: visible ? 1 : 0,
+            transition: "opacity 0.3s ease",
+            whiteSpace: "nowrap",
+            display: "inline-block",
+            textDecoration: "underline",
+            textDecorationStyle: "dashed",
+            textUnderlineOffset: "0.25rem",
+          }}
+        >
+          {words[idx]}
+        </span>
+      </span>
+      的人
+      <span
+        ref={measureRef}
+        aria-hidden="true"
+        style={{
+          position: "fixed",
+          top: -9999,
+          left: -9999,
+          whiteSpace: "nowrap",
+          visibility: "hidden",
+          pointerEvents: "none",
+          fontSize: "inherit",
+        }}
+      >
+        {words[idx]}
+      </span>
+    </span>
+  );
+}
 
 // === Spotify Progress ===
 function useSpotifyProgress(timestamps: { start: number; end: number } | null) {
@@ -86,15 +156,10 @@ interface ProfileAvatarProps {
   src: string;
   alt: string;
   name: string;
-  description: string;
+  words?: string[];
 }
 
-export default function ProfileAvatar({
-  src,
-  alt,
-  name,
-  description,
-}: ProfileAvatarProps) {
+export default function ProfileAvatar({ src, alt, name, words = [] }: ProfileAvatarProps) {
   const lanyard = useLanyard();
   const [spotifyOpen, setSpotifyOpen] = useState(false);
   const [cardOpen, setCardOpen] = useState(false);
@@ -103,7 +168,7 @@ export default function ProfileAvatar({
 
   return (
     <>
-      <div className="flex flex-col gap-6 md:flex-row md:gap-8">
+      <div className="flex flex-col gap-6 md:flex-row md:items-center md:gap-8">
         {/* Avatar */}
         <button
           type="button"
@@ -118,7 +183,7 @@ export default function ProfileAvatar({
           />
         </button>
 
-        {/* Name + Spotify + Description */}
+        {/* Name + Spotify */}
         <div className="min-w-0 flex-1">
           <div className="mb-3 flex flex-wrap items-center gap-2.5">
             <h1 className="mb-0 text-2xl font-bold">{name}</h1>
@@ -141,10 +206,11 @@ export default function ProfileAvatar({
               </button>
             )}
           </div>
-          <p
-            className="text-muted-foreground text-base md:text-lg"
-            dangerouslySetInnerHTML={{ __html: description }}
-          />
+          {words.length > 0 && (
+            <p>
+              <AnimatedBio words={words} />
+            </p>
+          )}
         </div>
       </div>
 
