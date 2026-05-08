@@ -29,7 +29,7 @@ function AnimatedBio({ words }: { words: string[] }) {
         setIdx((i) => (i + 1) % words.length);
         setVisible(true);
       }, 300);
-    }, 3000);
+    }, 1800);
     return () => clearInterval(id);
   }, []);
 

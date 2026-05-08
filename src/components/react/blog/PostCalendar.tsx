@@ -114,7 +114,7 @@ export default function PostCalendar({
                 return (
                   <div
                     key={cell.key}
-                    className={`aspect-square w-full rounded-[2px] transition-colors ${
+                    className={`aspect-square w-full rounded-sm transition-colors ${
                       hasPosts
                         ? "bg-primary hover:bg-primary/70 cursor-pointer"
                         : "bg-muted hover:bg-muted-foreground/30"
