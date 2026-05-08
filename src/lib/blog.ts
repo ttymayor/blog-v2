@@ -31,6 +31,32 @@ export async function getAdjacentPosts(currentId: string): Promise<{
   };
 }
 
+function countWords(body: string): number {
+  const clean = body
+    .replace(/^---[\s\S]*?---/, "")
+    .replace(/```[\s\S]*?```/g, "")
+    .replace(/`[^`]+`/g, "")
+    .replace(/!?\[.*?\]\(.*?\)/g, "")
+    .replace(/#{1,6}\s/g, "")
+    .replace(/[*_~]/g, "")
+    .replace(/<[^>]+>/g, "");
+
+  const cjk = (clean.match(/[一-鿿㐀-䶿]/g) ?? []).length;
+  const latin = clean
+    .replace(/[一-鿿㐀-䶿]/g, " ")
+    .split(/\s+/)
+    .filter((w) => w.length > 0).length;
+
+  return cjk + latin;
+}
+
+export async function getTotalWordCount(): Promise<number> {
+  const posts = await getCollection("blog");
+  return posts
+    .filter((post) => !post.data.draft)
+    .reduce((sum, post) => sum + countWords(post.body ?? ""), 0);
+}
+
 export async function getPosts(): Promise<BlogPost[]> {
   const posts = await getCollection("blog");
 

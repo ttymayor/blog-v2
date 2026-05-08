@@ -2,10 +2,11 @@
 import { execSync } from "child_process";
 import { SITE_TITLE, SITE_DESCRIPTION } from "@/consts";
 import { GitBranch } from "@lucide/astro";
-import { getPosts } from "@/lib/blog";
+import { getPosts, getTotalWordCount } from "@/lib/blog";
 import PostCalendar from "@/components/react/blog/PostCalendar";
 
 const posts = await getPosts();
+const totalWords = await getTotalWordCount();
 
 const lastCommitHash = (() => {
   try {
@@ -66,6 +67,9 @@ const socialLinks = [
         </p>
         <div class="mt-2">
           <PostCalendar client:visible posts={posts} numWeeks={18} compact={true} />
+          <p class="max-w-5xl mx-auto py-3 text-xs text-muted-foreground font-mono">
+            本站累計 {posts.length} 篇文章，共 {totalWords.toLocaleString()} 字
+          </p>
         </div>
       </div>
 
@@ -136,7 +140,7 @@ const socialLinks = [
               href="/diff"
               class="inline-flex items-center gap-2 text-xs text-muted-foreground hover:text-foreground transition-colors"
             >
-              <GitBranch class="size-4" />
+              <GitBranch class="size-3" />
               {lastCommitHash}
             </a>
           )}
