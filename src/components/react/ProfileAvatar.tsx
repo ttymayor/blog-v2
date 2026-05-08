@@ -140,7 +140,7 @@ function SpotifyDialogContent({ spotify }: { spotify: SpotifyData }) {
         </span>
         <div className="bg-border h-1.5 flex-1 overflow-hidden rounded-full">
           <div
-            className="h-full rounded-full bg-white transition-[width] duration-1000 ease-linear"
+            className="bg-primary h-full rounded-full transition-[width] duration-1000 ease-linear"
             style={{ width: `${progress * 100}%` }}
           />
         </div>
@@ -159,7 +159,12 @@ interface ProfileAvatarProps {
   words?: string[];
 }
 
-export default function ProfileAvatar({ src, alt, name, words = [] }: ProfileAvatarProps) {
+export default function ProfileAvatar({
+  src,
+  alt,
+  name,
+  words = [],
+}: ProfileAvatarProps) {
   const lanyard = useLanyard();
   const [spotifyOpen, setSpotifyOpen] = useState(false);
   const [cardOpen, setCardOpen] = useState(false);
