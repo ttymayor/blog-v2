@@ -23,6 +23,11 @@ export default function PostBrowser({ posts }: PostBrowserProps) {
   const [filteredPosts, setFilteredPosts] = useState(posts);
   const [page, setPage] = useState(1);
 
+  function onSetPage(p: number) {
+    setPage(p);
+    window.scrollTo({ top: 0 });
+  }
+
   useEffect(() => {
     const timer = setTimeout(() => {
       const q = search.toLowerCase();
@@ -73,7 +78,7 @@ export default function PostBrowser({ posts }: PostBrowserProps) {
           <PaginationContent>
             <PaginationItem>
               <PaginationPrevious
-                onClick={() => setPage((p) => Math.max(1, p - 1))}
+                onClick={() => onSetPage(Math.max(1, page - 1))}
                 aria-disabled={page === 1}
                 className={
                   page === 1
@@ -91,7 +96,7 @@ export default function PostBrowser({ posts }: PostBrowserProps) {
                 <PaginationItem key={p}>
                   <PaginationLink
                     isActive={p === page}
-                    onClick={() => setPage(p)}
+                    onClick={() => onSetPage(p)}
                     className="cursor-pointer"
                   >
                     {p}
@@ -101,7 +106,7 @@ export default function PostBrowser({ posts }: PostBrowserProps) {
             )}
             <PaginationItem>
               <PaginationNext
-                onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
+                onClick={() => onSetPage(Math.min(totalPages, page + 1))}
                 aria-disabled={page === totalPages}
                 className={
                   page === totalPages
