@@ -4,6 +4,9 @@ settings:
   autoInstallPeers: true
   excludeLinksFromLockfile: false
 
+patchedDependencies:
+  tegaki: aa243751814664c7f1fd35ef39500f466814419401261ea2153eb477a834c12d
+
 importers:
 
   .:
@@ -139,7 +142,7 @@ importers:
         version: 1.0.7(tailwindcss@4.2.1)
       tegaki:
         specifier: ^0.17.1
-        version: 0.17.1(react@19.2.4)
+        version: 0.17.1(patch_hash=aa243751814664c7f1fd35ef39500f466814419401261ea2153eb477a834c12d)(react@19.2.4)
       three:
         specifier: ^0.183.2
         version: 0.183.2
@@ -9041,7 +9044,7 @@ snapshots:
 
   tapable@2.3.0: {}
 
-  tegaki@0.17.1(react@19.2.4):
+  tegaki@0.17.1(patch_hash=aa243751814664c7f1fd35ef39500f466814419401261ea2153eb477a834c12d)(react@19.2.4):
     optionalDependencies:
       react: 19.2.4
 

@@ -80,6 +80,9 @@
       "allowedVersions": {
         "@lucide/astro>astro": "6"
       }
+    },
+    "patchedDependencies": {
+      "tegaki@0.17.1": "patches/tegaki.patch"
     }
   }
 }
