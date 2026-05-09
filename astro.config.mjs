@@ -1,5 +1,3 @@
-// @ts-check
-
 import mdx from "@astrojs/mdx";
 import sitemap from "@astrojs/sitemap";
 import { defineConfig, fontProviders } from "astro/config";
@@ -41,39 +39,47 @@ export default defineConfig({
       name: "GeistPixelGrid",
       cssVariable: "--font-geist-pixel-grid",
       options: {
-        variants: [{
-          src: ['./src/assets/fonts/GeistPixel/GeistPixel-Grid.woff2'],
-          weight: 'normal',
-          style: 'normal'
-        }]
-      }
-    }
+        variants: [
+          {
+            src: ["./src/assets/fonts/GeistPixel/GeistPixel-Grid.woff2"],
+            weight: "normal",
+            style: "normal",
+          },
+        ],
+      },
+    },
   ],
   experimental: {
     queuedRendering: {
       enabled: true,
     },
   },
-  integrations: [mdx({
-    syntaxHighlight: false,
-    remarkPlugins: [
-      remarkMath,
-      remarkGfm,
-      remarkReadingTime,
-      remarkModifiedTime,
-    ],
-    rehypePlugins: [rehypeKatex, [rehypePrismPlus, { ignoreMissing: true }], rehypeSlug],
-    gfm: true,
-  }),
-  sitemap({
-    filter: (page) =>
-      page !== 'https://v2.ttymayor.com/blog/2026/03/new-relationship/' &&
-      page !== 'https://v2.ttymayor.com/blog/2026/02/i-am-who-i-am/' &&
-      page !== 'https://v2.ttymayor.com/diff/' &&
-      page !== 'https://v2.ttymayor.com/blog/2026/04/am-i-the-problem/',
-  }),
-  react(),
-  partytown()],
+  integrations: [
+    mdx({
+      syntaxHighlight: false,
+      remarkPlugins: [
+        remarkMath,
+        remarkGfm,
+        remarkReadingTime,
+        remarkModifiedTime,
+      ],
+      rehypePlugins: [
+        rehypeKatex,
+        [rehypePrismPlus, { ignoreMissing: true }],
+        rehypeSlug,
+      ],
+      gfm: true,
+    }),
+    sitemap({
+      filter: (page) =>
+        page !== "https://v2.ttymayor.com/blog/2026/03/new-relationship/" &&
+        page !== "https://v2.ttymayor.com/blog/2026/02/i-am-who-i-am/" &&
+        page !== "https://v2.ttymayor.com/diff/" &&
+        page !== "https://v2.ttymayor.com/blog/2026/04/am-i-the-problem/",
+    }),
+    react(),
+    partytown(),
+  ],
 
   vite: {
     plugins: [tailwindcss()],

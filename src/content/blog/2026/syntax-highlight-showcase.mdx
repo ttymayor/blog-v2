@@ -1,8 +1,8 @@
 ---
-title: '語法高亮展示'
-description: '展示 rehype-prism-plus 帶來的 line numbers、line highlighting 與語言 badge 效果'
-pubDate: '2026-05-06T12:00:00+08:00'
-tags: ['Dev', 'Blog']
+title: "語法高亮展示"
+description: "展示 rehype-prism-plus 帶來的 line numbers、line highlighting 與語言 badge 效果"
+pubDate: "2026-05-06T12:00:00+08:00"
+tags: ["Dev", "Blog"]
 draft: true
 ---
 
@@ -21,7 +21,7 @@ function greet(name) {
   return message;
 }
 
-greet('World');
+greet("World");
 ```
 
 ```python
@@ -75,7 +75,7 @@ interface User {
   id: number;
   name: string;
   email: string;
-  role: 'admin' | 'editor' | 'viewer';
+  role: "admin" | "editor" | "viewer";
 }
 
 async function fetchUser(id: number): Promise<User> {
@@ -92,13 +92,13 @@ async function fetchUser(id: number): Promise<User> {
 用 `{n}` 或 `{n-m}` 指定要高亮的行，搭配左側藍線標示。
 
 ```javascript {3,7-9}
-const express = require('express');
+const express = require("express");
 const app = express();
 const PORT = process.env.PORT ?? 3000;
 
-app.get('/', (req, res) => {
-  res.send('Hello!');
-  res.on('finish', () => {
+app.get("/", (req, res) => {
+  res.send("Hello!");
+  res.on("finish", () => {
     console.log(`${req.method} ${req.path} ${res.statusCode}`);
   });
 });
@@ -200,7 +200,6 @@ flag{th1s_1s_4_pl4in_t3xt_bl0ck}
 行內的 `code` 用單引號包住，例如 `const x = 1`、`SELECT * FROM users`，樣式與 code block 分開。
 
 ---
-
 
 ```diff showLineNumbers {2-3}
 const a = 1;

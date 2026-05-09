@@ -43,9 +43,14 @@ const ogImage = heroImage
     ? `/og/${slug}.png`
     : undefined;
 
-const modifiedDate: Date | undefined = lastModified?.isValid?.() ? lastModified.toDate() : undefined;
+const modifiedDate: Date | undefined = lastModified?.isValid?.()
+  ? lastModified.toDate()
+  : undefined;
 const readTime: Number = Math.round(readMinutes);
-const isOutdated = modifiedDate && !isNaN(modifiedDate.getTime()) && Date.now() - modifiedDate.getTime() > 180 * 24 * 60 * 60 * 1000;
+const isOutdated =
+  modifiedDate &&
+  !isNaN(modifiedDate.getTime()) &&
+  Date.now() - modifiedDate.getTime() > 180 * 24 * 60 * 60 * 1000;
 
 let aiPrompt = "";
 let encodedPrompt = "";
@@ -59,10 +64,10 @@ if (chatWithAI) {
 <BaseLayout title={title} description={description} ogImage={ogImage}>
   <BlankBlock />
 
-  <div class="max-w-7xl w-full mx-auto px-4 py-12">
+  <div class="mx-auto w-full max-w-7xl px-4 py-12">
     <div class="flex gap-8">
       <!-- Left: back to list -->
-      <div class="hidden lg:block w-40 shrink-0">
+      <div class="hidden w-40 shrink-0 lg:block">
         <div class="sticky top-30 flex justify-end">
           <a href="/blog">
             <Button
@@ -79,10 +84,10 @@ if (chatWithAI) {
       </div>
 
       <!-- Center: article -->
-      <article id="content" class="min-w-0 w-full">
+      <article id="content" class="w-full min-w-0">
         {
           heroImage && (
-            <div class="md:mb-8 mb-4">
+            <div class="mb-4 md:mb-8">
               <Image
                 width={1020}
                 height={510}
@@ -96,7 +101,7 @@ if (chatWithAI) {
             </div>
           )
         }
-        <div class="flex flex-row justify-between mb-4 gap-4">
+        <div class="mb-4 flex flex-row justify-between gap-4">
           <div class="flex flex-col gap-2">
             {
               category && (
@@ -112,7 +117,7 @@ if (chatWithAI) {
             }
             <h1
               id="article-title"
-              class="font-serif w-fit text-3xl md:text-4xl font-bold m-0 text-[clamp(1.75rem, 4vw, 2.25rem)]"
+              class="text-[clamp(1.75rem, 4vw, 2.25rem)] m-0 w-fit font-serif text-3xl font-bold md:text-4xl"
               transition:name={`post-title-${slug.replace(/\//g, "-")}`}
             >
               {title}
@@ -129,13 +134,13 @@ if (chatWithAI) {
           }
         </div>
         <div
-          class="flex flex-row items-center gap-4 text-muted-foreground text-xs flex-wrap mb-4"
+          class="text-muted-foreground mb-4 flex flex-row flex-wrap items-center gap-4 text-xs"
         >
           {
             modifiedDate && (
               <div class="flex items-center gap-1.5">
                 <Calendar class="size-4" />
-                <span class="font-serif font-bold -translate-y-px">
+                <span class="-translate-y-px font-serif font-bold">
                   <RelativeTime dateStr={pubDate} client:load />
                 </span>
               </div>
@@ -145,7 +150,9 @@ if (chatWithAI) {
             minutesRead && (
               <div class="flex items-center gap-1.5">
                 <Timer class="size-4" />
-                <span class="font-serif font-bold -translate-y-px">{readTime} 分鐘</span>
+                <span class="-translate-y-px font-serif font-bold">
+                  {readTime} 分鐘
+                </span>
               </div>
             )
           }
@@ -153,21 +160,27 @@ if (chatWithAI) {
             wordCount && (
               <div class="flex items-center gap-1.5">
                 <Type class="size-4" />
-                <span class="font-serif font-bold -translate-y-px">約 {wordCount} 字</span>
+                <span class="-translate-y-px font-serif font-bold">
+                  約 {wordCount} 字
+                </span>
               </div>
             )
           }
         </div>
 
         <!-- Warning for outdated post -->
-        { isOutdated && (
-          <>
-            <div class="flex items-center gap-2 p-4 bg-card border rounded-md ">
-              <TriangleAlert class="size-3.5 text-yellow-500/50" />
-              <span class="text-muted-foreground text-sm font-serif font-bold -translate-y-px">此文章可能已經過時，內容僅供參考。</span>
-            </div>
-          </>
-        )}
+        {
+          isOutdated && (
+            <>
+              <div class="bg-card flex items-center gap-2 rounded-md border p-4">
+                <TriangleAlert class="size-3.5 text-yellow-500/50" />
+                <span class="text-muted-foreground -translate-y-px font-serif text-sm font-bold">
+                  此文章可能已經過時，內容僅供參考。
+                </span>
+              </div>
+            </>
+          )
+        }
 
         <Separator className="my-6" client:load />
         <div class="prose">
@@ -196,19 +209,19 @@ if (chatWithAI) {
           (prevPost || nextPost) && (
             <>
               <Separator className="my-6" client:load />
-              <nav class="grid grid-cols-2 gap-4 not-prose">
+              <nav class="not-prose grid grid-cols-2 gap-4">
                 <div>
                   {prevPost && (
                     <a
                       href={`/blog/${prevPost.id}`}
-                      class="flex flex-col gap-1 group"
+                      class="group flex flex-col gap-1"
                     >
-                      <span class="text-muted-foreground text-xs flex items-center gap-1 group-hover:-translate-x-2 transition-all">
+                      <span class="text-muted-foreground flex items-center gap-1 text-xs transition-all group-hover:-translate-x-2">
                         <ChevronLeft class="size-3" />
                         上一篇
                       </span>
                       <span
-                        class="text-sm font-medium group-hover:text-primary transition-colors line-clamp-2 font-serif"
+                        class="group-hover:text-primary line-clamp-2 font-serif text-sm font-medium transition-colors"
                         transition:name={`post-title-${prevPost.id.replace(/\//g, "-")}`}
                       >
                         {prevPost.title}
@@ -220,14 +233,14 @@ if (chatWithAI) {
                   {nextPost && (
                     <a
                       href={`/blog/${nextPost.id}`}
-                      class="flex flex-col gap-1 items-end group"
+                      class="group flex flex-col items-end gap-1"
                     >
-                      <span class="text-muted-foreground text-xs flex items-center gap-1 group-hover:translate-x-2 transition-all">
+                      <span class="text-muted-foreground flex items-center gap-1 text-xs transition-all group-hover:translate-x-2">
                         下一篇
                         <ChevronRight class="size-3" />
                       </span>
                       <span
-                        class="text-sm font-medium group-hover:text-primary transition-colors line-clamp-2 font-serif"
+                        class="group-hover:text-primary line-clamp-2 font-serif text-sm font-medium transition-colors"
                         transition:name={`post-title-${nextPost.id.replace(/\//g, "-")}`}
                       >
                         {nextPost.title}
@@ -242,7 +255,7 @@ if (chatWithAI) {
       </article>
 
       <!-- Right: TOC -->
-      <div class="hidden lg:block w-55 shrink-0">
+      <div class="hidden w-55 shrink-0 lg:block">
         <div class="sticky top-30">
           <TableOfContents headings={headings ?? []} />
         </div>
@@ -251,23 +264,28 @@ if (chatWithAI) {
 
     <script>
       function setupCopyButtons() {
-        document.querySelectorAll<HTMLButtonElement>(".code-block .copy-btn").forEach((btn) => {
-          if (btn.dataset.initialized) return;
-          btn.dataset.initialized = "true";
-          let copying = false;
-          btn.addEventListener("click", async () => {
-            if (copying) return;
-            copying = true;
-            const code = btn.closest(".code-block")?.querySelector("code");
-            if (!code) { copying = false; return; }
-            await navigator.clipboard.writeText(code.textContent || "");
-            const swap = btn.querySelector(".t-icon-swap") as HTMLElement;
-            if (swap) swap.dataset.state = "b";
-            await new Promise<void>((r) => setTimeout(r, 2000));
-            if (swap) swap.dataset.state = "a";
-            copying = false;
+        document
+          .querySelectorAll<HTMLButtonElement>(".code-block .copy-btn")
+          .forEach((btn) => {
+            if (btn.dataset.initialized) return;
+            btn.dataset.initialized = "true";
+            let copying = false;
+            btn.addEventListener("click", async () => {
+              if (copying) return;
+              copying = true;
+              const code = btn.closest(".code-block")?.querySelector("code");
+              if (!code) {
+                copying = false;
+                return;
+              }
+              await navigator.clipboard.writeText(code.textContent || "");
+              const swap = btn.querySelector(".t-icon-swap") as HTMLElement;
+              if (swap) swap.dataset.state = "b";
+              await new Promise<void>((r) => setTimeout(r, 2000));
+              if (swap) swap.dataset.state = "a";
+              copying = false;
+            });
           });
-        });
       }
 
       setupCopyButtons();
@@ -300,6 +318,5 @@ if (chatWithAI) {
       initPhotoSwipe();
       document.addEventListener("astro:page-load", initPhotoSwipe);
     </script>
-
   </div>
 </BaseLayout>

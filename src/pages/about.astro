@@ -44,10 +44,10 @@ const slides: Slide[] = [
 >
   <BlankBlock />
   <!-- Content -->
-  <div class="relative z-10 bg-background">
+  <div class="bg-background relative z-10">
     <!-- Profile section -->
     <section class="w-full">
-      <div class="max-w-5xl mx-auto px-6 py-12">
+      <div class="mx-auto max-w-5xl px-6 py-12">
         <ProfileAvatar
           client:load
           src={avatar.src}
@@ -65,17 +65,17 @@ const slides: Slide[] = [
     </div>
 
     <!-- Bio section -->
-    <section class="border-t w-full">
+    <section class="w-full border-t">
       <div
-        class="max-w-5xl mx-auto px-6 py-12 grid grid-cols-1 gap-12 md:grid-cols-2"
+        class="mx-auto grid max-w-5xl grid-cols-1 gap-12 px-6 py-12 md:grid-cols-2"
       >
         <div>
           <h2
-            class="text-xs font-semibold uppercase tracking-widest text-muted-foreground mb-4"
+            class="text-muted-foreground mb-4 text-xs font-semibold tracking-widest uppercase"
           >
             About
           </h2>
-          <ul class="text-sm text-foreground/80 leading-relaxed">
+          <ul class="text-foreground/80 text-sm leading-relaxed">
             <li>在 Coding 👨‍💻 中，極度享受當下的時光</li>
             <li>Linux 使用者，使用過 Ubuntu、Kali、Arch、Fedora（正在探索）</li>
             <li>🔥Team Pixel（Pixel 7），預計入手 Pixel 11</li>
@@ -91,12 +91,12 @@ const slides: Slide[] = [
         </div>
         <div>
           <h2
-            class="text-xs font-semibold uppercase tracking-widest text-muted-foreground mb-4"
+            class="text-muted-foreground mb-4 text-xs font-semibold tracking-widest uppercase"
           >
             Stack
           </h2>
           <ul
-            class="grid grid-cols-2 gap-x-6 gap-y-2 text-sm text-foreground/80"
+            class="text-foreground/80 grid grid-cols-2 gap-x-6 gap-y-2 text-sm"
           >
             {
               [
@@ -110,7 +110,7 @@ const slides: Slide[] = [
                 "PostgreSQL",
               ].map((item) => (
                 <li class="flex items-center gap-2">
-                  <span class="inline-block size-1 rounded-full bg-muted-foreground/60 shrink-0" />
+                  <span class="bg-muted-foreground/60 inline-block size-1 shrink-0 rounded-full" />
                   {item}
                 </li>
               ))
@@ -129,9 +129,9 @@ const slides: Slide[] = [
     <!-- Slides section -->
     {
       slides.length > 0 && (
-        <section class="border-t w-full">
-          <div class="max-w-5xl mx-auto px-6 py-12">
-            <h2 class="text-xs font-semibold uppercase tracking-widest text-muted-foreground mb-6">
+        <section class="w-full border-t">
+          <div class="mx-auto max-w-5xl px-6 py-12">
+            <h2 class="text-muted-foreground mb-6 text-xs font-semibold tracking-widest uppercase">
               Slides
             </h2>
             <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3">
@@ -142,20 +142,20 @@ const slides: Slide[] = [
                     href={slide.href}
                     target={slide.href ? "_blank" : undefined}
                     rel={slide.href ? "noopener noreferrer" : undefined}
-                    class={`group flex flex-col overflow-hidden rounded-2xl shadow-xl border bg-card transition-colors${slide.href ? " hover:border-foreground/30" : ""}`}
+                    class={`group bg-card flex flex-col overflow-hidden rounded-2xl border shadow-xl transition-colors${slide.href ? " hover:border-foreground/30" : ""}`}
                   >
-                    <div class="aspect-video w-full overflow-hidden bg-card relative">
+                    <div class="bg-card relative aspect-video w-full overflow-hidden">
                       {slide.cover ? (
                         <>
                           <div class="overflow-hidden rounded-2xl">
                             <img
                               src={slide.cover.src}
                               alt={slide.title}
-                              class="h-full w-full object-cover  transition-transform duration-300 group-hover:scale-105"
+                              class="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
                               onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"
                             />
 
-                            <div class="absolute inset-0 hidden flex-col items-center justify-center gap-1.5 text-muted-foreground/50">
+                            <div class="text-muted-foreground/50 absolute inset-0 hidden flex-col items-center justify-center gap-1.5">
                               <svg
                                 xmlns="http://www.w3.org/2000/svg"
                                 width="20"
@@ -182,7 +182,7 @@ const slides: Slide[] = [
                           </div>
                         </>
                       ) : (
-                        <div class="absolute inset-0 flex flex-col items-center justify-center gap-1.5 text-muted-foreground/50">
+                        <div class="text-muted-foreground/50 absolute inset-0 flex flex-col items-center justify-center gap-1.5">
                           <svg
                             xmlns="http://www.w3.org/2000/svg"
                             width="20"
@@ -203,10 +203,10 @@ const slides: Slide[] = [
                       )}
                     </div>
                     <div class="flex flex-col gap-1 rounded-2xl p-4">
-                      <p class="text-sm font-medium text-foreground leading-snug">
+                      <p class="text-foreground text-sm leading-snug font-medium">
                         {slide.title}
                       </p>
-                      <p class="text-xs text-muted-foreground">{slide.date}</p>
+                      <p class="text-muted-foreground text-xs">{slide.date}</p>
                     </div>
                   </Tag>
                 );

@@ -5,10 +5,10 @@
       "settings": {
         "css": {
           "lint": {
-            "unknownAtRules": "ignore",
-          },
-        },
-      },
-    },
-  },
+            "unknownAtRules": "ignore"
+          }
+        }
+      }
+    }
+  }
 }

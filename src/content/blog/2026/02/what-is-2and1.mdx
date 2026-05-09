@@ -1,9 +1,9 @@
 ---
-title: '2>&1'
-description: ''
-pubDate: '2026-02-11'
-tags: ['Bash']
-category: '指令'
+title: "2>&1"
+description: ""
+pubDate: "2026-02-11"
+tags: ["Bash"]
+category: "指令"
 ---
 
 ## 前言
@@ -39,6 +39,7 @@ category: '指令'
 # 假設沒有該檔案
 cat hi.txt
 ```
+
 ```text
 cat: hi.txt: No such file or directory
 ```
@@ -52,6 +53,7 @@ cat: hi.txt: No such file or directory
 ```bash
 cat hi.txt 2>log
 ```
+
 ```
 
 ```
@@ -61,6 +63,7 @@ cat hi.txt 2>log
 ```bash
 cat log
 ```
+
 ```
 cat: hi.txt: No such file or directory
 ```
@@ -72,6 +75,7 @@ cat: hi.txt: No such file or directory
 ```bash
 cat hi.txt 2>&1
 ```
+
 ```
 cat: hi.txt: No such file or directory
 ```
@@ -85,6 +89,7 @@ cat: hi.txt: No such file or directory
 ```bash
 cat hi.txt > log 2>&1
 ```
+
 ```
 
 ```

@@ -1,9 +1,9 @@
 ---
-title: 'caas'
-description: ''
-pubDate: '2026-04-03'
-tags: ['picoCTF', 'Web']
-category: 'WriteUp'
+title: "caas"
+description: ""
+pubDate: "2026-04-03"
+tags: ["picoCTF", "Web"]
+category: "WriteUp"
 ---
 
 分類：Web  
@@ -18,11 +18,15 @@ None
 看原始碼就是一個 Call 指令的服務
 
 ```js
-app.get('/cowsay/:message', (req, res) => {
-  exec(`/usr/games/cowsay ${req.params.message}`, {timeout: 5000}, (error, stdout) => {
-    if (error) return res.status(500).end();
-    res.type('txt').send(stdout).end();
-  });
+app.get("/cowsay/:message", (req, res) => {
+  exec(
+    `/usr/games/cowsay ${req.params.message}`,
+    { timeout: 5000 },
+    (error, stdout) => {
+      if (error) return res.status(500).end();
+      res.type("txt").send(stdout).end();
+    },
+  );
 });
 ```
 

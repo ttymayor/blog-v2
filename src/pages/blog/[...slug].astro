@@ -22,7 +22,7 @@ dayjs.extend(utc);
 
 export async function getStaticPaths() {
   const posts = await getCollection("blog");
-  return posts.map((post: { id: any; }) => ({
+  return posts.map((post: { id: any }) => ({
     params: { slug: post.id },
     props: post,
   }));

@@ -9,7 +9,13 @@ interface Props {
 const { text, speed = 180, zhuyinSpeed = 90, class: className } = Astro.props;
 ---
 
-<span class={className} data-zhuyin-typing data-text={text} data-speed={speed} data-zhuyin-speed={zhuyinSpeed}>
+<span
+  class={className}
+  data-zhuyin-typing
+  data-text={text}
+  data-speed={speed}
+  data-zhuyin-speed={zhuyinSpeed}
+>
   <span class="typing-text"></span><span class="cursor">▍</span>
 </span>
 
@@ -114,7 +120,8 @@ const { text, speed = 180, zhuyinSpeed = 90, class: className } = Astro.props;
           const zhuyinChars = toGraphemes(zhuyin);
           for (let j = 0; j < zhuyinChars.length; j++) {
             if (this.cancelled) return;
-            this.textElement.textContent = result + zhuyinChars.slice(0, j + 1).join("");
+            this.textElement.textContent =
+              result + zhuyinChars.slice(0, j + 1).join("");
             await this.sleep(this.randomSpeed(this.zhuyinSpeed));
           }
           result += char;
@@ -145,7 +152,7 @@ const { text, speed = 180, zhuyinSpeed = 90, class: className } = Astro.props;
 
   function initZhuyinTyping() {
     const elements = document.querySelectorAll<HTMLElement>(
-      "[data-zhuyin-typing]"
+      "[data-zhuyin-typing]",
     );
     elements.forEach((element) => {
       // Skip if already initialized

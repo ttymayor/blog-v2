@@ -23,7 +23,10 @@ const year = now.getFullYear().toString();
 const month = (now.getMonth() + 1).toString().padStart(2, "0");
 const pubDate = now.toISOString();
 
-const title = await input({ message: "Post title:", validate: (v) => v.trim() !== "" || "Title is required" });
+const title = await input({
+  message: "Post title:",
+  validate: (v) => v.trim() !== "" || "Title is required",
+});
 const description = await input({ message: "Description (optional):" });
 const category = await input({
   message: `Category (${CATEGORIES.join(" / ")}):`,
@@ -31,9 +34,14 @@ const category = await input({
 });
 const selectedTags = await checkbox({
   message: "Select tags:",
-  choices: TAG_STATS.map((t) => ({ name: `${t.name} (${t.count})`, value: t.name })),
+  choices: TAG_STATS.map((t) => ({
+    name: `${t.name} (${t.count})`,
+    value: t.name,
+  })),
 });
-const extraTagsInput = await input({ message: "Additional tags (comma separated, optional):" });
+const extraTagsInput = await input({
+  message: "Additional tags (comma separated, optional):",
+});
 const extraTags = extraTagsInput
   .split(",")
   .map((t) => t.trim())
@@ -55,7 +63,8 @@ if (existsSync(filePath)) {
   process.exit(1);
 }
 
-const tagsYaml = tags.length > 0 ? `[${tags.map((t) => `'${t}'`).join(", ")}]` : "[]";
+const tagsYaml =
+  tags.length > 0 ? `[${tags.map((t) => `'${t}'`).join(", ")}]` : "[]";
 
 const content = `---
 title: '${title}'

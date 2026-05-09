@@ -29,8 +29,8 @@ description: string
 pubDate: date
 tags: string[]
 category?: string
-draft?: boolean      # excluded in production
-pin?: boolean        # pinned to top of listing
+draft?: boolean # excluded in production
+pin?: boolean # pinned to top of listing
 heroImage?: image
 ```
 

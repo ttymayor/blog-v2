@@ -20,7 +20,7 @@ const isBlogPost = /^blog\/.+/.test(pathname);
 <header
   id="site-header"
   data-blog-post={isBlogPost ? "" : undefined}
-  class="pointer-events-auto fixed bottom-0 left-0 z-50 flex w-full flex-row items-center justify-center md:bottom-auto md:top-0 group"
+  class="group pointer-events-auto fixed bottom-0 left-0 z-50 flex w-full flex-row items-center justify-center md:top-0 md:bottom-auto"
 >
   <nav
     id="nav-container"
@@ -38,7 +38,7 @@ const isBlogPost = /^blog\/.+/.test(pathname);
     <!-- Desktop Logo (Hidden on Mobile) -->
     <a
       href="/"
-      class="hidden md:flex relative z-10 shrink-0 items-center gap-3 transition-all active:scale-98"
+      class="relative z-10 hidden shrink-0 items-center gap-3 transition-all active:scale-98 md:flex"
     >
       <Image
         inferSize
@@ -52,7 +52,7 @@ const isBlogPost = /^blog\/.+/.test(pathname);
     </a>
 
     <div
-      class="flex flex-1 flex-row justify-around md:flex-none md:justify-end md:gap-4 items-center"
+      class="flex flex-1 flex-row items-center justify-around md:flex-none md:justify-end md:gap-4"
     >
       {
         navItems.map(({ href, label, Icon, isHome }) => {
@@ -66,11 +66,11 @@ const isBlogPost = /^blog\/.+/.test(pathname);
               data-nav-item
               data-active={isActive ? "true" : undefined}
               class:list={[
-                "relative z-10 inline-flex whitespace-nowrap flex-col md:flex-row items-center justify-center gap-1 md:gap-2 rounded-full no-underline transition-all",
-                "w-16 h-12 md:w-fit md:h-fit md:py-2 md:px-3",
+                "relative z-10 inline-flex flex-col items-center justify-center gap-1 rounded-full whitespace-nowrap no-underline transition-all md:flex-row md:gap-2",
+                "h-12 w-16 md:h-fit md:w-fit md:px-3 md:py-2",
                 isHome ? "md:hidden" : "",
                 isActive
-                  ? "text-[#745525] md:text-foreground dark:text-[#d0ae7d] md:dark:text-foreground"
+                  ? "md:text-foreground md:dark:text-foreground text-[#745525] dark:text-[#d0ae7d]"
                   : "text-foreground/60 md:text-foreground/80 hover:text-foreground",
               ]}
             >
@@ -81,7 +81,7 @@ const isBlogPost = /^blog\/.+/.test(pathname);
         })
       }
       <div
-        class="flex flex-col items-center justify-center w-16 h-12 md:hidden"
+        class="flex h-12 w-16 flex-col items-center justify-center md:hidden"
       >
         <ModeToggle client:load />
       </div>

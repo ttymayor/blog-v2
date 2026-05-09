@@ -15,45 +15,42 @@ interface SlidesListProps {
 
 export default function SlidesList({ slides }: SlidesListProps) {
   return (
-    <div className="relative border-l border-border ml-3 space-y-10 py-4">
+    <div className="border-border relative ml-3 space-y-10 border-l py-4">
       {slides.map((slide, index) => (
         <div key={index} className="mb-10 ml-6">
-          <span className="absolute flex items-center justify-center w-6 h-6 bg-primary/20 rounded-full -left-3 ring-8 ring-background">
-            <Calendar className="w-3 h-3 text-primary" />
+          <span className="bg-primary/20 ring-background absolute -left-3 flex h-6 w-6 items-center justify-center rounded-full ring-8">
+            <Calendar className="text-primary h-3 w-3" />
           </span>
-          <div className="p-4 bg-card border border-border rounded-lg shadow-sm">
-            <div className="items-center justify-between mb-3 sm:flex">
-              <time className="mb-1 text-xs font-normal text-muted-foreground sm:order-last sm:mb-0">
+          <div className="bg-card border-border rounded-lg border p-4 shadow-sm">
+            <div className="mb-3 items-center justify-between sm:flex">
+              <time className="text-muted-foreground mb-1 text-xs font-normal sm:order-last sm:mb-0">
                 {slide.date}
               </time>
-              <div className="text-sm font-normal text-muted-foreground lex">
+              <div className="text-muted-foreground lex text-sm font-normal">
                 {slide.location && (
-                  <span className="flex items-center gap-1 mb-2">
-                    <MapPin className="w-3 h-3" />
+                  <span className="mb-2 flex items-center gap-1">
+                    <MapPin className="h-3 w-3" />
                     {slide.location}
                   </span>
                 )}
               </div>
             </div>
-            <a
-              href={slide.link}
-              className="text-foreground hover:underline"
-            >
+            <a href={slide.link} className="text-foreground hover:underline">
               <h3 className="text-lg font-semibold">{slide.title}</h3>
             </a>
-            <div className="flex flex-wrap items-center gap-4 mt-4">
+            <div className="mt-4 flex flex-wrap items-center gap-4">
               {slide.made_with && (
-                <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                  <Cpu className="w-4 h-4" />
+                <div className="text-muted-foreground flex items-center gap-2 text-sm">
+                  <Cpu className="h-4 w-4" />
                   <span>Made with: {slide.made_with.join(", ")}</span>
                 </div>
               )}
               {slide.pdf && (
                 <a
                   href={slide.pdf}
-                  className="inline-flex items-center gap-2 px-3 py-2 text-sm font-medium text-foreground bg-card border border-border rounded-lg hover:bg-muted focus:z-10 focus:ring-4 focus:outline-none focus:ring-ring"
+                  className="text-foreground bg-card border-border hover:bg-muted focus:ring-ring inline-flex items-center gap-2 rounded-lg border px-3 py-2 text-sm font-medium focus:z-10 focus:ring-4 focus:outline-none"
                 >
-                  <FileText className="w-4 h-4" />
+                  <FileText className="h-4 w-4" />
                   PDF
                 </a>
               )}

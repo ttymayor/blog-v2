@@ -35,8 +35,7 @@ export type TechItem = {
   icon: string;
 };
 
-export const CDN =
-  "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons";
+export const CDN = "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons";
 
 export const books: ReadingItem[] = [
   {
@@ -232,7 +231,14 @@ export const personalityData: PersonalityItem[] = [
   { traits: "Teamwork", Score: 55 },
 ];
 
-export type Category = "books" | "tech" | "slides" | "projects" | "events" | "personality" | "devRules";
+export type Category =
+  | "books"
+  | "tech"
+  | "slides"
+  | "projects"
+  | "events"
+  | "personality"
+  | "devRules";
 export type BookFilter = "all" | "recommended" | "in-progress" | "not-started";
 
 export const categoryLabels: Record<Category, string> = {

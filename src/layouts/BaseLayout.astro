@@ -61,7 +61,11 @@ const pageTitle = title ? `${title}｜${SITE_TITLE}` : SITE_TITLE;
       });
     </script>
     <ClientRouter />
-    <BaseHead title={pageTitle} description={description ?? SITE_DESCRIPTION} image={ogImage} />
+    <BaseHead
+      title={pageTitle}
+      description={description ?? SITE_DESCRIPTION}
+      image={ogImage}
+    />
     <Font cssVariable="--font-geist" preload />
     <Font cssVariable="--font-geist-mono" preload />
     <Font cssVariable="--font-geist-pixel-grid" preload />

@@ -12,13 +12,13 @@ const latestPosts = posts.slice(0, 5);
 
 <BaseLayout ogImage="/og/index.png">
   <div class="hidden md:block md:h-22" aria-hidden="true"></div>
-  <div class="max-w-5xl w-full mx-auto px-4 py-12">
+  <div class="mx-auto w-full max-w-5xl px-4 py-12">
     <section id="hero" class="mb-10 flex items-center justify-start">
       <div>
         <h2 id="greeting" class="text-3xl font-bold">
           <ZhuyinTyping text="休息一下" class="greeting-text" />
         </h2>
-        <p class="text-lg text-muted-foreground m-0">{SITE_DESCRIPTION}</p>
+        <p class="text-muted-foreground m-0 text-lg">{SITE_DESCRIPTION}</p>
       </div>
     </section>
 
@@ -64,7 +64,7 @@ const latestPosts = posts.slice(0, 5);
         <h3 class="text-2xl font-bold">最新文章</h3>
         <a
           href="/blog"
-          class="text-muted-foreground flex items-center gap-2 hover:translate-x-1 transition-all"
+          class="text-muted-foreground flex items-center gap-2 transition-all hover:translate-x-1"
           >瞧<ArrowRight /></a
         >
       </div>
