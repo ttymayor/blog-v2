@@ -6,22 +6,10 @@
       "options": {
         "parser": "astro"
       }
-    },
-    {
-      "files": "*.tsx",
-      "options": {
-        "parser": "tsx"
-      }
-    },
-    {
-      "files": "*.ts",
-      "options": {
-        "parser": "typescript"
-      }
     }
   ],
   "semi": true,
   "jsxSingleQuote": false,
-  "trailingComma": "es5",
+  "trailingComma": "all",
   "tabWidth": 2
 }
