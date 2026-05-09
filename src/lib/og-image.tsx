@@ -17,46 +17,35 @@ const fontDir = join(
 const fontRegular = readFileSync(join(fontDir, "Geist-Regular.ttf"));
 const fontBold = readFileSync(join(fontDir, "Geist-Bold.ttf"));
 
-// Fetch a subset of Noto Sans TC from Google Fonts that only contains the
-// glyphs used by `text`. This keeps the embedded font tiny and lets satori
-// render CJK characters.
-const cjkFontCache = new Map<string, ArrayBuffer>();
-async function loadCjkFont(
-  text: string,
-  weight: 400 | 700,
-): Promise<ArrayBuffer | null> {
-  const chars = Array.from(new Set(text)).filter((c) => c.charCodeAt(0) > 127);
-  if (chars.length === 0) return null;
-  const key = `${weight}:${[...chars].sort().join("")}`;
-  const cached = cjkFontCache.get(key);
-  if (cached) return cached;
-
-  const cssUrl =
-    `https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@${weight}` +
-    `&text=${encodeURIComponent(chars.join(""))}`;
+// Fetch Noto Sans TC once per weight at module load time using a broad
+// fixed character set, so individual OG renders never hit the network.
+async function fetchCjkFont(weight: 400 | 700): Promise<ArrayBuffer | null> {
+  const cssUrl = `https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@${weight}`;
   try {
     const css = await fetch(cssUrl, {
       headers: {
-        // Google serves woff2 only to modern UAs.
         "User-Agent":
           "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36",
       },
-      signal: AbortSignal.timeout(5000),
+      signal: AbortSignal.timeout(10000),
     }).then((r) => r.text());
     const match = css.match(
       /src:\s*url\(([^)]+)\)\s*format\('(woff2?|truetype)'\)/,
     );
     if (!match) return null;
-    const buf = await fetch(match[1], {
-      signal: AbortSignal.timeout(5000),
+    return await fetch(match[1], {
+      signal: AbortSignal.timeout(10000),
     }).then((r) => r.arrayBuffer());
-    cjkFontCache.set(key, buf);
-    return buf;
   } catch (err) {
     console.warn("[og] CJK font fetch failed:", (err as Error).message);
     return null;
   }
 }
+
+const [cjkRegularPromise, cjkBoldPromise] = [
+  fetchCjkFont(400),
+  fetchCjkFont(700),
+];
 
 interface OgImageOptions {
   title: string;
@@ -69,12 +58,9 @@ export async function renderOgImage({
   description,
   category,
 }: OgImageOptions): Promise<Buffer> {
-  const allText = [title, description ?? "", category ?? "", SITE_TITLE].join(
-    " ",
-  );
   const [cjkRegular, cjkBold] = await Promise.all([
-    loadCjkFont(allText, 400),
-    loadCjkFont(allText, 700),
+    cjkRegularPromise,
+    cjkBoldPromise,
   ]);
 
   const svg = await satori(
@@ -209,6 +195,6 @@ export async function renderOgImage({
   );
 
   return await sharp(Buffer.from(svg))
-    .png({ compressionLevel: 9, quality: 80, palette: true })
+    .png({ compressionLevel: 6, quality: 80, palette: true })
     .toBuffer();
 }
