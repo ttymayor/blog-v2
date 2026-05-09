@@ -4,14 +4,13 @@ import { Button } from "@/components/ui/button";
 import { IconSwap } from "@/components/react/IconSwap";
 
 export function ModeToggle() {
-  const [theme, setThemeState] = useState<"light" | "dark">(() =>
-    typeof document !== "undefined" &&
-    document.documentElement.classList.contains("dark")
-      ? "dark"
-      : "light",
-  );
+  const [theme, setThemeState] = useState<"light" | "dark">("light");
 
   useEffect(() => {
+    setThemeState(
+      document.documentElement.classList.contains("dark") ? "dark" : "light",
+    );
+
     const handleThemeChange = (e: CustomEvent) => {
       setThemeState(e.detail.theme);
     };
@@ -54,6 +53,7 @@ export function ModeToggle() {
         iconA={<Sun className="h-[1.2rem] w-[1.2rem]" />}
         iconB={<Moon className="h-[1.2rem] w-[1.2rem]" />}
         state={theme === "light" ? "a" : "b"}
+        data-theme-icon=""
       />
     </Button>
   );

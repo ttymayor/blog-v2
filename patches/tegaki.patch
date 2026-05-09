@@ -1,0 +1,109 @@
+diff --git a/src/astro/TegakiRenderer.astro b/src/astro/TegakiRenderer.astro
+index 2239d474b87ecd3bc4f2d86630be48790d828438..428eeab8ad2c3e2d10146a31ee46ed1dcf7093aa 100644
+--- a/src/astro/TegakiRenderer.astro
++++ b/src/astro/TegakiRenderer.astro
+@@ -83,13 +83,18 @@ const clientOptions = {
+   ...engineOptions,
+   font: resolvedFont?.family,
+ };
++
++// When font is passed as an object directly (not a string lookup), auto-serialize
++// the bundle so the client can hydrate without requiring an explicit `bundle` prop.
++// The `bundle` prop is still useful for the register-only pattern (no text rendered).
++const shouldInlineBundle = !registerBundle && typeof font !== 'string' && !!resolvedFont;
+ ---
+ 
+ {loadFont && resolvedFont?.fontFaceCSS && (
+   <style is:inline set:html={resolvedFont.fontFaceCSS} />
+ )}
+ 
+-{registerBundle && resolvedFont && (
++{(registerBundle || shouldInlineBundle) && resolvedFont && (
+   <script is:inline type="application/json" data-tegaki-bundle set:html={JSON.stringify(resolvedFont)} />
+ )}
+ 
+@@ -100,6 +105,8 @@ const clientOptions = {
+ <script>
+   import { TegakiEngine } from 'tegaki/core';
+ 
++  const engines = new WeakMap<HTMLElement, TegakiEngine>();
++
+   function hydrateBundle(el: Element) {
+     TegakiEngine.registerBundle(JSON.parse(el.textContent || '{}'));
+   }
+@@ -109,14 +116,33 @@ const clientOptions = {
+     container.dataset.tegakiHydrated = '';
+     const options = JSON.parse(container.dataset.tegakiOptions || '{}');
+     const engine = new TegakiEngine(container, { adopt: true, ...options });
++    engines.set(container, engine);
+     container.dispatchEvent(new CustomEvent('tegaki:ready', { detail: { engine }, bubbles: true }));
+   }
+ 
+-  // Hydrate existing elements
+-  document.querySelectorAll<HTMLScriptElement>('[data-tegaki-bundle]').forEach(hydrateBundle);
+-  document.querySelectorAll<HTMLElement>('[data-tegaki-options]').forEach(hydrateContainer);
++  function hydrateAll() {
++    document.querySelectorAll<HTMLScriptElement>('[data-tegaki-bundle]').forEach(hydrateBundle);
++    document.querySelectorAll<HTMLElement>('[data-tegaki-options]').forEach(hydrateContainer);
++  }
++
++  // Destroy engines before View Transitions swaps the DOM, and clear the
++  // hydration flag so elements on the incoming page can be re-hydrated.
++  document.addEventListener('astro:before-swap', () => {
++    document.querySelectorAll<HTMLElement>('[data-tegaki-options]').forEach((container) => {
++      engines.get(container)?.destroy();
++      engines.delete(container);
++      delete container.dataset.tegakiHydrated;
++    });
++  });
++
++  // Re-hydrate after View Transitions (bundles before containers to ensure
++  // the registry is populated before engines are created).
++  document.addEventListener('astro:page-load', hydrateAll);
++
++  // Initial load
++  hydrateAll();
+ 
+-  // Watch for dynamically added elements (View Transitions, client-side routing, etc.)
++  // Watch for dynamically added elements (non-View-Transitions cases).
+   new MutationObserver((mutations) => {
+     for (const mutation of mutations) {
+       for (const node of mutation.addedNodes) {
+diff --git a/src/core/bundle-registry.ts b/src/core/bundle-registry.ts
+index 9bfb8eec30e99f97ef30414239362d50497cf769..9bab931891dbab7710e7328f36de4f9056a6f383 100644
+--- a/src/core/bundle-registry.ts
++++ b/src/core/bundle-registry.ts
+@@ -19,6 +19,9 @@ function checkBundleVersion(bundle: TegakiBundle): void {
+ export function registerBundle(bundle: TegakiBundle): void {
+   checkBundleVersion(bundle);
+   bundles.set(bundle.family, bundle);
++  if (bundle.fullFamily && bundle.fullFamily !== bundle.family) {
++    bundles.set(bundle.fullFamily, bundle);
++  }
+ }
+ 
+ /** Look up a registered bundle by family name. */
+diff --git a/src/lib/font.ts b/src/lib/font.ts
+index 0a7229da2132f41949a4677f1a05bbd0537f3d07..458020afd9b6bd4169d0ee67409337ac453df7df 100644
+--- a/src/lib/font.ts
++++ b/src/lib/font.ts
+@@ -12,7 +12,7 @@ export async function ensureFontFace(bundle: TegakiBundle): Promise<void> {
+   await ensureFont(bundle.family, bundle.fontUrl, bundle.features, bundle.extraFontUrls);
+ }
+ 
+-export function ensureFont(family: string, url: string, features?: string[], extraFontUrls?: string[]): Promise<void> | null {
++export function ensureFont(family: string, url: string, features?: readonly string[], extraFontUrls?: string[]): Promise<void> | null {
+   if (typeof document === 'undefined') return Promise.resolve();
+   // Register every subset URL under the same family name. Browsers union
+   // glyph coverage across same-family faces via cmap, so Arabic text falls
+diff --git a/src/types.ts b/src/types.ts
+index 5569ae89638407685617463b92d4aca28d7a2daf..051d838a7f549ee0a2d7638aa2336e463e085010 100644
+--- a/src/types.ts
++++ b/src/types.ts
+@@ -191,5 +191,5 @@ export interface TegakiBundle {
+    * The renderer enables these during shaping. Absent when no variant glyphs
+    * were generated.
+    */
+-  features?: string[];
++  features?: readonly string[];
+ }

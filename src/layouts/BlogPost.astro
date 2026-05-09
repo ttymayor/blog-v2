@@ -17,6 +17,8 @@ import { Badge } from "@/components/ui/badge";
 import PostActions from "@/components/PostActions";
 import { Button } from "@/components/ui/button";
 import RelativeTime from "@/components/react/RelativeTime";
+import TegakiRenderer from "tegaki/astro";
+import bundle from "tegaki/fonts/caveat";
 
 const {
   title,
@@ -104,15 +106,35 @@ if (chatWithAI) {
         <div class="mb-4 flex flex-row justify-between gap-4">
           <div class="flex flex-col gap-2">
             {
-              category && (
-                <Badge
-                  variant={"default"}
-                  style={{
-                    viewTransitionName: `post-category-${slug.replace(/\//g, "-")}`,
-                  }}
-                >
-                  {category}
-                </Badge>
+              (category || tags.length > 0) && (
+                <div class="flex flex-row flex-wrap gap-2">
+                  {category && (
+                    <Badge
+                      variant={"default"}
+                      client:load
+                      style={{
+                        viewTransitionName: `post-category-${slug.replace(/\//g, "-")}`,
+                      }}
+                    >
+                      {category}
+                    </Badge>
+                  )}
+                  {tags &&
+                    tags.length > 0 &&
+                    tags.slice(0, 3).map((tag: string) => (
+                      <Badge
+                        variant={"secondary"}
+                        key={tag}
+                        className="rounded-xs"
+                        client:load
+                        style={{
+                          viewTransitionName: `post-tag-${slug.replace(/\//g, "-")}-${tag.replace(/\//g, "-")}`,
+                        }}
+                      >
+                        {tag}
+                      </Badge>
+                    ))}
+                </div>
               )
             }
             <h1
@@ -185,31 +207,22 @@ if (chatWithAI) {
         <Separator className="my-6" client:load />
         <div class="prose">
           <slot />
-          {
-            tags && tags.length > 0 && (
-              <>
-                <Separator client:load />
-                <div class="flex flex-wrap gap-2">
-                  {tags.map((tag: string) => (
-                    <Badge
-                      client:load
-                      variant={"secondary"}
-                      className="rounded-xs"
-                    >
-                      {tag}
-                    </Badge>
-                  ))}
-                </div>
-              </>
-            )
-          }
+          <div class="flex items-center gap-2">
+            <Separator className="flex-1" client:load />
+            <TegakiRenderer
+              font={bundle}
+              text="tantuyu. :)"
+              time={{ mode: "uncontrolled", speed: 1.75, playing: false }}
+              style="font-size: 32px"
+              data-inview=""
+            />
+          </div>
         </div>
 
         {
           (prevPost || nextPost) && (
             <>
-              <Separator className="my-6" client:load />
-              <nav class="not-prose grid grid-cols-2 gap-4">
+              <nav class="not-prose mt-4 grid grid-cols-2 gap-4">
                 <div>
                   {prevPost && (
                     <a
@@ -261,6 +274,34 @@ if (chatWithAI) {
         </div>
       </div>
     </div>
+
+    <script is:inline>
+      // Attach before Tegaki's module script hydrates so we catch tegaki:ready.
+      // Guard prevents duplicate listeners across view-transition navigations.
+      if (!window._tegakiInviewSetup) {
+        window._tegakiInviewSetup = true;
+        document.addEventListener("tegaki:ready", function (e) {
+          var container = e.target;
+          if (
+            !(container instanceof HTMLElement) ||
+            !("inview" in container.dataset)
+          )
+            return;
+          var engine = e.detail && e.detail.engine;
+          if (!engine) return;
+          var observer = new IntersectionObserver(
+            function (entries) {
+              if (entries[0].isIntersecting) {
+                observer.disconnect();
+                engine.play();
+              }
+            },
+            { threshold: 0.5 },
+          );
+          observer.observe(container);
+        });
+      }
+    </script>
 
     <script>
       function setupCopyButtons() {

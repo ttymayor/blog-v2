@@ -75,6 +75,9 @@ export default function PostList({ posts }: PostListProps) {
                       variant={"secondary"}
                       key={tag}
                       className="rounded-xs"
+                      style={{
+                        viewTransitionName: `post-tag-${post.id.replace(/\//g, "-")}-${tag.replace(/\//g, "-")}`,
+                      }}
                     >
                       {tag}
                     </Badge>
