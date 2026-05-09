@@ -96,7 +96,11 @@ export default function DiffViewer({ commits = [] }: { commits?: Commit[] }) {
   }, []);
 
   const selectedCommit = commits.find((c) => c.hash === selectedHash);
-  const patches = selectedCommit ? splitPatch(selectedCommit.diff) : [];
+  const patches = selectedCommit
+    ? splitPatch(selectedCommit.diff).filter(
+        (p) => !p.startsWith("diff --git a/pnpm-lock.yaml"),
+      )
+    : [];
 
   return (
     <div className="space-y-6">
