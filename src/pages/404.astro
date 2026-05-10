@@ -6,7 +6,20 @@ import BaseLayout from "@/layouts/BaseLayout.astro";
   <div
     class="flex min-h-[80dvh] flex-col items-center justify-center px-4 select-none"
   >
-    <h1 class="text-9xl">404</h1>
+    <h1
+      id="error-code"
+      class="t-digit-group is-animating font-se cursor-pointer font-mono text-9xl"
+      role="button"
+      tabindex="0"
+      aria-label="404"
+    >
+      <span class="t-digit">4</span>
+      <span class="t-digit" style="animation-delay:var(--digit-stagger)">0</span
+      >
+      <span class="t-digit" style="animation-delay:calc(var(--digit-stagger)*2)"
+        >4</span
+      >
+    </h1>
     <p class="text-muted-foreground mt-4 text-lg">好像找不到頁面</p>
     <a
       href="/"
@@ -16,3 +29,51 @@ import BaseLayout from "@/layouts/BaseLayout.astro";
     </a>
   </div>
 </BaseLayout>
+
+<script>
+  const group = document.getElementById("error-code") as HTMLElement;
+  let count = 404;
+
+  function increment() {
+    const oldStr = String(count);
+    count++;
+    const newStr = String(count);
+
+    group.classList.remove("is-animating");
+
+    let staggerIndex = 0;
+    group.innerHTML = newStr
+      .split("")
+      .map((ch, i) => {
+        const posFromRight = newStr.length - 1 - i;
+        const oldCh =
+          posFromRight < oldStr.length
+            ? oldStr[oldStr.length - 1 - posFromRight]
+            : null;
+        const changed = ch !== oldCh;
+
+        let style = "";
+        if (!changed) {
+          style = "animation:none";
+        } else if (staggerIndex > 0) {
+          style = `animation-delay:calc(var(--digit-stagger)*${staggerIndex})`;
+        }
+        if (changed) staggerIndex++;
+
+        return `<span class="t-digit"${style ? ` style="${style}"` : ""}>${ch}</span>`;
+      })
+      .join("");
+
+    group.setAttribute("aria-label", newStr);
+    void group.offsetWidth;
+    group.classList.add("is-animating");
+  }
+
+  group.addEventListener("click", increment);
+  group.addEventListener("keydown", (e) => {
+    if (e.key === "Enter" || e.key === " ") {
+      e.preventDefault();
+      increment();
+    }
+  });
+</script>
