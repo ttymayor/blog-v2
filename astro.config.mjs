@@ -34,20 +34,6 @@ export default defineConfig({
       cssVariable: "--font-geist-mono",
       provider: fontProviders.google(),
     },
-    {
-      provider: fontProviders.local(),
-      name: "GeistPixelGrid",
-      cssVariable: "--font-geist-pixel-grid",
-      options: {
-        variants: [
-          {
-            src: ["./src/assets/fonts/GeistPixel/GeistPixel-Grid.woff2"],
-            weight: "normal",
-            style: "normal",
-          },
-        ],
-      },
-    },
   ],
   experimental: {
     queuedRendering: {
