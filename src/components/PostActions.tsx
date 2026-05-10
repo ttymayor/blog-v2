@@ -50,10 +50,10 @@ export default function PostActions({ body, encodedPrompt }: Props) {
       <ButtonGroup className="h-fit">
         <Button
           variant="outline"
-          size="sm"
+          size="icon-sm"
           onClick={handleCopy}
           aria-label="Copy as Markdown"
-          className="group/copy relative"
+          className="group/copy relative rounded-lg"
         >
           <IconSwap
             iconA={<Copy className="size-3.5" />}
@@ -66,7 +66,11 @@ export default function PostActions({ body, encodedPrompt }: Props) {
         </Button>
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant="outline" size="sm" aria-label="Discuss with AI">
+            <Button
+              variant="outline"
+              size="icon-sm"
+              aria-label="Discuss with AI"
+            >
               <EllipsisVertical className="size-3.5" />
             </Button>
           </DropdownMenuTrigger>
