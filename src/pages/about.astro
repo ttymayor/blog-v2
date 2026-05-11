@@ -2,6 +2,8 @@
 import BaseLayout from "@/layouts/BaseLayout.astro";
 import ProfileAvatar from "@/components/react/ProfileAvatar";
 import BlankBlock from "@/components/BlankBlock.astro";
+import TegakiRenderer from "tegaki/astro";
+import bundle from "tegaki/fonts/caveat";
 import avatar from "@/assets/avatar.jpg";
 import slideGitForensics from "@/assets/slides/20260423-git-and-forensics.png";
 import slideLinux101 from "@/assets/slides/20250925-linux.png";
@@ -216,6 +218,94 @@ const slides: Slide[] = [
         </section>
       )
     }
+
+    <div
+      class="h-6 w-full border-t [background:repeating-linear-gradient(-45deg,transparent,transparent_8px,#94a3b815_8px,#94a3b815_10px)]"
+    >
+    </div>
+    <section class="w-full border-t">
+      <div class="mx-auto max-w-5xl px-6 py-12">
+        <div class="relative size-full">
+          <div
+            id="mask"
+            class="bg-card/50 absolute flex size-full flex-col items-center justify-center rounded-2xl border backdrop-blur-md"
+          >
+            <TegakiRenderer
+              font={bundle}
+              text="Wish you well. You are the best. :D"
+              time={{ mode: "uncontrolled", speed: 5, playing: false }}
+              class="text-2xl md:text-4xl"
+              data-inview=""
+            />
+            <TegakiRenderer
+              font={bundle}
+              text="You can tap me!"
+              time={{ mode: "uncontrolled", speed: 10, playing: false }}
+              class=""
+              data-inview=""
+            />
+          </div>
+
+          <iframe
+            data-testid="embed-iframe"
+            class="rounded-2xl"
+            src="https://open.spotify.com/embed/album/0FKC566l6cp7gHF0QXe9G3?utm_source=generator&theme=0"
+            width="100%"
+            height="400px"
+            allowfullscreen=""
+            allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
+            loading="lazy"></iframe>
+        </div>
+      </div>
+    </section>
   </div>
   <!-- <div class="h-8 border-t w-full"></div> -->
 </BaseLayout>
+
+<script is:inline>
+  // Attach before Tegaki's module script hydrates so we catch tegaki:ready.
+  // Guard prevents duplicate listeners across view-transition navigations.
+  var mask = document.getElementById("mask");
+  if (mask) {
+    mask.style.cursor = "pointer";
+    mask.addEventListener(
+      "click",
+      function () {
+        mask.style.transition = "opacity 0.4s ease";
+        mask.style.opacity = "0";
+        mask.addEventListener(
+          "transitionend",
+          function () {
+            mask.remove();
+          },
+          { once: true },
+        );
+      },
+      { once: true },
+    );
+  }
+
+  if (!window._tegakiInviewSetup) {
+    window._tegakiInviewSetup = true;
+    document.addEventListener("tegaki:ready", function (e) {
+      var container = e.target;
+      if (
+        !(container instanceof HTMLElement) ||
+        !("inview" in container.dataset)
+      )
+        return;
+      var engine = e.detail && e.detail.engine;
+      if (!engine) return;
+      var observer = new IntersectionObserver(
+        function (entries) {
+          if (entries[0].isIntersecting) {
+            observer.disconnect();
+            engine.play();
+          }
+        },
+        { threshold: 0.5 },
+      );
+      observer.observe(container);
+    });
+  }
+</script>
