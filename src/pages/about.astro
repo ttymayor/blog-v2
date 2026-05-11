@@ -265,25 +265,30 @@ const slides: Slide[] = [
 <script is:inline>
   // Attach before Tegaki's module script hydrates so we catch tegaki:ready.
   // Guard prevents duplicate listeners across view-transition navigations.
-  var mask = document.getElementById("mask");
-  if (mask) {
-    mask.style.cursor = "pointer";
-    mask.addEventListener(
-      "click",
-      function () {
-        mask.style.transition = "opacity 0.4s ease";
-        mask.style.opacity = "0";
-        mask.addEventListener(
-          "transitionend",
-          function () {
-            mask.remove();
-          },
-          { once: true },
-        );
-      },
-      { once: true },
-    );
+  function MaskEffect() {
+    var mask = document.getElementById("mask");
+    if (mask) {
+      mask.style.cursor = "pointer";
+      mask.addEventListener(
+        "click",
+        function () {
+          mask.style.transition = "opacity 0.4s ease";
+          mask.style.opacity = "0";
+          mask.addEventListener(
+            "transitionend",
+            function () {
+              mask.remove();
+            },
+            { once: true },
+          );
+        },
+        { once: true },
+      );
+    }
   }
+
+  document.addEventListener("astro:after-swap", MaskEffect());
+  MaskEffect();
 
   if (!window._tegakiInviewSetup) {
     window._tegakiInviewSetup = true;
