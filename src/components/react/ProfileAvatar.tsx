@@ -8,6 +8,12 @@ import {
   DialogTitle,
   DialogDescription,
 } from "@/components/ui/dialog";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+  TooltipProvider,
+} from "@/components/ui/tooltip";
 
 // === Animated Bio ===
 function AnimatedBio({ words }: { words: string[] }) {
@@ -115,40 +121,61 @@ function SpotifyDialogContent({ spotify }: { spotify: SpotifyData }) {
   const elapsed = total * progress;
 
   return (
-    <div className="flex min-w-0 flex-col gap-4">
-      <div className="flex min-w-0 items-center gap-4">
-        <img
-          src={spotify.album_art_url}
-          alt={spotify.song}
-          className="size-16 shrink-0 rounded-lg shadow-md"
-        />
-        <div className="min-w-0 flex-1">
-          <p className="text-foreground truncate text-base font-semibold">
-            {spotify.song}
-          </p>
-          <p className="text-muted-foreground truncate text-sm">
-            {spotify.artist
-              .split(";")
-              .map((artist) => artist.trim())
-              .join("、")}
-          </p>
+    <TooltipProvider>
+      <div className="flex min-w-0 flex-col gap-4">
+        <div className="flex min-w-0 items-center gap-4">
+          <a
+            href={`spotify:track:${spotify.track_id}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="aspect-square size-16 shrink-0 rounded-xl object-cover p-1 shadow-md backdrop-blur-xl transition-all duration-180 ease-in-out hover:p-[2px] md:size-24"
+          >
+            <img
+              src={spotify.album_art_url}
+              alt={spotify.song}
+              className="rounded-lg"
+            />
+          </a>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <a
+                href={`spotify:track:${spotify.track_id}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="w-fit min-w-0 hover:underline hover:underline-offset-4"
+              >
+                <p className="text-foreground line-clamp-1 text-base font-semibold">
+                  {spotify.song}
+                </p>
+                <p className="text-muted-foreground line-clamp-1 text-sm">
+                  {spotify.artist
+                    .split(";")
+                    .map((artist) => artist.trim())
+                    .join("、")}
+                </p>
+              </a>
+            </TooltipTrigger>
+            <TooltipContent>
+              <p>以 Spotify 開啟</p>
+            </TooltipContent>
+          </Tooltip>
+        </div>
+        <div className="flex items-center gap-2">
+          <span className="text-muted-foreground text-[11px] tabular-nums">
+            {formatMs(elapsed)}
+          </span>
+          <div className="bg-border h-1.5 flex-1 overflow-hidden rounded-full">
+            <div
+              className="bg-primary h-full rounded-full transition-[width] duration-1000 ease-linear"
+              style={{ width: `${progress * 100}%` }}
+            />
+          </div>
+          <span className="text-muted-foreground text-[11px] tabular-nums">
+            {formatMs(total)}
+          </span>
         </div>
       </div>
-      <div className="flex items-center gap-2">
-        <span className="text-muted-foreground text-[11px] tabular-nums">
-          {formatMs(elapsed)}
-        </span>
-        <div className="bg-border h-1.5 flex-1 overflow-hidden rounded-full">
-          <div
-            className="bg-primary h-full rounded-full transition-[width] duration-1000 ease-linear"
-            style={{ width: `${progress * 100}%` }}
-          />
-        </div>
-        <span className="text-muted-foreground text-[11px] tabular-nums">
-          {formatMs(total)}
-        </span>
-      </div>
-    </div>
+    </TooltipProvider>
   );
 }
 
@@ -222,14 +249,38 @@ export default function ProfileAvatar({
       {/* Spotify Dialog */}
       {hasSpotify && (
         <Dialog open={spotifyOpen} onOpenChange={setSpotifyOpen}>
-          <DialogContent showCloseButton={false} className="sm:max-w-md">
-            <DialogHeader>
-              <DialogTitle>正在聽 Spotify</DialogTitle>
-              <DialogDescription className="sr-only">
-                正在聽 Spotify
-              </DialogDescription>
-            </DialogHeader>
-            <SpotifyDialogContent spotify={lanyard.spotify!} />
+          <DialogContent
+            showCloseButton={false}
+            className="overflow-hidden p-0 sm:max-w-md"
+          >
+            {/* Blurred album art background */}
+            <img
+              src={lanyard?.spotify?.album_art_url}
+              alt=""
+              aria-hidden="true"
+              className="absolute inset-0 h-full w-full -translate-x-30 object-cover blur-2xl md:blur-lg"
+            />
+            <div className="bg-background/50 dark:bg-background/50 absolute inset-0" />
+
+            {/* Foreground content */}
+            <div className="relative z-10 flex flex-col gap-4 p-6">
+              <DialogHeader>
+                <DialogTitle className="flex items-center gap-2">
+                  <svg
+                    viewBox="0 0 24 24"
+                    fill="#1DB954"
+                    className="size-5 shrink-0"
+                  >
+                    <path d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.66 0 12 0zm5.521 17.34c-.24.359-.66.48-1.021.24-2.82-1.74-6.36-2.101-10.561-1.141-.418.122-.779-.179-.899-.539-.12-.421.18-.78.54-.9 4.56-1.021 8.52-.6 11.64 1.32.42.18.479.659.301 1.02zm1.44-3.3c-.301.42-.841.6-1.262.3-3.239-1.98-8.159-2.58-11.939-1.38-.479.12-1.02-.12-1.14-.6-.12-.48.12-1.021.6-1.141C9.6 9.9 15 10.561 18.72 12.84c.361.181.54.78.241 1.2zm.12-3.36C15.24 8.4 8.82 8.16 5.16 9.301c-.6.179-1.2-.181-1.38-.721-.18-.601.18-1.2.72-1.381 4.26-1.26 11.28-1.02 15.721 1.621.539.3.719 1.02.419 1.56-.299.421-1.02.599-1.559.3z" />
+                  </svg>
+                  正在聽 Spotify
+                </DialogTitle>
+                <DialogDescription className="sr-only">
+                  正在聽 Spotify
+                </DialogDescription>
+              </DialogHeader>
+              <SpotifyDialogContent spotify={lanyard.spotify!} />
+            </div>
           </DialogContent>
         </Dialog>
       )}
