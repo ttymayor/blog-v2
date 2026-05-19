@@ -16,10 +16,18 @@ const { text, speed = 180, zhuyinSpeed = 90, class: className } = Astro.props;
   data-speed={speed}
   data-zhuyin-speed={zhuyinSpeed}
 >
-  <span class="typing-text"></span><span class="cursor">▍</span>
+  <span class="typing-text"></span><span class="zhuyin-draft"></span><span
+    class="cursor">▍</span
+  >
 </span>
 
 <style>
+  .typing-text.is-composing,
+  .zhuyin-draft {
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+
   .cursor {
     animation: blink 1s step-end infinite;
   }
@@ -83,6 +91,7 @@ const { text, speed = 180, zhuyinSpeed = 90, class: className } = Astro.props;
 
   class ZhuyinTyper {
     private textElement: HTMLElement;
+    private zhuyinElement: HTMLElement;
     public text: string;
     private speed: number;
     private zhuyinSpeed: number;
@@ -91,6 +100,7 @@ const { text, speed = 180, zhuyinSpeed = 90, class: className } = Astro.props;
 
     constructor(element: HTMLElement) {
       this.textElement = element.querySelector(".typing-text")!;
+      this.zhuyinElement = element.querySelector(".zhuyin-draft")!;
       this.text = element.dataset.text || "";
       this.speed = parseInt(element.dataset.speed || "180");
       this.zhuyinSpeed = parseInt(element.dataset.zhuyinSpeed || "90");
@@ -104,6 +114,8 @@ const { text, speed = 180, zhuyinSpeed = 90, class: className } = Astro.props;
       this.stop();
       this.cancelled = false;
       this.textElement.textContent = "";
+      this.zhuyinElement.textContent = "";
+      this.textElement.classList.add("is-composing");
       let result = "";
 
       // Initial 1s pause before typing starts
@@ -120,12 +132,15 @@ const { text, speed = 180, zhuyinSpeed = 90, class: className } = Astro.props;
           const zhuyinChars = toGraphemes(zhuyin);
           for (let j = 0; j < zhuyinChars.length; j++) {
             if (this.cancelled) return;
-            this.textElement.textContent =
-              result + zhuyinChars.slice(0, j + 1).join("");
+            this.textElement.textContent = result;
+            this.zhuyinElement.textContent = zhuyinChars
+              .slice(0, j + 1)
+              .join("");
             await this.sleep(this.randomSpeed(this.zhuyinSpeed));
           }
           result += char;
           this.textElement.textContent = result;
+          this.zhuyinElement.textContent = "";
           await this.sleep(this.randomSpeed(this.speed));
         } else {
           result += char;
@@ -133,6 +148,9 @@ const { text, speed = 180, zhuyinSpeed = 90, class: className } = Astro.props;
           await this.sleep(this.randomSpeed(this.speed));
         }
       }
+
+      // Typing complete — remove composing underline
+      this.textElement.classList.remove("is-composing");
     }
 
     private sleep(ms: number): Promise<void> {
@@ -147,6 +165,8 @@ const { text, speed = 180, zhuyinSpeed = 90, class: className } = Astro.props;
         clearTimeout(this.timeout);
         this.timeout = null;
       }
+      this.zhuyinElement.textContent = "";
+      this.textElement.classList.remove("is-composing");
     }
   }
 
