@@ -30,6 +30,7 @@ export default function PostList({ posts }: PostListProps) {
               href={`/blog/${post.id}`}
               initial={{ opacity: 0, filter: "blur(10px)" }}
               whileInView={{ opacity: 1, filter: "none" }}
+              viewport={{ once: true }}
             >
               {post.heroImage && (
                 <img

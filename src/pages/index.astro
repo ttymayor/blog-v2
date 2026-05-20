@@ -8,21 +8,81 @@ import { getPosts } from "@/lib/blog";
 
 const posts = await getPosts();
 const latestPosts = posts.slice(0, 5);
+
+const site_description = [
+  SITE_DESCRIPTION,
+  "AI 時代，更需要思考、表達，與提問",
+  "人生充滿喜劇",
+  "🖐️",
+  "這是什麼？",
+  "五顆地瓜 🍠",
+  "🦽 椅子推進器，噗嘶",
+  "🗣️ 狗會說話嗎 ☝️☝️☝️",
+  "🗣️ 狗會自己跳出角色嗎 ☝️☝️☝️",
+];
 ---
 
 <BaseLayout ogImage="/og/index.png">
   <div class="hidden md:block md:h-22" aria-hidden="true"></div>
   <div class="mx-auto w-full max-w-5xl px-4 py-12">
-    <section id="hero" class="mb-10 flex items-center justify-start">
-      <div>
-        <h2 id="greeting" class="text-3xl font-bold">
-          <ZhuyinTyping text="休息一下" class="greeting-text" />
-        </h2>
-        <p class="text-muted-foreground m-0 text-lg">{SITE_DESCRIPTION}</p>
-      </div>
+    <section id="hero" class="mb-10">
+      <h2 id="greeting" class="font-serif text-3xl font-bold">
+        <ZhuyinTyping text="休息一下" class="greeting-text" />
+      </h2>
+      <p
+        id="site-description"
+        class="t-text-swap text-muted-foreground m-0 font-serif text-lg"
+        data-texts={JSON.stringify(site_description)}
+      >
+        {SITE_DESCRIPTION}
+      </p>
     </section>
 
     <script>
+      const TEXT_SWAP_DUR = 200; // matches --text-swap-dur in transitions.css
+      let descTimer: ReturnType<typeof setTimeout> | null = null;
+
+      function initDescriptionRotation() {
+        const elOrNull = document.getElementById("site-description");
+        if (!elOrNull) return;
+        const el: HTMLElement = elOrNull;
+
+        const texts: string[] = JSON.parse(el.dataset.texts || "[]");
+        if (texts.length < 2) return;
+
+        let index = 0;
+
+        if (descTimer) clearTimeout(descTimer);
+
+        function scheduleNext() {
+          const displayDur = Math.max(2000, texts[index].length * 150);
+
+          descTimer = setTimeout(() => {
+            // Phase 1: exit — old text slides up + blurs + fades
+            el.classList.add("is-exit");
+
+            setTimeout(() => {
+              // Phase 2: swap text + jump to enter-start (below, no transition)
+              index = (index + 1) % texts.length;
+              el.textContent = texts[index];
+              el.classList.remove("is-exit");
+              el.classList.add("is-enter-start");
+
+              // Phase 3: force reflow, then animate back to resting state
+              el.getBoundingClientRect();
+              el.classList.remove("is-enter-start");
+
+              scheduleNext();
+            }, TEXT_SWAP_DUR);
+          }, displayDur);
+        }
+
+        scheduleNext();
+      }
+
+      initDescriptionRotation();
+      document.addEventListener("astro:page-load", initDescriptionRotation);
+
       function updateGreeting() {
         const greetingElement = document.querySelector(".greeting-text");
         if (!greetingElement) return;
@@ -61,11 +121,11 @@ const latestPosts = posts.slice(0, 5);
 
     <section id="latest-posts" class="space-y-4">
       <div class="flex items-center justify-between">
-        <h3 class="text-2xl font-bold">最新文章</h3>
+        <h3 class="font-serif text-2xl font-bold">最新文章</h3>
         <a
           href="/blog"
-          class="text-muted-foreground flex items-center gap-2 transition-all hover:translate-x-1"
-          >瞧<ArrowRight /></a
+          class="text-muted-foreground flex items-center gap-2 font-serif transition-all hover:translate-x-1"
+          >瞧<ArrowRight class="size-5" /></a
         >
       </div>
       <!-- <LatestPosts /> -->
