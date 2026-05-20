@@ -128,12 +128,12 @@ function SpotifyDialogContent({ spotify }: { spotify: SpotifyData }) {
             href={`spotify:track:${spotify.track_id}`}
             target="_blank"
             rel="noopener noreferrer"
-            className="aspect-square size-16 shrink-0 rounded-xl object-cover p-1 shadow-md backdrop-blur-xl transition-all duration-180 ease-in-out hover:p-[2px] md:size-24"
+            className="aspect-square size-16 shrink-0 rounded-xl object-cover p-1 shadow-md backdrop-blur-xl transition-all duration-180 ease-in-out hover:p-0.5 md:size-24"
           >
             <img
               src={spotify.album_art_url}
               alt={spotify.song}
-              className="rounded-lg"
+              className="rounded-lg hover:rounded-[6px]"
             />
           </a>
           <Tooltip>
