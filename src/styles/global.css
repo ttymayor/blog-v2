@@ -254,11 +254,11 @@
     }
 
     th {
-      @apply text-foreground h-10 px-2 text-left align-middle font-medium whitespace-nowrap [&:has([role=checkbox])]:pr-0;
+      @apply text-foreground h-10 px-2 text-left align-middle font-medium whitespace-nowrap has-[[role=checkbox]]:pr-0;
     }
 
     td {
-      @apply p-2 align-middle whitespace-nowrap [&:has([role=checkbox])]:pr-0;
+      @apply p-2 align-middle whitespace-nowrap has-[[role=checkbox]]:pr-0;
     }
 
     caption {

@@ -133,7 +133,7 @@ function SpotifyDialogContent({ spotify }: { spotify: SpotifyData }) {
             <img
               src={spotify.album_art_url}
               alt={spotify.song}
-              className="rounded-lg hover:rounded-[6px]"
+              className="rounded-lg"
             />
           </a>
           <Tooltip>
