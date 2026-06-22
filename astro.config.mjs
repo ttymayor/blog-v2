@@ -8,6 +8,8 @@ import rehypeSlug from "rehype-slug";
 import { remarkReadingTime } from "./src/lib/remark-reading-time.mjs";
 import { remarkModifiedTime } from "./src/lib/remark-modified-time.mjs";
 import rehypePrismPlus from "rehype-prism-plus";
+import { satteri } from "@astrojs/markdown-satteri";
+import { unified } from "@astrojs/markdown-remark";
 
 import tailwindcss from "@tailwindcss/vite";
 
@@ -35,26 +37,26 @@ export default defineConfig({
       provider: fontProviders.google(),
     },
   ],
-  experimental: {
-    queuedRendering: {
-      enabled: true,
-    },
+  markdown: {
+    processor: satteri({
+      features: { directive: true },
+    }),
   },
   integrations: [
     mdx({
-      syntaxHighlight: false,
-      remarkPlugins: [
-        remarkMath,
-        remarkGfm,
-        remarkReadingTime,
-        remarkModifiedTime,
-      ],
-      rehypePlugins: [
-        rehypeKatex,
-        [rehypePrismPlus, { ignoreMissing: true }],
-        rehypeSlug,
-      ],
-      gfm: true,
+      processor: unified({
+        remarkPlugins: [
+          remarkMath,
+          remarkGfm,
+          remarkReadingTime,
+          remarkModifiedTime,
+        ],
+        rehypePlugins: [
+          rehypeKatex,
+          [rehypePrismPlus, { ignoreMissing: true }],
+          rehypeSlug,
+        ],
+      }),
     }),
     sitemap({
       filter: (page) =>
