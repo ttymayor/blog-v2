@@ -3,7 +3,6 @@ import sitemap from "@astrojs/sitemap";
 import { defineConfig, fontProviders } from "astro/config";
 import remarkMath from "remark-math";
 import rehypeKatex from "rehype-katex";
-import remarkGfm from "remark-gfm";
 import rehypeSlug from "rehype-slug";
 import { remarkReadingTime } from "./src/lib/remark-reading-time.mjs";
 import { remarkModifiedTime } from "./src/lib/remark-modified-time.mjs";
@@ -20,6 +19,7 @@ import partytown from "@astrojs/partytown";
 // https://astro.build/config
 export default defineConfig({
   site: "https://v2.ttymayor.com",
+  prefetchAll: false,
   fonts: [
     {
       name: "Noto Serif TC",
@@ -39,23 +39,14 @@ export default defineConfig({
   ],
   markdown: {
     processor: satteri({
-      features: { directive: true },
+      features: { math: true, gfm: true, directive: true },
     }),
   },
   integrations: [
     mdx({
       processor: unified({
-        remarkPlugins: [
-          remarkMath,
-          remarkGfm,
-          remarkReadingTime,
-          remarkModifiedTime,
-        ],
-        rehypePlugins: [
-          rehypeKatex,
-          [rehypePrismPlus, { ignoreMissing: true }],
-          rehypeSlug,
-        ],
+        remarkPlugins: [remarkReadingTime, remarkModifiedTime],
+        rehypePlugins: [[rehypePrismPlus, { ignoreMissing: true }]],
       }),
     }),
     sitemap({

@@ -9,7 +9,6 @@ import {
 } from "@/components/ui/item";
 import { Badge } from "@/components/ui/badge";
 import RelativeTime from "@/components/react/RelativeTime";
-import { motion } from "motion/react";
 
 interface PostListProps {
   posts: BlogPost[];
@@ -26,12 +25,7 @@ export default function PostList({ posts }: PostListProps) {
             </div>
           )}
           <Item asChild size="sm" className="rounded-2xl">
-            <motion.a
-              href={`/blog/${post.id}`}
-              initial={{ opacity: 0, filter: "blur(10px)" }}
-              whileInView={{ opacity: 1, filter: "none" }}
-              viewport={{ once: true }}
-            >
+            <a href={`/blog/${post.id}`}>
               {post.heroImage && (
                 <img
                   src={post.heroImage}
@@ -88,7 +82,7 @@ export default function PostList({ posts }: PostListProps) {
                   <RelativeTime dateStr={post.pubDate} />
                 </span>
               </ItemFooter>
-            </motion.a>
+            </a>
           </Item>
         </div>
       ))}

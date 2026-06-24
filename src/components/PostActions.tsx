@@ -7,6 +7,7 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
+  DropdownMenuLabel,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import claudeIconUrl from "@/assets/ai-icons/claude-color.svg?url";
@@ -46,8 +47,8 @@ export default function PostActions({ body, encodedPrompt }: Props) {
   };
 
   return (
-    <div className="h-fit">
-      <ButtonGroup className="h-fit">
+    <div>
+      <ButtonGroup>
         <Button
           variant="outline"
           size="icon-sm"
@@ -56,8 +57,8 @@ export default function PostActions({ body, encodedPrompt }: Props) {
           className="group/copy relative rounded-lg"
         >
           <IconSwap
-            iconA={<Copy className="size-3.5" />}
-            iconB={<Check className="size-3.5" />}
+            iconA={<Copy />}
+            iconB={<Check />}
             state={copied ? "b" : "a"}
           />
           <span className="bg-primary text-primary-foreground pointer-events-none absolute bottom-full left-1/2 mb-1.5 -translate-x-1/2 rounded px-2 py-1 text-xs whitespace-nowrap opacity-0 transition-opacity group-hover/copy:opacity-100">
@@ -71,10 +72,11 @@ export default function PostActions({ body, encodedPrompt }: Props) {
               size="icon-sm"
               aria-label="Discuss with AI"
             >
-              <EllipsisVertical className="size-3.5" />
+              <EllipsisVertical />
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
+            <DropdownMenuLabel>Chat with...</DropdownMenuLabel>
             {aiLinks.map((link) => (
               <DropdownMenuItem key={link.name} asChild>
                 <a href={link.href} target="_blank" rel="noopener noreferrer">
