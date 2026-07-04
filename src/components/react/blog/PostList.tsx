@@ -20,11 +20,11 @@ export default function PostList({ posts }: PostListProps) {
       {posts.map((post, i) => (
         <div key={post.id}>
           {i > 0 && (
-            <div className="my-1 px-3">
+            <div className="my-1">
               <ItemSeparator />
             </div>
           )}
-          <Item asChild size="sm" className="rounded-2xl">
+          <Item asChild size="sm" className="-mx-4 rounded-2xl">
             <a href={`/blog/${post.id}`}>
               {post.heroImage && (
                 <img
