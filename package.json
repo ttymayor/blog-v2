@@ -1,7 +1,7 @@
 {
   "name": "blog-v2",
-  "type": "module",
   "version": "0.0.1",
+  "type": "module",
   "scripts": {
     "dev": "astro dev",
     "build": "astro build",
@@ -9,7 +9,10 @@
     "astro": "astro",
     "new-post": "node scripts/new-post.mjs",
     "typecheck": "astro check && tsc --noEmit",
-    "lint": "eslint ."
+    "lint": "oxlint",
+    "lint:fix": "oxlint --fix",
+    "fmt": "oxfmt",
+    "fmt:check": "oxfmt --check"
   },
   "dependencies": {
     "@astrojs/check": "^0.9.9",
@@ -66,6 +69,8 @@
     "eslint": "^10.6.0",
     "eslint-plugin-astro": "^2.1.1",
     "eslint-plugin-react-hooks": "^7.1.1",
+    "oxfmt": "^0.58.0",
+    "oxlint": "^1.73.0",
     "prettier": "^3.9.5",
     "prettier-plugin-astro": "^0.14.1",
     "prettier-plugin-tailwindcss": "^0.8.0",

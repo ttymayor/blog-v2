@@ -1,9 +1,9 @@
 import mdx from "@astrojs/mdx";
 import sitemap from "@astrojs/sitemap";
 import { defineConfig, fontProviders } from "astro/config";
-import remarkMath from "remark-math";
-import rehypeKatex from "rehype-katex";
-import rehypeSlug from "rehype-slug";
+// import remarkMath from "remark-math";
+// import rehypeKatex from "rehype-katex";
+// import rehypeSlug from "rehype-slug";
 import { remarkReadingTime } from "./src/lib/remark-reading-time.mjs";
 import { remarkModifiedTime } from "./src/lib/remark-modified-time.mjs";
 import rehypePrismPlus from "rehype-prism-plus";
