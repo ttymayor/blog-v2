@@ -70,7 +70,7 @@ const pageTitle = title ? `${title}｜${SITE_TITLE}` : SITE_TITLE;
     <Font cssVariable="--font-geist-mono" preload />
   </head>
   <body>
-    {header && <Header transition:persist />}
+    {header && <Header transition:persist transition:name="header" />}
     <main class="p-0" transition:animate="fade">
       <slot />
     </main>

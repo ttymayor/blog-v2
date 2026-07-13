@@ -1,7 +1,7 @@
 ---
 import BaseLayout from "@/layouts/BaseLayout.astro";
 import BlankBlock from "@/components/BlankBlock.astro";
-import { ArrowLeft, Calendar, Dot } from "@lucide/astro";
+import { ArrowLeft, Dot } from "@lucide/astro";
 import RelativeTime from "@/components/react/RelativeTime";
 
 interface Props {
@@ -11,11 +11,6 @@ interface Props {
 
 const { id, pubDate } = Astro.props;
 const persistName = `jotting-content-${id}`;
-const date = new Intl.DateTimeFormat("zh-TW", {
-  year: "numeric",
-  month: "long",
-  day: "numeric",
-}).format(new Date(pubDate));
 ---
 
 <BaseLayout title="隨筆">

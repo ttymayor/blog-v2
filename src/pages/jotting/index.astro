@@ -30,7 +30,7 @@ const renderedJottings = await Promise.all(
           transition:name={`jotting-border`}
           class="border-border -mx-5 overflow-hidden sm:rounded-4xl sm:border"
         >
-          {renderedJottings.map(({ jotting, Content, isLong }, index) => {
+          {renderedJottings.map(({ jotting, Content }, index) => {
             const persistName = `jotting-content-${jotting.id}`;
             return (
               <>

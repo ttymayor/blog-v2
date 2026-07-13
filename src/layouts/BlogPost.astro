@@ -48,7 +48,7 @@ const ogImage = heroImage
 const modifiedDate: Date | undefined = lastModified?.isValid?.()
   ? lastModified.toDate()
   : undefined;
-const readTime: Number = Math.round(readMinutes);
+const readTime: number = Math.round(readMinutes);
 const isOutdated =
   modifiedDate &&
   !isNaN(modifiedDate.getTime()) &&
