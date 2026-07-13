@@ -273,31 +273,33 @@ const slides: Slide[] = [
 
 <script is:inline>
   // Attach before Tegaki's module script hydrates so we catch tegaki:ready.
-  // Guard prevents duplicate listeners across view-transition navigations.
-  function MaskEffect() {
+  // The data attribute prevents duplicate listeners across view-transition navigations.
+  function setupMaskEffect() {
     var mask = document.getElementById("mask");
-    if (mask) {
-      mask.style.cursor = "pointer";
-      mask.addEventListener(
-        "click",
-        function () {
-          mask.style.transition = "opacity 0.4s ease";
-          mask.style.opacity = "0";
-          mask.addEventListener(
-            "transitionend",
-            function () {
-              mask.remove();
-            },
-            { once: true },
-          );
-        },
-        { once: true },
-      );
-    }
+    if (!mask || mask.dataset.maskEffectReady) return;
+
+    mask.dataset.maskEffectReady = "true";
+    mask.style.cursor = "pointer";
+    mask.addEventListener(
+      "click",
+      function () {
+        mask.style.transition = "opacity 0.4s ease";
+        mask.style.opacity = "0";
+        // Let the iframe receive interactions even if transitionend never fires.
+        mask.style.pointerEvents = "none";
+
+        var removeMask = function () {
+          mask.remove();
+        };
+        mask.addEventListener("transitionend", removeMask, { once: true });
+        window.setTimeout(removeMask, 500);
+      },
+      { once: true },
+    );
   }
 
-  document.addEventListener("astro:after-swap", MaskEffect());
-  MaskEffect();
+  document.addEventListener("astro:page-load", setupMaskEffect);
+  setupMaskEffect();
 
   if (!window._tegakiInviewSetup) {
     window._tegakiInviewSetup = true;
