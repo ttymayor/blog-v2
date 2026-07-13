@@ -1,0 +1,51 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import BlankBlock from "@/components/BlankBlock.astro";
+import { ArrowLeft, Calendar, Dot } from "@lucide/astro";
+import RelativeTime from "@/components/react/RelativeTime";
+
+interface Props {
+  id: string;
+  pubDate: string;
+}
+
+const { id, pubDate } = Astro.props;
+const persistName = `jotting-content-${id}`;
+const date = new Intl.DateTimeFormat("zh-TW", {
+  year: "numeric",
+  month: "long",
+  day: "numeric",
+}).format(new Date(pubDate));
+---
+
+<BaseLayout title="隨筆">
+  <BlankBlock />
+  <div class="mx-auto w-full max-w-2xl px-5 py-12">
+    <a
+      href="/jotting"
+      class="text-muted-foreground hover:text-foreground mb-8 inline-flex items-center gap-2 text-sm no-underline transition-colors"
+    >
+      <ArrowLeft class="size-4" />
+      返回隨筆
+    </a>
+    <div
+      transition:name={`jotting-border`}
+      class="border-border -mx-5 overflow-hidden p-5 sm:rounded-4xl sm:border"
+    >
+      <header class="mb-5 flex flex-row items-center gap-1.5 text-sm">
+        <span class="font-semibold">tantuyu</span>
+        <span class="text-muted-foreground font-light">@tantuyu</span>
+        <Dot class="size-2" />
+        <time datetime={pubDate} class="text-muted-foreground font-light">
+          <RelativeTime dateStr={pubDate} client:load />
+        </time>
+      </header>
+      <div
+        data-astro-transition-persist={persistName}
+        class="prose jotting-prose gap-5 font-serif"
+      >
+        <slot />
+      </div>
+    </div>
+  </div>
+</BaseLayout>

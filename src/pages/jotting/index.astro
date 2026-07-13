@@ -1,0 +1,122 @@
+---
+import { render } from "astro:content";
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import BlankBlock from "@/components/BlankBlock.astro";
+import RelativeTime from "@/components/react/RelativeTime";
+import { getJottings } from "@/lib/jotting";
+import { Separator } from "@/components/ui/separator";
+import { Dot } from "@lucide/astro";
+
+const jottings = await getJottings();
+const renderedJottings = await Promise.all(
+  jottings.map(async (jotting) => ({
+    jotting,
+    ...(await render(jotting)),
+  })),
+);
+---
+
+<BaseLayout title="隨筆" description="一些長短不一、尚未整理成文章的個人抒發。">
+  <BlankBlock />
+  <div class="mx-auto w-full max-w-2xl px-5 py-12">
+    <header class="mb-8 font-serif">
+      <h1 class="mb-3 text-4xl font-bold">隨筆</h1>
+      <p class="text-muted-foreground m-0 leading-relaxed">寫一點。</p>
+    </header>
+
+    {
+      renderedJottings.length > 0 ? (
+        <div
+          transition:name={`jotting-border`}
+          class="border-border -mx-5 overflow-hidden sm:rounded-4xl sm:border"
+        >
+          {renderedJottings.map(({ jotting, Content, isLong }, index) => {
+            const persistName = `jotting-content-${jotting.id}`;
+            return (
+              <>
+                <article
+                  data-jotting-card
+                  tabindex="0"
+                  role="link"
+                  class="relative cursor-pointer"
+                >
+                  <a
+                    href={`/jotting/${jotting.id}`}
+                    data-jotting-link
+                    class="sr-only"
+                  >
+                    閱讀這則隨筆
+                  </a>
+                  <div class="relative p-5">
+                    <header class="mb-5 flex flex-row items-center gap-1.5 text-sm">
+                      <span class="font-semibold">tantuyu</span>
+                      <span class="text-muted-foreground font-light">
+                        @tantuyu
+                      </span>
+                      <Dot class="size-2" />
+                      <time
+                        datetime={jotting.data.pubDate}
+                        class="text-muted-foreground font-light"
+                      >
+                        <RelativeTime
+                          dateStr={jotting.data.pubDate}
+                          client:load
+                        />
+                      </time>
+                    </header>
+
+                    <div
+                      data-astro-transition-persist={persistName}
+                      class="prose jotting-prose gap-5 font-serif"
+                    >
+                      <Content />
+                    </div>
+                  </div>
+                </article>
+                {index !== renderedJottings.length - 1 && (
+                  <Separator className="" />
+                )}
+              </>
+            );
+          })}
+        </div>
+      ) : (
+        <p class="text-muted-foreground">這裡還沒有隨筆。</p>
+      )
+    }
+  </div>
+</BaseLayout>
+
+<script>
+  function initJottingCardLinks() {
+    document
+      .querySelectorAll<HTMLElement>("[data-jotting-card]")
+      .forEach((card) => {
+        if (card.dataset.initialized) return;
+        card.dataset.initialized = "true";
+
+        const openJotting = () =>
+          card.querySelector<HTMLAnchorElement>("[data-jotting-link]")?.click();
+
+        card.addEventListener("click", (event) => {
+          const target = event.target;
+          if (
+            target instanceof Element &&
+            target.closest("a, button, input, textarea, select, iframe")
+          )
+            return;
+          if (window.getSelection()?.toString().trim()) return;
+          openJotting();
+        });
+
+        card.addEventListener("keydown", (event) => {
+          if (event.key !== "Enter" && event.key !== " ") return;
+          event.preventDefault();
+          openJotting();
+        });
+      });
+  }
+
+  initJottingCardLinks();
+  document.addEventListener("astro:page-load", initJottingCardLinks);
+</script>

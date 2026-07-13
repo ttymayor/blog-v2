@@ -3,13 +3,14 @@ import { Image } from "astro:assets";
 import AvatarImage from "@/assets/avatar.jpg";
 import { SITE_TITLE } from "@/consts";
 import { ModeToggle } from "@/components/react/ModeToggle";
-import { PenTool, User, House } from "@lucide/astro";
+import { BookOpenText, PenTool, User, House } from "@lucide/astro";
 import { cn } from "@/lib/utils";
 
 const pathname = Astro.url.pathname.replace(import.meta.env.BASE_URL, "");
 
 const navItems = [
   { href: "/", label: "首頁", Icon: House, isHome: true },
+  { href: "/jotting", label: "隨筆", Icon: BookOpenText },
   { href: "/blog", label: "文章", Icon: PenTool },
   { href: "/about", label: "關於", Icon: User },
 ];

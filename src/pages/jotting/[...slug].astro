@@ -1,0 +1,22 @@
+---
+export const prerender = true;
+
+import { render, type CollectionEntry } from "astro:content";
+import JottingEntry from "@/layouts/JottingEntry.astro";
+import { getJottings } from "@/lib/jotting";
+
+export async function getStaticPaths() {
+  const jottings = await getJottings();
+  return jottings.map((jotting) => ({
+    params: { slug: jotting.id },
+    props: jotting,
+  }));
+}
+
+const jotting: CollectionEntry<"jotting"> = Astro.props;
+const { Content } = await render(jotting);
+---
+
+<JottingEntry {...jotting.data} id={jotting.id}>
+  <Content />
+</JottingEntry>
