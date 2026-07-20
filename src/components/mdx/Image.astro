@@ -15,15 +15,15 @@ const shouldHaveLightbox = !imageWidth || imageWidth >= 200;
 const fullSizeUrl = isLocalImage ? (src as ImageMetadata).src : (src as string);
 ---
 
-<div class="my-4 overflow-hidden rounded-md">
-  <p class="m-0">
-    {
-      shouldHaveLightbox ? (
+<div class="flex justify-center overflow-hidden rounded-md">
+  {
+    shouldHaveLightbox ? (
+      <div class="flex flex-col items-center gap-1">
         <a
           href={fullSizeUrl}
           data-pswp-width={imageWidth}
           data-pswp-height={imageHeight}
-          class="lightbox-trigger block"
+          class="lightbox-trigger"
         >
           <ImageComp
             src={src as ImageMetadata}
@@ -32,14 +32,15 @@ const fullSizeUrl = isLocalImage ? (src as ImageMetadata).src : (src as string);
             loading="lazy"
           />
         </a>
-      ) : (
-        <ImageComp
-          src={src as ImageMetadata}
-          alt={alt}
-          class:list={"transition-all duration-300 ease-out hover:scale-101"}
-          inferSize
-        />
-      )
-    }
-  </p>
+        <p class="text-muted-foreground text-center text-xs">{alt}</p>
+      </div>
+    ) : (
+      <ImageComp
+        src={src as ImageMetadata}
+        alt={alt}
+        class:list={"transition-all duration-300 ease-out hover:scale-101"}
+        inferSize
+      />
+    )
+  }
 </div>
