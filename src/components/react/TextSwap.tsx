@@ -7,12 +7,7 @@ interface TextSwapProps {
   className?: string;
 }
 
-export function TextSwap({
-  textA,
-  textB,
-  state: controlledState,
-  className,
-}: TextSwapProps) {
+export function TextSwap({ textA, textB, state: controlledState, className }: TextSwapProps) {
   const target = controlledState === "a" ? textA : textB;
   const [displayed, setDisplayed] = useState(target);
   const ref = useRef<HTMLSpanElement>(null);
@@ -41,10 +36,7 @@ export function TextSwap({
   }, [target, displayed]);
 
   return (
-    <span
-      className={`t-text-swap${className ? ` ${className}` : ""}`}
-      ref={ref}
-    >
+    <span className={`t-text-swap${className ? ` ${className}` : ""}`} ref={ref}>
       {displayed}
     </span>
   );

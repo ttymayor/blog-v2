@@ -1,8 +1,4 @@
-import {
-  InputGroup,
-  InputGroupAddon,
-  InputGroupInput,
-} from "@/components/ui/input-group";
+import { InputGroup, InputGroupAddon, InputGroupInput } from "@/components/ui/input-group";
 import { Search } from "lucide-react";
 
 interface FilterProps {
@@ -24,9 +20,7 @@ export default function Filter({ search, setSearch, totalPosts }: FilterProps) {
           onChange={(e) => setSearch(e.target.value)}
         />
         <InputGroupAddon align="inline-end">
-          <span className="text-muted-foreground text-sm">
-            {totalPosts} results
-          </span>
+          <span className="text-muted-foreground text-sm">{totalPosts} results</span>
         </InputGroupAddon>
       </InputGroup>
     </div>

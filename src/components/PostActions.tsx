@@ -56,22 +56,14 @@ export default function PostActions({ body, encodedPrompt }: Props) {
           aria-label="Copy as Markdown"
           className="group/copy relative rounded-lg"
         >
-          <IconSwap
-            iconA={<Copy />}
-            iconB={<Check />}
-            state={copied ? "b" : "a"}
-          />
+          <IconSwap iconA={<Copy />} iconB={<Check />} state={copied ? "b" : "a"} />
           <span className="bg-primary text-primary-foreground pointer-events-none absolute bottom-full left-1/2 mb-1.5 -translate-x-1/2 rounded px-2 py-1 text-xs whitespace-nowrap opacity-0 transition-opacity group-hover/copy:opacity-100">
             {copied ? "Copied!" : "Copy as Markdown"}
           </span>
         </Button>
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button
-              variant="outline"
-              size="icon-sm"
-              aria-label="Discuss with AI"
-            >
+            <Button variant="outline" size="icon-sm" aria-label="Discuss with AI">
               <EllipsisVertical />
             </Button>
           </DropdownMenuTrigger>

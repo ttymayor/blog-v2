@@ -69,12 +69,8 @@ export default function FlipCard({ avatarSrc }: FlipCardProps) {
         }
       } else {
         // Lerp flip for user-triggered flips
-        currentFlip.current +=
-          (flipTarget.current - currentFlip.current) * FLIP_LERP;
-        if (
-          isFlipping.current &&
-          Math.abs(currentFlip.current - flipTarget.current) < 0.5
-        ) {
+        currentFlip.current += (flipTarget.current - currentFlip.current) * FLIP_LERP;
+        if (isFlipping.current && Math.abs(currentFlip.current - flipTarget.current) < 0.5) {
           isFlipping.current = false;
         }
       }
@@ -144,9 +140,7 @@ export default function FlipCard({ avatarSrc }: FlipCardProps) {
             />
             <Separator orientation="vertical" />
             <div className="min-w-0">
-              <h2 className="text-card-foreground text-2xl font-bold">
-                tantuyu
-              </h2>
+              <h2 className="text-card-foreground text-2xl font-bold">tantuyu</h2>
               <p className="text-muted-foreground mt-1 text-sm md:text-base">
                 Web Developer．Student
               </p>
@@ -160,17 +154,12 @@ export default function FlipCard({ avatarSrc }: FlipCardProps) {
               </div>
             </div>
           </div>
-          <p className="text-muted-foreground/50 absolute bottom-3 text-xs">
-            Click to flip
-          </p>
+          <p className="text-muted-foreground/50 absolute bottom-3 text-xs">Click to flip</p>
         </div>
 
         {/* Back face */}
         <div
-          className={cn(
-            flipCardStyle,
-            "absolute inset-0 flex flex-col justify-center gap-4 p-10",
-          )}
+          className={cn(flipCardStyle, "absolute inset-0 flex flex-col justify-center gap-4 p-10")}
           style={{
             backfaceVisibility: "hidden",
             WebkitBackfaceVisibility: "hidden",

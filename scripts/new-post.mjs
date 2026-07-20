@@ -63,8 +63,7 @@ if (existsSync(filePath)) {
   process.exit(1);
 }
 
-const tagsYaml =
-  tags.length > 0 ? `[${tags.map((t) => `'${t}'`).join(", ")}]` : "[]";
+const tagsYaml = tags.length > 0 ? `[${tags.map((t) => `'${t}'`).join(", ")}]` : "[]";
 
 const content = `---
 title: '${title}'

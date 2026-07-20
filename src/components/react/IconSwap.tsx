@@ -6,19 +6,9 @@ interface IconSwapProps extends HTMLAttributes<HTMLSpanElement> {
   state?: "a" | "b";
 }
 
-export function IconSwap({
-  iconA,
-  iconB,
-  state = "a",
-  className,
-  ...rest
-}: IconSwapProps) {
+export function IconSwap({ iconA, iconB, state = "a", className, ...rest }: IconSwapProps) {
   return (
-    <span
-      className={`t-icon-swap${className ? ` ${className}` : ""}`}
-      data-state={state}
-      {...rest}
-    >
+    <span className={`t-icon-swap${className ? ` ${className}` : ""}`} data-state={state} {...rest}>
       <span className="t-icon" data-icon="a">
         {iconA}
       </span>

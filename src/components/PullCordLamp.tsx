@@ -97,13 +97,9 @@ export default function PullCordLamp() {
       // Fallback: also accept hits near the bead in screen space
       const rect = canvas.getBoundingClientRect();
       const beadScreenY =
-        rect.top +
-        ((anchor.y - length - camera.top) / (camera.bottom - camera.top)) *
-          rect.height;
+        rect.top + ((anchor.y - length - camera.top) / (camera.bottom - camera.top)) * rect.height;
       const beadScreenX =
-        rect.left +
-        rect.width / 2 +
-        (offsetX / (camera.right - camera.left)) * rect.width;
+        rect.left + rect.width / 2 + (offsetX / (camera.right - camera.left)) * rect.width;
       const dx = e.clientX - beadScreenX;
       const dy = e.clientY - beadScreenY;
       return dx * dx + dy * dy < 16 * 16;
@@ -127,26 +123,16 @@ export default function PullCordLamp() {
       }
       const dx = e.clientX - dragStartX;
       const dy = e.clientY - dragStartY;
-      targetLength = Math.max(
-        MIN_LENGTH,
-        Math.min(MAX_LENGTH, dragStartLength + dy),
-      );
-      targetOffsetX = Math.max(
-        -MAX_OFFSET_X,
-        Math.min(MAX_OFFSET_X, dragStartOffsetX + dx),
-      );
+      targetLength = Math.max(MIN_LENGTH, Math.min(MAX_LENGTH, dragStartLength + dy));
+      targetOffsetX = Math.max(-MAX_OFFSET_X, Math.min(MAX_OFFSET_X, dragStartOffsetX + dx));
     }
 
     function toggleTheme() {
       const current = localStorage.getItem("theme") || "dark";
       const next = current === "dark" ? "light" : "dark";
       localStorage.setItem("theme", next);
-      document.documentElement.classList[next === "dark" ? "add" : "remove"](
-        "dark",
-      );
-      document.dispatchEvent(
-        new CustomEvent("themechange", { detail: { theme: next } }),
-      );
+      document.documentElement.classList[next === "dark" ? "add" : "remove"]("dark");
+      document.dispatchEvent(new CustomEvent("themechange", { detail: { theme: next } }));
     }
 
     function onPointerUp(e: PointerEvent) {
@@ -184,8 +170,7 @@ export default function PullCordLamp() {
 
       // Update cord geometry
       const tip = new THREE.Vector3(offsetX, anchor.y - length, 0);
-      const positions = cord.geometry.attributes
-        .position as THREE.BufferAttribute;
+      const positions = cord.geometry.attributes.position as THREE.BufferAttribute;
       positions.setXYZ(0, anchor.x, anchor.y, anchor.z);
       positions.setXYZ(1, tip.x, tip.y, tip.z);
       positions.needsUpdate = true;

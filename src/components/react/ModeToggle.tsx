@@ -7,24 +7,16 @@ export function ModeToggle() {
   const [theme, setThemeState] = useState<"light" | "dark">("light");
 
   useEffect(() => {
-    setThemeState(
-      document.documentElement.classList.contains("dark") ? "dark" : "light",
-    );
+    setThemeState(document.documentElement.classList.contains("dark") ? "dark" : "light");
 
     const handleThemeChange = (e: CustomEvent) => {
       setThemeState(e.detail.theme);
     };
 
-    document.addEventListener(
-      "themechange",
-      handleThemeChange as EventListener,
-    );
+    document.addEventListener("themechange", handleThemeChange as EventListener);
 
     return () => {
-      document.removeEventListener(
-        "themechange",
-        handleThemeChange as EventListener,
-      );
+      document.removeEventListener("themechange", handleThemeChange as EventListener);
     };
   }, []);
 
@@ -36,9 +28,7 @@ export function ModeToggle() {
     localStorage.setItem("theme", newTheme);
     setThemeState(newTheme);
 
-    document.dispatchEvent(
-      new CustomEvent("themechange", { detail: { theme: newTheme } }),
-    );
+    document.dispatchEvent(new CustomEvent("themechange", { detail: { theme: newTheme } }));
   };
 
   return (

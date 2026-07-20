@@ -5,14 +5,7 @@ import { join } from "node:path";
 import satori from "satori";
 import sharp from "sharp";
 
-const fontDir = join(
-  process.cwd(),
-  "node_modules",
-  "geist",
-  "dist",
-  "fonts",
-  "geist-sans",
-);
+const fontDir = join(process.cwd(), "node_modules", "geist", "dist", "fonts", "geist-sans");
 
 const fontRegular = readFileSync(join(fontDir, "Geist-Regular.ttf"));
 const fontBold = readFileSync(join(fontDir, "Geist-Bold.ttf"));
@@ -24,14 +17,11 @@ async function fetchCjkFont(weight: 400 | 700): Promise<ArrayBuffer | null> {
   try {
     const css = await fetch(cssUrl, {
       headers: {
-        "User-Agent":
-          "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36",
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36",
       },
       signal: AbortSignal.timeout(10000),
     }).then((r) => r.text());
-    const match = css.match(
-      /src:\s*url\(([^)]+)\)\s*format\('(woff2?|truetype)'\)/,
-    );
+    const match = css.match(/src:\s*url\(([^)]+)\)\s*format\('(woff2?|truetype)'\)/);
     if (!match) return null;
     return await fetch(match[1], {
       signal: AbortSignal.timeout(10000),
@@ -42,10 +32,7 @@ async function fetchCjkFont(weight: 400 | 700): Promise<ArrayBuffer | null> {
   }
 }
 
-const [cjkRegularPromise, cjkBoldPromise] = [
-  fetchCjkFont(400),
-  fetchCjkFont(700),
-];
+const [cjkRegularPromise, cjkBoldPromise] = [fetchCjkFont(400), fetchCjkFont(700)];
 
 interface OgImageOptions {
   title: string;
@@ -58,10 +45,7 @@ export async function renderOgImage({
   description,
   category,
 }: OgImageOptions): Promise<Buffer> {
-  const [cjkRegular, cjkBold] = await Promise.all([
-    cjkRegularPromise,
-    cjkBoldPromise,
-  ]);
+  const [cjkRegular, cjkBold] = await Promise.all([cjkRegularPromise, cjkBoldPromise]);
 
   const svg = await satori(
     {
@@ -74,8 +58,7 @@ export async function renderOgImage({
           flexDirection: "column",
           justifyContent: "space-between",
           padding: "72px",
-          background:
-            "linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 50%, #0f1729 100%)",
+          background: "linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 50%, #0f1729 100%)",
           color: "#fafafa",
           fontFamily: "Geist, NotoTC",
         },

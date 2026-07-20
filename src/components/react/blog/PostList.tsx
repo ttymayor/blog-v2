@@ -48,9 +48,7 @@ export default function PostList({ posts }: PostListProps) {
                   {post.title}
                 </ItemTitle>
                 {post.excerpt && (
-                  <ItemDescription className="truncate">
-                    {post.excerpt}
-                  </ItemDescription>
+                  <ItemDescription className="truncate">{post.excerpt}</ItemDescription>
                 )}
               </ItemContent>
               <ItemFooter>

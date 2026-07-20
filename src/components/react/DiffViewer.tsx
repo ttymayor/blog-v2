@@ -13,9 +13,7 @@ export interface Commit {
 }
 
 function splitPatch(raw: string): string[] {
-  return raw
-    .split(/(?=^diff --git )/m)
-    .filter((s) => s.trim().startsWith("diff --git "));
+  return raw.split(/(?=^diff --git )/m).filter((s) => s.trim().startsWith("diff --git "));
 }
 
 function timeAgo(dateStr: string): string {
@@ -39,8 +37,7 @@ function CommitHeader({ commit }: { commit: Commit }) {
       <div className="min-w-0">
         <p className="text-sm leading-snug font-medium">{commit.message}</p>
         <p className="text-muted-foreground mt-1 text-xs">
-          {commit.author} ·{" "}
-          <span className="font-mono">{commit.shortHash}</span> ·{" "}
+          {commit.author} · <span className="font-mono">{commit.shortHash}</span> ·{" "}
           {new Date(commit.date).toLocaleDateString()}
         </p>
       </div>
@@ -78,17 +75,13 @@ function DiffOutput({
 }
 
 export default function DiffViewer({ commits = [] }: { commits?: Commit[] }) {
-  const [selectedHash, setSelectedHash] = useState<string>(
-    commits[0]?.hash ?? "",
-  );
+  const [selectedHash, setSelectedHash] = useState<string>(commits[0]?.hash ?? "");
   const [diffStyle, setDiffStyle] = useState<"unified" | "split">("unified");
   const [themeType, setThemeType] = useState<"light" | "dark">("dark");
 
   useEffect(() => {
     const update = () =>
-      setThemeType(
-        document.documentElement.classList.contains("dark") ? "dark" : "light",
-      );
+      setThemeType(document.documentElement.classList.contains("dark") ? "dark" : "light");
     update();
     const handler = (e: Event) => setThemeType((e as CustomEvent).detail.theme);
     document.addEventListener("themechange", handler);
@@ -97,9 +90,7 @@ export default function DiffViewer({ commits = [] }: { commits?: Commit[] }) {
 
   const selectedCommit = commits.find((c) => c.hash === selectedHash);
   const patches = selectedCommit
-    ? splitPatch(selectedCommit.diff).filter(
-        (p) => !p.startsWith("diff --git a/pnpm-lock.yaml"),
-      )
+    ? splitPatch(selectedCommit.diff).filter((p) => !p.startsWith("diff --git a/pnpm-lock.yaml"))
     : [];
 
   return (
@@ -160,9 +151,7 @@ export default function DiffViewer({ commits = [] }: { commits?: Commit[] }) {
                 {timeAgo(commit.date)}
               </span>
             </div>
-            <p className="text-foreground line-clamp-2 text-xs leading-snug">
-              {commit.message}
-            </p>
+            <p className="text-foreground line-clamp-2 text-xs leading-snug">{commit.message}</p>
           </button>
         ))}
       </div>
@@ -189,34 +178,22 @@ export default function DiffViewer({ commits = [] }: { commits?: Commit[] }) {
                   {timeAgo(commit.date)}
                 </span>
               </div>
-              <p className="text-foreground line-clamp-2 text-xs leading-snug">
-                {commit.message}
-              </p>
-              <p className="text-muted-foreground/60 mt-1 text-[11px]">
-                {commit.author}
-              </p>
+              <p className="text-foreground line-clamp-2 text-xs leading-snug">{commit.message}</p>
+              <p className="text-muted-foreground/60 mt-1 text-[11px]">{commit.author}</p>
             </button>
           ))}
         </div>
 
         <div className="min-w-0 flex-1 space-y-3">
           {selectedCommit && <CommitHeader commit={selectedCommit} />}
-          <DiffOutput
-            patches={patches}
-            diffStyle={diffStyle}
-            themeType={themeType}
-          />
+          <DiffOutput patches={patches} diffStyle={diffStyle} themeType={themeType} />
         </div>
       </div>
 
       {/* Mobile: diff output (below strip) */}
       <div className="flex flex-col gap-3 lg:hidden">
         {selectedCommit && <CommitHeader commit={selectedCommit} />}
-        <DiffOutput
-          patches={patches}
-          diffStyle={diffStyle}
-          themeType={themeType}
-        />
+        <DiffOutput patches={patches} diffStyle={diffStyle} themeType={themeType} />
       </div>
     </div>
   );
