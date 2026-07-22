@@ -44,6 +44,7 @@ export default defineConfig({
   },
   integrations: [
     mdx({
+      syntaxHighlight: false,
       processor: unified({
         remarkPlugins: [remarkReadingTime, remarkModifiedTime],
         rehypePlugins: [[rehypePrismPlus, { ignoreMissing: true }]],

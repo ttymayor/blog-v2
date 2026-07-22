@@ -2,16 +2,27 @@
 import { Copy, Check } from "@lucide/astro";
 
 const { class: className, ...props } = Astro.props;
-const lang = className?.match(/language-(\w+)/)?.[1];
+const dataLanguage = props["data-language"];
+const lang =
+  (typeof dataLanguage === "string" && dataLanguage) ||
+  (typeof className === "string" &&
+    className.match(/(?:^|\s)language-([^\s]+)/)?.[1]);
 ---
 
-<div class="code-block">
+<div class="code-block group">
   <div class="code-header">
-    <span class="lang-badge">{lang ?? ""}</span>
-    <button class="copy-btn" aria-label="Copy code">
+    {lang && <span class="lang-badge">{lang}</span>}
+    <button
+      class="copy-btn ml-auto opacity-0 group-hover:opacity-100"
+      aria-label="Copy code"
+    >
       <span class="t-icon-swap" data-state="a">
-        <span class="t-icon" data-icon="a"><Copy size={14} /></span>
-        <span class="t-icon" data-icon="b"><Check size={14} /></span>
+        <span class="t-icon" data-icon="a">
+          <Copy size={14} />
+        </span>
+        <span class="t-icon" data-icon="b">
+          <Check size={14} />
+        </span>
       </span>
     </button>
   </div>

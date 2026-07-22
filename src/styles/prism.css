@@ -24,7 +24,7 @@
   }
 
   .dark {
-    --prism-bg: #24292e;
+    --prism-bg: #242424;
     --prism-fg: #e1e4e8;
     --prism-comment: #6a737d;
     --prism-keyword: #f97583;
@@ -43,7 +43,7 @@
     --prism-line-num: #6a737d;
     --prism-highlight-bg: rgba(121, 184, 255, 0.08);
     --prism-highlight-border: #79b8ff;
-    --prism-header-bg: #343b43;
+    --prism-header-bg: #2e2e2e;
   }
 
   /* ── Token colours ── */
@@ -171,7 +171,7 @@
 
   /* ── Code block component ── */
   .prose .code-block {
-    @apply overflow-hidden rounded-lg border-t border-t-white/25 shadow-lg;
+    @apply overflow-hidden rounded-md border-t border-t-white/10 shadow-lg;
     background-color: var(--prism-bg);
   }
 
