@@ -37,6 +37,25 @@ if (tocHeadings.length === 0) return null;
 </nav>
 
 <script>
+  function scrollToCurrentHeading() {
+    const hash = window.location.hash.slice(1);
+    if (!hash) return;
+
+    let id: string;
+    try {
+      id = decodeURIComponent(hash);
+    } catch {
+      return;
+    }
+
+    const heading = document.getElementById(id);
+    if (!heading) return;
+
+    requestAnimationFrame(() => {
+      heading.scrollIntoView({ behavior: "smooth", block: "start" });
+    });
+  }
+
   function initTableOfContents() {
     const tocLinks = document.querySelectorAll("[data-toc-link]");
     const headings = document.querySelectorAll("h2[id], h3[id], h4[id]");
@@ -81,6 +100,10 @@ if (tocHeadings.length === 0) return null;
         const target = link.getAttribute("data-target");
         const heading = document.getElementById(target!);
         if (heading) {
+          const href = link.getAttribute("href");
+          if (href && window.location.hash !== href) {
+            window.history.pushState(null, "", href);
+          }
           heading.scrollIntoView({ behavior: "smooth", block: "start" });
           // Update active state immediately on click
           setActiveLink(link);
@@ -91,7 +114,11 @@ if (tocHeadings.length === 0) return null;
 
   // Re-initialize after view transitions
   initTableOfContents();
-  document.addEventListener("astro:page-load", initTableOfContents);
+  document.addEventListener("astro:page-load", () => {
+    initTableOfContents();
+    scrollToCurrentHeading();
+  });
+  window.addEventListener("load", scrollToCurrentHeading);
 </script>
 
 <style>
