@@ -162,7 +162,7 @@ if (chatWithAI) {
             modifiedDate && (
               <div class="flex items-center gap-1.5">
                 <Calendar class="size-4" />
-                <span class="-translate-y-px font-serif font-bold">
+                <span class="font-serif font-bold">
                   <RelativeTime dateStr={pubDate} client:load />
                 </span>
               </div>
@@ -172,9 +172,7 @@ if (chatWithAI) {
             minutesRead && (
               <div class="flex items-center gap-1.5">
                 <Timer class="size-4" />
-                <span class="-translate-y-px font-serif font-bold">
-                  {readTime} 分鐘
-                </span>
+                <span class="font-serif font-bold">{readTime} 分鐘</span>
               </div>
             )
           }
@@ -182,9 +180,7 @@ if (chatWithAI) {
             wordCount && (
               <div class="flex items-center gap-1.5">
                 <Type class="size-4" />
-                <span class="-translate-y-px font-serif font-bold">
-                  約 {wordCount} 字
-                </span>
+                <span class="font-serif font-bold">約 {wordCount} 字</span>
               </div>
             )
           }
