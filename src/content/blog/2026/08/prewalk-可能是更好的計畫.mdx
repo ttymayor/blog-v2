@@ -1,0 +1,69 @@
+---
+title: "Prewalk 可能是更好的計畫"
+description: "omp 的初次使用與嘗試理解 prewalk 的研究文章"
+pubDate: "2026-08-13T14:43:12.401Z"
+tags: ["Note","Dev","AI"]
+---
+
+## 前言
+
+前陣子就聽說過 Pi Agent 是一個很不錯的代理，但還沒嘗試就被推坑 [oh-my-pi (omp)](https://omp.sh/)。
+
+> A coding agent with the IDE wired in.
+
+omp 內建了編輯器整合，提供了更好的開發體驗。
+
+### 初次使用
+
+裝完後就選擇登入我當前所訂閱的 ChatGPT Plus。最先被驚艷到的應該是可以直接在 omp 內執行指令，只需要一個 `!` 前綴後面加上指令就可以與終端互動，甚至可以運行 Python 指令。
+
+除了支援執行指令，omp 本身提供 LSP 支援，假設在需要使用 LSP 的專案中，這個 Agent 能夠知道：型別是不是寫錯、檔案從哪裡引入、全局修改變數也能正確匹配應修改的變數，省去大量閱讀也就節省了 token 用量。
+
+就我使用而言，確實是減少了不少 token 用量。
+
+---
+
+> 與其他 Agent 大同小異的功能暫不多紀錄
+
+內建工具本身就支援 `/handoff` 指令，可以將當前會話上下文交接給新的會話。
+
+也有獨特的輸出會話 `/export` 可以變成一份 `HTML` 檔案，點開即可在瀏覽器上查看會話內容。
+
+`/stats` 開啟一個 port 可以查看當前 omp 的總狀態。
+
+## `/prewalk`：你先走...？
+
+> Any agent, any model, any scaffold: the bill is essentially `O(reads)`.  
+> -- <cite>Can Bölük, "[*You only need the frontier model for one single edit*](https://stencil.so/blog/prewalk)"</cite>
+
+根據作者的描述是：他發現 Opus 在專案中消耗 token 用量 reading 佔了約 88%，edits 僅佔約 9%。由之前的研究說明並不是 harness 的問題，也不是能夠修復的問題。
+
+之後他們發現使用 `/plan` 在 Opus 4.8 在 reading + planning 後，交給 Flash 去執行，但 Flash 又重新閱讀檔案，這很不必要。
+
+> What actually could transfer something of value is the context window itself  
+> -- <cite>Can Bölük, "[*You only need the frontier model for one single edit*](https://stencil.so/blog/prewalk)"</cite>
+
+作者寫了三步，簡單來說就是先由前沿模型計畫（Read + Plan）並走出第一步（Edit），再交接給平價模型，將整個規劃思考精修、整理後處理剩下計畫繼續編輯。
+
+利用前沿模型的強項：思考。編輯了第一步後，交給便宜的模型。此時便宜的模型只知道：它的任務是處理代辦而且它也走了第一步。
+
+（對低廉的模型來說就像場騙局，但它卻照作）
+
+後續就是他們研究的測試指標與數據了，有趣的是：
+
+> Another funny failure mode: GPT 5.6 as the guide really likes creating 60-item TODO lists and completing them in batches (do they just hand out rewards for anything?), so an item limit in the prompt is a must.  
+> -- <cite>Can Bölük, "[*You only need the frontier model for one single edit*](https://stencil.so/blog/prewalk)"</cite>
+
+嗯，所以用 GPT 5.6 記得說明一下 TODO 列表數量的限制...🤣
+
+## 總結
+
+這算是第一次稍微認真看一份研究與發現，後面部分也有一些很有趣的描述。
+
+由於是第一次使用該功能，我嘗試了幾次 `/prewalk`，而最近一次是要重構一個功能，說大不大，說小不小，但我實在不太敢放手讓更低廉的模型幫我編輯，我使用 Plan: `gpt-5.6-sol (high)`, Edit: `gpt-5.6-terra (med)`。做完後只能說結果應該跟 `/plan` 差不多，但更快（這點我無從比較），用量確實是大該只花了 ChatGPT Plus Weekly Usage 5% 上下而已。
+
+之後的 `/prewalk` 使用上，可能會更進一步在 Edit 使用更低廉的模型，看看效果如何，並嘗試將思考設為 `(low)` 或 `(off)`
+
+## 參考
+
+- [You only need the frontier model for one single edit -- Can Bölük](https://stencil.so/blog/prewalk)
