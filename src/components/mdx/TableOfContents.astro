@@ -27,7 +27,7 @@ if (tocHeadings.length === 0) return null;
               class="toc-link text-muted-foreground hover:text-foreground block py-1.25"
             >
               <span class={`toc-bar depth-${heading.depth}`} />
-              <span class="toc-label">{heading.text}</span>
+              <span class="toc-label min-w-0 truncate">{heading.text}</span>
             </a>
           </li>
         );
