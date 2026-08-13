@@ -47,7 +47,7 @@ const isBlogPost = /^blog\/.+/.test(pathname);
         alt="Avatar"
         class="h-10 w-10 rounded-full object-cover"
       />
-      <h2 class="m-0 text-[1em] font-bold">
+      <h2 class="m-0 text-[1em] font-black">
         {SITE_TITLE}
       </h2>
     </a>
@@ -76,7 +76,7 @@ const isBlogPost = /^blog\/.+/.test(pathname);
               ]}
             >
               <Icon class="size-5 md:size-5" />
-              <span class="text-[10px] md:text-sm">{label}</span>
+              <span class="text-[10px] font-semibold md:text-sm">{label}</span>
             </a>
           );
         })
