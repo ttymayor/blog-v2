@@ -130,13 +130,7 @@ if (chatWithAI) {
               (category || tags.length > 0) && (
                 <div class="flex flex-row flex-wrap gap-2">
                   {category && (
-                    <Badge
-                      variant={"default"}
-                      client:load
-                      style={{
-                        viewTransitionName: `post-category-${slug.replace(/\//g, "-")}`,
-                      }}
-                    >
+                    <Badge variant={"default"} client:load>
                       {category}
                     </Badge>
                   )}
@@ -148,9 +142,6 @@ if (chatWithAI) {
                         key={tag}
                         className="rounded-xs"
                         client:load
-                        style={{
-                          viewTransitionName: `post-tag-${slug.replace(/\//g, "-")}-${tag.replace(/\//g, "-")}`,
-                        }}
                       >
                         {tag}
                       </Badge>
@@ -250,10 +241,7 @@ if (chatWithAI) {
                         <ChevronLeft class="size-3" />
                         上一篇
                       </span>
-                      <span
-                        class="group-hover:text-primary line-clamp-2 font-serif text-sm font-medium transition-colors"
-                        transition:name={`post-title-${prevPost.id.replace(/\//g, "-")}`}
-                      >
+                      <span class="group-hover:text-primary line-clamp-2 font-serif text-sm font-medium transition-colors">
                         {prevPost.title}
                       </span>
                     </a>
@@ -269,10 +257,7 @@ if (chatWithAI) {
                         下一篇
                         <ChevronRight class="size-3" />
                       </span>
-                      <span
-                        class="group-hover:text-primary line-clamp-2 font-serif text-sm font-medium transition-colors"
-                        transition:name={`post-title-${nextPost.id.replace(/\//g, "-")}`}
-                      >
+                      <span class="group-hover:text-primary line-clamp-2 font-serif text-sm font-medium transition-colors">
                         {nextPost.title}
                       </span>
                     </a>

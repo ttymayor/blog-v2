@@ -56,9 +56,6 @@ export default function PostList({ posts }: PostListProps) {
                   {post.category && (
                     <Badge
                       variant={"default"}
-                      style={{
-                        viewTransitionName: `post-category-${post.id.replace(/\//g, "-")}`,
-                      }}
                     >
                       {post.category}
                     </Badge>
@@ -68,9 +65,6 @@ export default function PostList({ posts }: PostListProps) {
                       variant={"secondary"}
                       key={tag}
                       className="rounded-xs"
-                      style={{
-                        viewTransitionName: `post-tag-${post.id.replace(/\//g, "-")}-${tag.replace(/\//g, "-")}`,
-                      }}
                     >
                       {tag}
                     </Badge>
