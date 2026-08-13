@@ -1,5 +1,8 @@
 ---
 import BaseLayout from "@/layouts/BaseLayout.astro";
+import type { CollectionEntry } from "astro:content";
+import type { Dayjs } from "dayjs";
+import type { BlogPost as BlogPostSummary } from "@/types/blog";
 import { Image, getImage } from "astro:assets";
 import { Separator } from "@/components/ui/separator";
 import TableOfContents from "@/components/mdx/TableOfContents.astro";
@@ -19,6 +22,24 @@ import { Button } from "@/components/ui/button";
 import RelativeTime from "@/components/react/RelativeTime";
 import TegakiRenderer from "tegaki/astro";
 import bundle from "tegaki/fonts/caveat";
+
+type Heading = {
+  depth: number;
+  slug: string;
+  text: string;
+};
+
+type Props = CollectionEntry<"blog">["data"] & {
+  headings: Heading[];
+  minutesRead: string;
+  wordCount: number;
+  lastModified: Dayjs;
+  readMinutes: number;
+  slug: string;
+  body?: string;
+  prevPost: BlogPostSummary | null;
+  nextPost: BlogPostSummary | null;
+};
 
 const {
   title,
@@ -121,7 +142,7 @@ if (chatWithAI) {
                   )}
                   {tags &&
                     tags.length > 0 &&
-                    tags.slice(0, 3).map((tag: string) => (
+                    tags.map((tag) => (
                       <Badge
                         variant={"secondary"}
                         key={tag}

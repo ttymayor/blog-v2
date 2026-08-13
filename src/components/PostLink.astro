@@ -21,24 +21,16 @@ const { post } = Astro.props;
         <div class="flex flex-wrap items-center gap-1.5">
           {post.category && <Badge variant={"default"}>{post.category}</Badge>}
           {
-            post.tags?.length > 0 &&
-              post.tags.slice(0, 3).map((tag) => (
-                <Badge
-                  client:load
-                  key={tag}
-                  variant={"secondary"}
-                  className="rounded-xs"
-                >
-                  {tag}
-                </Badge>
-              ))
-          }
-          {
-            post.tags?.length > 3 && (
-              <Badge client:load variant="outline" className="text-xs">
-                +{post.tags.length - 3}
+            post.tags.map((tag) => (
+              <Badge
+                client:load
+                key={tag}
+                variant={"secondary"}
+                className="rounded-xs"
+              >
+                {tag}
               </Badge>
-            )
+            ))
           }
         </div>
         <h3

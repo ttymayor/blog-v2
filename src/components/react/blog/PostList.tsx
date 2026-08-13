@@ -63,7 +63,7 @@ export default function PostList({ posts }: PostListProps) {
                       {post.category}
                     </Badge>
                   )}
-                  {post.tags.slice(0, 3).map((tag) => (
+                  {post.tags.map((tag) => (
                     <Badge
                       variant={"secondary"}
                       key={tag}
