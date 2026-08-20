@@ -6,7 +6,6 @@ import { ClientRouter } from "astro:transitions";
 import { SITE_DESCRIPTION, SITE_TITLE } from "@/consts";
 
 import PullCordLamp from "@/components/PullCordLamp";
-import { Font } from "astro:assets";
 
 interface Props {
   title?: string;
@@ -66,8 +65,6 @@ const pageTitle = title ? `${title}｜${SITE_TITLE}` : SITE_TITLE;
       description={description ?? SITE_DESCRIPTION}
       image={ogImage}
     />
-    <Font cssVariable="--font-geist" preload />
-    <Font cssVariable="--font-geist-mono" preload />
   </head>
   <body>
     {header && <Header transition:persist transition:name="header" />}

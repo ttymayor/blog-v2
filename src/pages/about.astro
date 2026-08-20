@@ -1,234 +1,284 @@
 ---
-import BaseLayout from "@/layouts/BaseLayout.astro";
-import ProfileAvatar from "@/components/react/ProfileAvatar";
-import BlankBlock from "@/components/BlankBlock.astro";
+import { Image } from "astro:assets";
 import TegakiRenderer from "tegaki/astro";
 import bundle from "tegaki/fonts/caveat";
-import avatar from "@/assets/avatar.jpg";
+import { MoveUpRight, Music } from "@lucide/astro";
+
+import avatar from "@/assets/avatar.webp";
+import avatarForeground from "@/assets/avatar_removebg.png";
+import infpIllustration from "@/assets/INFP.svg";
+import pixel_7 from "@/assets/Google_Pixel_7_back_(Lemongrass).svg";
+import pixel_11_pro from "@/assets/Pixel_11_Pro_(Fog,_back).svg";
+import valorantIcon from "@/assets/valorant-icon.svg";
 import slideGitForensics from "@/assets/slides/20260423-git-and-forensics.png";
 import slideLinux101 from "@/assets/slides/20250925-linux.png";
 import slideUnUsefulTool from "@/assets/slides/20260430-un-useful-tool.png";
 import { SITE_TITLE } from "@/consts";
+import BaseLayout from "@/layouts/BaseLayout.astro";
 
 type Slide = {
   title: string;
   date: string;
-  cover?: ImageMetadata;
-  href?: string;
+  cover: ImageMetadata;
+  href: string;
 };
 
 const slides: Slide[] = [
   {
-    title: "最無/有用的工具",
-    date: "2026-04-30",
+    title: "最無／有用的工具",
+    date: "2026.04.30",
     cover: slideUnUsefulTool,
     href: "https://url.ttymayor.com/un-useful-tool",
   },
   {
     title: "Git & Forensics",
-    date: "2026-04-23",
+    date: "2026.04.23",
     cover: slideGitForensics,
     href: "https://url.ttymayor.com/git-forensics",
   },
   {
-    title: "Linux - 你應該要認識的企鵝",
-    date: "2025-09-25",
+    title: "Linux — 你應該要認識的企鵝",
+    date: "2025.09.25",
     cover: slideLinux101,
     href: "https://url.ttymayor.com/20250925-linux",
   },
+];
+
+const ai_agents: string[] = [
+  "omp (current)",
+  "Codex (current)",
+  "OpenCode (rare)",
+  "Gemini CLI (not Antigravity CLI)",
+  "Claude Code",
 ];
 ---
 
 <BaseLayout
   title="About"
-  description="tantuyu 的個人網站"
+  description="關於 tantuyu：寫程式、使用 Linux，也喜歡資安、喜劇與漫才。"
   ogImage="/og/about.png"
 >
   <BlankBlock />
-  <!-- Content -->
-  <div class="bg-background relative z-10">
-    <!-- Profile section -->
-    <section class="w-full">
-      <div class="mx-auto max-w-5xl px-6 py-12">
-        <ProfileAvatar
-          client:load
-          src={avatar.src}
-          alt="tantuyu's avatar"
-          name={SITE_TITLE}
-          words={["認真", "愛 Coding", "喜歡漫才", "用 Linux", "打 CTF"]}
-        />
-      </div>
-    </section>
 
-    <!-- hatched divider -->
-    <div
-      class="h-6 w-full border-t [background:repeating-linear-gradient(-45deg,transparent,transparent_8px,#94a3b815_8px,#94a3b815_10px)]"
-    >
-    </div>
-
-    <!-- Bio section -->
-    <section class="w-full border-t">
-      <div
-        class="mx-auto grid max-w-5xl grid-cols-1 gap-12 px-6 py-12 md:grid-cols-2"
+  <main class="bg-background relative z-10 px-6 pb-24">
+    <article class="mx-auto max-w-3xl pt-14 md:pt-20">
+      <header
+        class="mx-auto mb-12 flex max-w-[50em] flex-col gap-8 sm:flex-row sm:items-center"
       >
-        <div>
-          <h2
-            class="text-muted-foreground mb-4 text-xs font-semibold tracking-widest uppercase"
-          >
-            About
-          </h2>
-          <ul class="text-foreground/80 text-sm leading-relaxed">
-            <li>在 Coding 👨‍💻 中，極度享受當下的時光</li>
-            <li>Linux 使用者，使用過 Ubuntu、Kali、Arch、Fedora（正在探索）</li>
-            <li>🔥Team Pixel（Pixel 7），預計入手 Pixel 11</li>
-            <li>
-              <strong class="text-foreground/90"
-                >打 CTF
-              </strong>但不怎麼強，有時間有朋友約就去打
-            </li>
-            <li>
-              喜歡看臺灣<strong class="text-foreground/90">喜劇、漫才</strong>
-            </li>
-          </ul>
-        </div>
-        <div>
-          <h2
-            class="text-muted-foreground mb-4 text-xs font-semibold tracking-widest uppercase"
-          >
-            Stack
-          </h2>
-          <ul
-            class="text-foreground/80 grid grid-cols-2 gap-x-6 gap-y-2 text-sm"
-          >
-            {
-              [
-                "Next.js",
-                "Astro",
-                "React",
-                "Vue",
-                "Laravel",
-                "TypeScript",
-                "Tailwind CSS",
-                "PostgreSQL",
-              ].map((item) => (
-                <li class="flex items-center gap-2">
-                  <span class="bg-muted-foreground/60 inline-block size-1 shrink-0 rounded-full" />
-                  {item}
-                </li>
-              ))
-            }
-          </ul>
-        </div>
-      </div>
-    </section>
-
-    <!-- hatched divider -->
-    <div
-      class="h-6 w-full border-t [background:repeating-linear-gradient(-45deg,transparent,transparent_8px,#94a3b815_8px,#94a3b815_10px)]"
-    >
-    </div>
-
-    <!-- Slides section -->
-    {
-      slides.length > 0 && (
-        <section class="w-full border-t">
-          <div class="mx-auto max-w-5xl px-6 py-12">
-            <h2 class="text-muted-foreground mb-6 text-xs font-semibold tracking-widest uppercase">
-              Slides
-            </h2>
-            <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3">
-              {slides.map((slide) => {
-                const Tag = slide.href ? "a" : "div";
-                return (
-                  <Tag
-                    href={slide.href}
-                    target={slide.href ? "_blank" : undefined}
-                    rel={slide.href ? "noopener noreferrer" : undefined}
-                    class={`group bg-card flex flex-col overflow-hidden rounded-2xl border shadow-xl transition-colors${slide.href ? " hover:border-foreground/30" : ""}`}
-                  >
-                    <div class="bg-card relative aspect-video w-full overflow-hidden">
-                      {slide.cover ? (
-                        <>
-                          <div class="overflow-hidden rounded-2xl">
-                            <img
-                              src={slide.cover.src}
-                              alt={slide.title}
-                              class="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
-                              onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"
-                            />
-
-                            <div class="text-muted-foreground/50 absolute inset-0 hidden flex-col items-center justify-center gap-1.5">
-                              <svg
-                                xmlns="http://www.w3.org/2000/svg"
-                                width="20"
-                                height="20"
-                                viewBox="0 0 24 24"
-                                fill="none"
-                                stroke="currentColor"
-                                stroke-width="1.5"
-                                stroke-linecap="round"
-                                stroke-linejoin="round"
-                              >
-                                <rect
-                                  width="18"
-                                  height="18"
-                                  x="3"
-                                  y="3"
-                                  rx="2"
-                                />
-                                <path d="m9 9 5 12 1.8-5.2L21 14Z" />
-                                <circle cx="10" cy="10" r="1" />
-                              </svg>
-                              <span class="text-xs">No preview</span>
-                            </div>
-                          </div>
-                        </>
-                      ) : (
-                        <div class="text-muted-foreground/50 absolute inset-0 flex flex-col items-center justify-center gap-1.5">
-                          <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            width="20"
-                            height="20"
-                            viewBox="0 0 24 24"
-                            fill="none"
-                            stroke="currentColor"
-                            stroke-width="1.5"
-                            stroke-linecap="round"
-                            stroke-linejoin="round"
-                          >
-                            <rect width="18" height="18" x="3" y="3" rx="2" />
-                            <path d="m9 9 5 12 1.8-5.2L21 14Z" />
-                            <circle cx="10" cy="10" r="1" />
-                          </svg>
-                          <span class="text-xs">No preview</span>
-                        </div>
-                      )}
-                    </div>
-                    <div class="flex flex-col gap-1 rounded-2xl p-4">
-                      <p class="text-foreground text-sm leading-snug font-medium">
-                        {slide.title}
-                      </p>
-                      <p class="text-muted-foreground text-xs">{slide.date}</p>
-                    </div>
-                  </Tag>
-                );
-              })}
-            </div>
-          </div>
-        </section>
-      )
-    }
-
-    <div
-      class="h-6 w-full border-t [background:repeating-linear-gradient(-45deg,transparent,transparent_8px,#94a3b815_8px,#94a3b815_10px)]"
-    >
-    </div>
-    <section class="w-full border-t">
-      <div class="mx-auto max-w-5xl px-6 py-12">
-        <div class="relative size-full">
+        <div
+          data-avatar-parallax
+          class="size-20 shrink-0 rotate-[-4deg] sm:size-32"
+        >
           <div
-            id="mask"
-            class="bg-card/50 absolute flex size-full flex-col items-center justify-center rounded-2xl border backdrop-blur-md"
+            data-avatar-scene
+            class="avatar-parallax-scene relative size-full overflow-hidden rounded-[1.5rem] shadow-lg sm:rounded-[2rem]"
+          >
+            <Image
+              src={avatar}
+              alt={`${SITE_TITLE} 的頭像`}
+              width={160}
+              height={160}
+              draggable="false"
+              class="absolute inset-0 size-full object-cover select-none"
+            />
+            <Image
+              src={avatarForeground}
+              alt=""
+              width={160}
+              height={160}
+              draggable="false"
+              aria-hidden="true"
+              class="avatar-parallax-foreground pointer-events-none absolute inset-0 size-full object-cover select-none"
+            />
+          </div>
+        </div>
+        <div>
+          <h1
+            class="text-foreground text-4xl leading-[1.12] font-semibold tracking-tight text-balance sm:text-5xl"
+            style="font-family: Merriweather Variable;"
+          >
+            {SITE_TITLE} 👋
+          </h1>
+        </div>
+      </header>
+
+      <div
+        class="typeset typeset-docs mx-auto max-w-[50em] [&_a]:text-[#745525] dark:[&_a]:text-[#d0ae7d] [&_h2]:scroll-mt-26"
+      >
+        <p>
+          嗨，我叫
+          <a href="#why-tantuyu">tantuyu</a
+          >。在自己的有興趣的事情中玩耍，而不喜歡被稱作努力，所以常自認為自己沒有學得很深入，就很喜歡玩開發工具。喜歡的東西很簡單，也不是特別想賺大錢（<del
+            >當然有錢更好</del
+          >），簡單的生活、平凡日常偶有驚喜即可滿足我自己。我用 <a
+            href="#team-pixel">Pixel</a
+          >
+          {" "}
+          可能跟簡單也有點關係。
+        </p>
+        <p>
+          近期喜歡看喜劇、漫才，特別喜歡聽音樂，也可能是因為宅在家所以才聽音樂，一週平均
+          1000 分鐘的 Spotify。會聽獨立樂團的歌，但並不是聽團仔，沒有到處跑 Live
+          House、各種音樂祭，但如果可以我也會想參加幾場音樂祭，找人一起現場聽音樂。
+        </p>
+        <p>
+          是一個資安小菜雞，也算是剛上大學時，誤入歧途加入駭客社，不過就是沒什麼動力深入了，後來當作儲備知識在緩慢學習，還是比較喜歡<a
+            href="#development">開發網頁</a
+          >。
+        </p>
+        <p>
+          我是
+          {" "}
+          <Image
+            draggable="false"
+            src={infpIllustration}
+            alt=""
+            width={18}
+            height={18}
+            class="inline-block h-auto w-6.5 align-text-bottom select-none"
+          />
+          {" "}
+          <span class="text-[#5a753d] dark:text-[#b1c045]">INFP</span>
+          ，但我其實不太在意這個，就看你怎麼看 MBTI 了。
+        </p>
+        <p>
+          是一個很愛摸貓 😺
+          的人，未來有錢可能也會想養一隻貓，在學校遇到貓幾乎都會駐足蹲下來摸貓（如果牠想的話）。
+        </p>
+
+        <Image
+          draggable="false"
+          src={"https://img.ttymayor.com/images/4651fb01-a30d-468a-b2be-36581e5c697a.webp"}
+          alt=""
+          width={1920}
+          height={1080}
+          class="ring-accent mx-auto w-1/3 rounded-2xl p-1 ring select-none"
+        />
+        <p>
+          沒什麼值得說嘴的地方，最厲害的地方莫過於就是一個平凡人。人們總拿各種抬頭往身上貼各式各樣的標籤，但或許我也一樣。建立網站的初衷是希望自己能保有自省、個人成長與紀錄生活所帶來的各種酸甜苦辣，所以這個網站不為任何人寫，只寫給自己。而我的核心有點像是開源精神，所以沒有絕對，自由、透明、協作，保持開放的心。
+        </p>
+
+        <p>
+          總的來說，我算是一個無聊的人，我們的關係靠緣份，當然朋友是會替換的，遠近都沒關係，人生沒有一定。
+        </p>
+
+        <h2 id="why-tantuyu">Why tantuyu</h2>
+        <p>
+          中學時，一直沒有一個代號或者小名，在玩 <Image
+            src={valorantIcon}
+            alt=""
+            width={18}
+            height={18}
+            draggable="false"
+            class="mx-0.5 inline-block size-4 rounded-none align-[-0.125em] select-none"
+          /> Valorant 又想要取一個簡單同時有記憶點的遊戲名稱，也剛好跟我本名有一點關聯，就叫彈塗魚了沒有任何特別的點。正式稱呼是：tantuyu，不是
+          {" "}
+          <del>Tantuyu</del>。
+
+          <p>
+            這個名稱又剛好因為一張梗圖，可以展開一個小話題：戀愛你們都談走了我談什麼，彈塗魚嗎？（<del
+              >雖然收到的回覆很可能是：？</del
+            >）
+          </p>
+
+          <p>上面頭像圖片是我爸之前養的彈塗魚，對。</p>
+        </p>
+
+        <h2 id="team-pixel">Team Pixel</h2>
+        <p>
+          我是 Google Pixel 的使用者，手上有 <Image
+            draggable="false"
+            src={pixel_7}
+            alt=""
+            width={18}
+            height={18}
+            class="mx-1 inline-block h-6.5 w-auto rotate-12 rounded-none align-text-bottom select-none"
+          /> Pixel 7 與 <Image
+            draggable="false"
+            src={pixel_11_pro}
+            alt=""
+            width={18}
+            height={18}
+            class="mx-1 inline-block h-6.5 w-auto rotate-12 rounded-none align-text-bottom select-none"
+          /> Pixel 11 Pro。原本就喜歡 Google 的服務與公司本身，加上喜歡乾淨的 Android
+          體驗，與 Google 自家服務配合完善，所以就用了 Pixel 要 4 年了（<del
+            >四年啦？明年就五年啦？</del
+          >）。
+        </p>
+
+        <h2 id="development">Development</h2>
+        <p>
+          現在沒在寫 Code，應該說寫程式這件事情已經沒那麼重要，現在 AI 寫 Code
+          的品質都已經可能是人都追不上的程度了。但我的意思並不是不再學習寫
+          Code，而是看你的目的，如果真的要當飯吃，在我看來還是得學習基礎概念，例如：判斷、迴圈、狀態等等，再到物件導向、還有很多架構之類的抽象概念；如果是要做自己的產品，那學會如何使用
+          AI
+          可能更重要。當然我也給不了多肯定的建議，畢竟我還沒有真的能混飯吃，也更不是資深工程師，我也不是專業顧問。
+        </p>
+        <p>
+          我很喜歡開發也很樂於使用
+          AI，如果你也有興趣，可以跟我討論或分享，目前使用過的 AI Agents：
+          {
+            ai_agents.map((agent, index) => (
+              <>
+                <code>{agent}</code>
+                {index < ai_agents.length - 2
+                  ? "、"
+                  : index === ai_agents.length - 2
+                    ? " 與 "
+                    : ""}
+              </>
+            ))
+          }。
+        </p>
+
+        <h2 id="music">Music</h2>
+        <p>
+          下面這個這是我最近很喜歡的歌手：陳嫺靜。近期還有 <a
+            href="https://open.spotify.com/artist/1Se0FtmWSFmL81n85repGg"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            someshiit 山姆
+            <MoveUpRight
+              class="text-muted-foreground mx-0.5 inline-block size-3.5"
+            />
+          </a>，如果是樂團的話，聽最多的應該是 <a
+            href="https://open.spotify.com/artist/5AO5nzx14PfLNfVgYVd0rw"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Crispy脆樂團
+            <MoveUpRight
+              class="text-muted-foreground mx-0.5 inline-block size-3.5"
+            />
+          </a>，流行音樂的話是<a
+            href="https://open.spotify.com/artist/2JBUyLiFvpFPWdZGqIGYLD"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            盧廣仲
+            <MoveUpRight
+              class="text-muted-foreground mx-0.5 inline-block size-3.5"
+            />
+          </a>與
+          <a
+            href="https://open.spotify.com/artist/0rARfHZ4ZteUlzbAuxUwAs"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            洪佩瑜
+            <MoveUpRight
+              class="text-muted-foreground mx-0.5 inline-block size-3.5"
+            />
+          </a>。
+        </p>
+
+        <div class="relative mt-8 overflow-hidden rounded-4xl" style="">
+          <button
+            id="music-mask"
+            type="button"
+            class="bg-card/70 absolute inset-0 z-10 flex w-full cursor-pointer flex-col items-center justify-center border text-center backdrop-blur-md transition-opacity duration-500"
+            aria-label="顯示 Spotify 播放器"
           >
             <TegakiRenderer
               font={bundle}
@@ -239,79 +289,281 @@ const slides: Slide[] = [
             />
             <TegakiRenderer
               font={bundle}
-              text="You can tap me!"
+              text="Tap to listen"
               time={{ mode: "uncontrolled", speed: 10, playing: false }}
-              class=""
               data-inview=""
             />
-          </div>
+          </button>
 
-          <!-- <iframe
-            data-testid="embed-iframe"
-            class="rounded-2xl"
-            src="https://open.spotify.com/embed/album/0FKC566l6cp7gHF0QXe9G3?utm_source=generator&theme=0"
-            width="100%"
-            height="400px"
-            allowfullscreen=""
-            allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
-            loading="lazy"></iframe> -->
           <iframe
             data-testid="embed-iframe"
-            style="border-radius:12px"
-            src="https://open.spotify.com/embed/artist/4wbipbaGeTXkuF5paNuJqB?utm_source=generator&theme=0&si=b655c63f229d46d0"
+            title="tantuyu 喜歡陳嫺靜"
+            src="https://open.spotify.com/embed/artist/4wbipbaGeTXkuF5paNuJqB?utm_source=generator&theme=0"
             width="100%"
             height="352"
             allowfullscreen=""
             allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
             loading="lazy"></iframe>
         </div>
+
+        <h2>Grow</h2>
+        <p>
+          國中開始接觸
+          {" "}
+          <Image
+            src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/python/python-original.svg"
+            alt=""
+            width={24}
+            height={24}
+            draggable="false"
+            class="inline-block rounded-none align-text-bottom select-none"
+          />
+          {" "}
+          Python，當時就覺得輸出「Hello World!\n」很有趣，到國三進到南山資培（資訊培訓）開始學習
+          {" "}
+          <Image
+            src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/cplusplus/cplusplus-original.svg"
+            alt=""
+            width={24}
+            height={24}
+            draggable="false"
+            class="inline-block rounded-none align-text-bottom select-none"
+          />
+          {" "}
+          C++ 解題、打競程，但總是被其他同屆的虐爛，一直到高二參加 TOI 初選，五題都寫不出來，直接打擊我的信心。就開始不怎麼解題了，改去用
+          Python 玩 Discord Bot。後來準備學測，直到學習歷程、備審準備完後，就開始學習基礎前端，偷用了別人的
+          API，但照理來將應該要申請，我在 Discord 看到就直接拿來玩玩看了，嘗試做了第一個
+          HTML、CSS 與
+          {" "}
+          <Image
+            src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/javascript/javascript-original.svg"
+            alt=""
+            width={24}
+            height={24}
+            draggable="false"
+            class="inline-block rounded-none align-text-bottom select-none"
+          />
+          {" "}
+          JavaScript 的地震報告 UI。大學之後就開始隨心所欲地探索，當時一步一步來學習
+          {" "}
+          <Image
+            src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/bash/bash-original.svg"
+            alt=""
+            width={24}
+            height={24}
+            draggable="false"
+            class="inline-block rounded-none align-text-bottom select-none"
+          />
+          {" "}
+          Bash 與一點點
+          {" "}
+          <Image
+            src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/linux/linux-original.svg"
+            alt=""
+            width={24}
+            height={24}
+            draggable="false"
+            class="inline-block rounded-none align-text-bottom select-none"
+          />
+          {" "}
+          Linux 知識，後續學習
+          {" "}
+          <Image
+            src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/docker/docker-original.svg"
+            alt=""
+            width={24}
+            height={24}
+            draggable="false"
+            class="inline-block rounded-none align-text-bottom select-none"
+          />
+          {" "}
+          Docker。
+        </p>
+        <p>
+          以上應該也只能說我就接觸越來越多（廣度），但深度可能沒想像中深，只看得出來：我是越來越喜歡開發這件事。
+        </p>
+        <p>
+          這些是某些在駭客社分享的簡報，喜歡學習使用
+          {" "}
+          <Image
+            src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/figma/figma-original.svg"
+            alt=""
+            width={24}
+            height={24}
+            draggable="false"
+            class="inline-block rounded-none align-text-bottom select-none"
+          />
+          {" "}
+          Figma，因為介面簡單，更傾向於設計。而非速成、活潑的
+          {" "}
+          <Image
+            src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/canva/canva-original.svg"
+            alt=""
+            width={24}
+            height={24}
+            draggable="false"
+            class="inline-block rounded-none align-text-bottom select-none"
+          /> Canva。
+        </p>
+        <ul class="not-typeset my-6 flex flex-col gap-4" data-not-typeset>
+          {
+            slides.map((slide) => (
+              <li>
+                <a
+                  href={slide.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="group bg-card/40 hover:bg-card flex items-center gap-4 rounded-2xl p-3 transition-colors"
+                >
+                  <Image
+                    src={slide.cover}
+                    alt=""
+                    width={112}
+                    class="aspect-video w-24 shrink-0 rounded-lg object-cover sm:w-28"
+                  />
+                  <span class="min-w-0 flex-1">
+                    <span class="text-foreground block truncate text-sm font-medium sm:text-base">
+                      {slide.title}
+                    </span>
+                    <span class="text-muted-foreground block text-xs">
+                      {slide.date}
+                    </span>
+                  </span>
+                  <span
+                    class="text-muted-foreground group-hover:text-foreground pr-1 transition-transform group-hover:translate-x-0.5"
+                    aria-hidden="true"
+                  >
+                    ↗
+                  </span>
+                </a>
+              </li>
+            ))
+          }
+        </ul>
+
+        <p>
+          接任教學職務是希望自己成長，同時也能夠訓練表達能力。高中時，有很多上台報告或主持不好的經驗，所以很希望能夠突破自己。
+        </p>
+        <p>
+          接任社長就不是那麼成功了，我並不認為我有領導特質，不過反過來看其實或許我更傾向於協作。若大家沒有心力，我也會沒有想要幫忙的心。<a
+            href="https://open.spotify.com/track/2nZUFQv6fEvyvkVwndttNi"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="group"
+          >
+            善良是
+            <Music
+              class="text-muted-foreground mx-1 inline-block size-3.5 transition-all group-hover:rotate-360"
+            />
+          </a>互相。
+        </p>
       </div>
-    </section>
-  </div>
-  <!-- <div class="h-8 border-t w-full"></div> -->
+    </article>
+  </main>
 </BaseLayout>
 
 <script is:inline>
-  // Attach before Tegaki's module script hydrates so we catch tegaki:ready.
-  // The data attribute prevents duplicate listeners across view-transition navigations.
-  function setupMaskEffect() {
-    var mask = document.getElementById("mask");
-    if (!mask || mask.dataset.maskEffectReady) return;
+  function setupMusicMask() {
+    var mask = document.getElementById("music-mask");
+    if (!mask || mask.dataset.ready) return;
 
-    mask.dataset.maskEffectReady = "true";
-    mask.style.cursor = "pointer";
+    mask.dataset.ready = "true";
     mask.addEventListener(
       "click",
       function () {
-        mask.style.transition = "opacity 0.4s ease";
         mask.style.opacity = "0";
-        // Let the iframe receive interactions even if transitionend never fires.
         mask.style.pointerEvents = "none";
-
-        var removeMask = function () {
+        window.setTimeout(function () {
           mask.remove();
-        };
-        mask.addEventListener("transitionend", removeMask, { once: true });
-        window.setTimeout(removeMask, 500);
+        }, 500);
       },
       { once: true },
     );
   }
 
-  document.addEventListener("astro:page-load", setupMaskEffect);
-  setupMaskEffect();
+  function setupAvatarParallax() {
+    var avatar = document.querySelector("[data-avatar-parallax]");
+    if (
+      !(avatar instanceof HTMLElement) ||
+      avatar.dataset.parallaxReady ||
+      window.matchMedia("(prefers-reduced-motion: reduce)").matches
+    )
+      return;
+
+    var scene = avatar.querySelector("[data-avatar-scene]");
+    if (!(scene instanceof HTMLElement)) return;
+
+    avatar.dataset.parallaxReady = "true";
+    var frame = 0;
+    var nextX = 0;
+    var nextY = 0;
+
+    function render() {
+      frame = 0;
+      scene.style.setProperty("--avatar-rotate-x", -nextY * 6 + "deg");
+      scene.style.setProperty("--avatar-rotate-y", nextX * 7 + "deg");
+      scene.style.setProperty("--avatar-shift-x", nextX * 3 + "px");
+      scene.style.setProperty("--avatar-shift-y", nextY * 3 + "px");
+    }
+
+    function handlePointerMove(event) {
+      if (event.pointerType === "touch") return;
+      nextX = Math.max(
+        -1,
+        Math.min(1, (event.clientX / window.innerWidth) * 2 - 1),
+      );
+      nextY = Math.max(
+        -1,
+        Math.min(1, (event.clientY / window.innerHeight) * 2 - 1),
+      );
+      if (!frame) frame = window.requestAnimationFrame(render);
+    }
+
+    function reset() {
+      nextX = 0;
+      nextY = 0;
+      if (frame) window.cancelAnimationFrame(frame);
+      frame = window.requestAnimationFrame(render);
+    }
+
+    if (window._avatarParallaxCleanup) window._avatarParallaxCleanup();
+    var controller = new AbortController();
+    window._avatarParallaxCleanup = function () {
+      controller.abort();
+      if (frame) window.cancelAnimationFrame(frame);
+    };
+
+    document.addEventListener("pointermove", handlePointerMove, {
+      signal: controller.signal,
+      passive: true,
+    });
+    document.documentElement.addEventListener("pointerleave", reset, {
+      signal: controller.signal,
+    });
+    window.addEventListener("blur", reset, { signal: controller.signal });
+  }
+
+  function setupAboutPage() {
+    setupMusicMask();
+    setupAvatarParallax();
+  }
+
+  document.addEventListener("astro:page-load", setupAboutPage);
+  setupAboutPage();
 
   if (!window._tegakiInviewSetup) {
     window._tegakiInviewSetup = true;
-    document.addEventListener("tegaki:ready", function (e) {
-      var container = e.target;
+    document.addEventListener("tegaki:ready", function (event) {
+      var container = event.target;
       if (
         !(container instanceof HTMLElement) ||
         !("inview" in container.dataset)
       )
         return;
-      var engine = e.detail && e.detail.engine;
+
+      var engine = event.detail && event.detail.engine;
       if (!engine) return;
+
       var observer = new IntersectionObserver(
         function (entries) {
           if (entries[0].isIntersecting) {
@@ -325,3 +577,36 @@ const slides: Slide[] = [
     });
   }
 </script>
+
+<style>
+  .avatar-parallax-scene {
+    --avatar-rotate-x: 0deg;
+    --avatar-rotate-y: 0deg;
+    --avatar-shift-x: 0px;
+    --avatar-shift-y: 0px;
+
+    transform: perspective(500px) rotateX(var(--avatar-rotate-x))
+      rotateY(var(--avatar-rotate-y));
+    transform-style: preserve-3d;
+    transition: transform 180ms cubic-bezier(0.2, 0.8, 0.2, 1);
+    will-change: transform;
+  }
+
+  .avatar-parallax-foreground {
+    backface-visibility: hidden;
+    filter: drop-shadow(0 4px 5px rgb(0 0 0 / 16%));
+    transform: translate3d(var(--avatar-shift-x), var(--avatar-shift-y), 28px)
+      scale(1.025);
+    transform-origin: center;
+    transition: transform 180ms cubic-bezier(0.2, 0.8, 0.2, 1);
+    will-change: transform;
+  }
+
+  @media (prefers-reduced-motion: reduce), (pointer: coarse) {
+    .avatar-parallax-scene,
+    .avatar-parallax-foreground {
+      transform: none;
+      transition: none;
+    }
+  }
+</style>

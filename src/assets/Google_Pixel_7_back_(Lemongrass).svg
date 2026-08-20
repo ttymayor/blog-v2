@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+<svg width="73.4mm" height="155.6mm" version="1.1" viewBox="0 0 277.42 588.09" xmlns="http://www.w3.org/2000/svg" xmlns:cc="http://creativecommons.org/ns#" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+ <metadata>
+  <rdf:RDF>
+   <cc:Work rdf:about="">
+    <dc:format>image/svg+xml</dc:format>
+    <dc:type rdf:resource="http://purl.org/dc/dcmitype/StillImage"/>
+    <dc:title/>
+   </cc:Work>
+  </rdf:RDF>
+ </metadata>
+ <g>
+  <rect transform="scale(-1,1)" x="-8.413" y="175.09" width="20" height="38"/>
+  <rect transform="scale(-1,1)" x="-8.413" y="250.09" width="20" height="72"/>
+  <rect transform="scale(-1,1)" x="-275.41" y="2.0945" width="273" height="584" rx="20" ry="20" fill="#f5fce4" stroke="#000" stroke-linecap="round" stroke-linejoin="bevel" stroke-width="4"/>
+  <rect x="1.413" y="57.095" width="275" height="77" rx="20" ry="5" fill="#cac2b2" stroke="#000" stroke-linecap="round" stroke-linejoin="bevel" stroke-width="2"/>
+  <rect x="42.413" y="71.095" width="110" height="50" rx="25" ry="25" fill="#333"/>
+ </g>
+ <g fill="#222">
+  <circle cx="127.41" cy="96.095" r="12"/>
+  <circle cx="67.413" cy="96.095" r="16"/>
+  <circle cx="98.413" cy="96.095" r="4"/>
+ </g>
+ <circle cx="233.41" cy="96.095" r="10" fill="#ddd" stroke="#000" stroke-linecap="round" stroke-linejoin="bevel" stroke-width="2"/>
+ <circle cx="209.41" cy="96.095" r="2" fill="#222"/>
+ <path d="m154.91 294.09a16 16 0 0 1-12.947 15.706 16 16 0 0 1-17.888-9.7123 16 16 0 0 1 6.1207-19.412 16 16 0 0 1 20.224 2.3042" fill="none" stroke="#cac2b2" stroke-linejoin="bevel" stroke-width="7.5"/>
+ <path d="m158.66 294.09h-19.75" fill="none" stroke="#cac2b2" stroke-width="7.5"/>
+</svg>
