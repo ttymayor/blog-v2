@@ -53,19 +53,9 @@ export default function PostList({ posts }: PostListProps) {
               </ItemContent>
               <ItemFooter>
                 <div className="flex flex-wrap items-center gap-1.5">
-                  {post.category && (
-                    <Badge
-                      variant={"default"}
-                    >
-                      {post.category}
-                    </Badge>
-                  )}
+                  {post.category && <Badge variant={"default"}>{post.category}</Badge>}
                   {post.tags.map((tag) => (
-                    <Badge
-                      variant={"secondary"}
-                      key={tag}
-                      className="rounded-xs"
-                    >
+                    <Badge variant={"secondary"} key={tag} className="rounded-xs">
                       {tag}
                     </Badge>
                   ))}

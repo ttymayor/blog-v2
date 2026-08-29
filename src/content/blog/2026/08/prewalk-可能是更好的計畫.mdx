@@ -2,7 +2,7 @@
 title: "Prewalk 可能是更好的計畫"
 description: "omp 的初次使用與嘗試理解 prewalk 的研究文章"
 pubDate: "2026-08-13T14:43:12.401Z"
-tags: ["Note","Read","Dev","AI"]
+tags: ["Note", "Read", "Dev", "AI"]
 ---
 
 ## 前言
@@ -34,14 +34,14 @@ omp 內建了編輯器整合，提供了更好的開發體驗。
 ## `/prewalk`：你先走...？
 
 > Any agent, any model, any scaffold: the bill is essentially `O(reads)`.  
-> -- <cite>Can Bölük, "[*You only need the frontier model for one single edit*](https://stencil.so/blog/prewalk)"</cite>
+> -- <cite>Can Bölük, "[_You only need the frontier model for one single edit_](https://stencil.so/blog/prewalk)"</cite>
 
 根據作者的描述是：他發現 Opus 在專案中消耗 token 用量 reading 佔了約 88%，edits 僅佔約 9%。由之前的研究說明並不是 harness 的問題，也不是能夠修復的問題。
 
 之後他們發現使用 `/plan` 在 Opus 4.8 在 reading + planning 後，交給 Flash 去執行，但 Flash 又重新閱讀檔案，這很不必要。
 
 > What actually could transfer something of value is the context window itself  
-> -- <cite>Can Bölük, "[*You only need the frontier model for one single edit*](https://stencil.so/blog/prewalk)"</cite>
+> -- <cite>Can Bölük, "[_You only need the frontier model for one single edit_](https://stencil.so/blog/prewalk)"</cite>
 
 作者寫了三步，簡單來說就是先由前沿模型計畫（Read + Plan）並走出第一步（Edit），再交接給平價模型，將整個規劃思考精修、整理後處理剩下計畫繼續編輯。
 
@@ -52,7 +52,7 @@ omp 內建了編輯器整合，提供了更好的開發體驗。
 後續就是他們研究的測試指標與數據了，有趣的是：
 
 > Another funny failure mode: GPT 5.6 as the guide really likes creating 60-item TODO lists and completing them in batches (do they just hand out rewards for anything?), so an item limit in the prompt is a must.  
-> -- <cite>Can Bölük, "[*You only need the frontier model for one single edit*](https://stencil.so/blog/prewalk)"</cite>
+> -- <cite>Can Bölük, "[_You only need the frontier model for one single edit_](https://stencil.so/blog/prewalk)"</cite>
 
 嗯，所以用 GPT 5.6 記得說明一下 TODO 列表數量的限制...🤣
 

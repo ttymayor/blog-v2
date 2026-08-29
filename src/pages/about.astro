@@ -2,7 +2,7 @@
 import { Image } from "astro:assets";
 import TegakiRenderer from "tegaki/astro";
 import bundle from "tegaki/fonts/caveat";
-import { MoveUpRight, Music } from "@lucide/astro";
+import { Music } from "@lucide/astro";
 
 import avatar from "@/assets/avatar.webp";
 import avatarForeground from "@/assets/avatar_removebg.png";
@@ -16,6 +16,8 @@ import slideUnUsefulTool from "@/assets/slides/20260430-un-useful-tool.png";
 import { SITE_TITLE } from "@/consts";
 import BaseLayout from "@/layouts/BaseLayout.astro";
 import BlankBlock from "@/components/BlankBlock.astro";
+import ExternalLink from "@/components/about/ExternalLink.astro";
+import InlineIcon from "@/components/about/InlineIcon.astro";
 
 type Slide = {
   title: string;
@@ -234,44 +236,20 @@ const ai_agents: string[] = [
 
         <h2 id="music">Music</h2>
         <p>
-          下面這個這是我最近很喜歡的歌手：陳嫺靜。近期還有 <a
-            href="https://open.spotify.com/artist/1Se0FtmWSFmL81n85repGg"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
+          下面這個這是我最近很喜歡的歌手：陳嫺靜。近期還有
+          <ExternalLink href="https://open.spotify.com/artist/1Se0FtmWSFmL81n85repGg">
             someshiit 山姆
-            <MoveUpRight
-              class="text-muted-foreground mx-0.5 inline-block size-3.5"
-            />
-          </a>，如果是樂團的話，聽最多的應該是 <a
-            href="https://open.spotify.com/artist/5AO5nzx14PfLNfVgYVd0rw"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
+          </ExternalLink>，如果是樂團的話，聽最多的應該是
+          <ExternalLink href="https://open.spotify.com/artist/5AO5nzx14PfLNfVgYVd0rw">
             Crispy脆樂團
-            <MoveUpRight
-              class="text-muted-foreground mx-0.5 inline-block size-3.5"
-            />
-          </a>，流行音樂的話是<a
-            href="https://open.spotify.com/artist/2JBUyLiFvpFPWdZGqIGYLD"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
+          </ExternalLink>，流行音樂的話是
+          <ExternalLink href="https://open.spotify.com/artist/2JBUyLiFvpFPWdZGqIGYLD">
             盧廣仲
-            <MoveUpRight
-              class="text-muted-foreground mx-0.5 inline-block size-3.5"
-            />
-          </a>與
-          <a
-            href="https://open.spotify.com/artist/0rARfHZ4ZteUlzbAuxUwAs"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
+          </ExternalLink> 與
+          <ExternalLink href="https://open.spotify.com/artist/0rARfHZ4ZteUlzbAuxUwAs">
             洪佩瑜
-            <MoveUpRight
-              class="text-muted-foreground mx-0.5 inline-block size-3.5"
-            />
-          </a>。
+          </ExternalLink>。
+
         </p>
 
         <div class="relative mt-8 overflow-hidden rounded-4xl" style="">
@@ -311,71 +289,36 @@ const ai_agents: string[] = [
         <p>
           國中開始接觸
           {" "}
-          <Image
+          <InlineIcon
             src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/python/python-original.svg"
-            alt=""
-            width={24}
-            height={24}
-            draggable="false"
-            class="inline-block rounded-none align-text-bottom select-none"
           />
-          {" "}
           Python，當時就覺得輸出「Hello World!\n」很有趣，到國三進到南山資培（資訊培訓）開始學習
           {" "}
-          <Image
+          <InlineIcon
             src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/cplusplus/cplusplus-original.svg"
-            alt=""
-            width={24}
-            height={24}
-            draggable="false"
-            class="inline-block rounded-none align-text-bottom select-none"
           />
-          {" "}
           C++ 解題、打競程，但總是被其他同屆的虐爛，一直到高二參加 TOI 初選，五題都寫不出來，直接打擊我的信心。就開始不怎麼解題了，改去用
           Python 玩 Discord Bot。後來準備學測，直到學習歷程、備審準備完後，就開始學習基礎前端，偷用了別人的
           API，但照理來將應該要申請，我在 Discord 看到就直接拿來玩玩看了，嘗試做了第一個
           HTML、CSS 與
           {" "}
-          <Image
+          <InlineIcon
             src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/javascript/javascript-original.svg"
-            alt=""
-            width={24}
-            height={24}
-            draggable="false"
-            class="inline-block rounded-none align-text-bottom select-none"
           />
-          {" "}
           JavaScript 的地震報告 UI。大學之後就開始隨心所欲地探索，當時一步一步來學習
           {" "}
-          <Image
+          <InlineIcon
             src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/bash/bash-original.svg"
-            alt=""
-            width={24}
-            height={24}
-            draggable="false"
-            class="inline-block rounded-none align-text-bottom select-none"
           />
-          {" "}
           Bash 與一點點
           {" "}
-          <Image
+          <InlineIcon
             src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/linux/linux-original.svg"
-            alt=""
-            width={24}
-            height={24}
-            draggable="false"
-            class="inline-block rounded-none align-text-bottom select-none"
           />
-          {" "}
           Linux 知識，後續學習
           {" "}
-          <Image
+          <InlineIcon
             src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/docker/docker-original.svg"
-            alt=""
-            width={24}
-            height={24}
-            draggable="false"
-            class="inline-block rounded-none align-text-bottom select-none"
           />
           {" "}
           Docker。
@@ -386,24 +329,13 @@ const ai_agents: string[] = [
         <p>
           這些是某些在駭客社分享的簡報，喜歡學習使用
           {" "}
-          <Image
+          <InlineIcon
             src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/figma/figma-original.svg"
-            alt=""
-            width={24}
-            height={24}
-            draggable="false"
-            class="inline-block rounded-none align-text-bottom select-none"
           />
-          {" "}
           Figma，因為介面簡單，更傾向於設計。而非速成、活潑的
           {" "}
-          <Image
+          <InlineIcon
             src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/canva/canva-original.svg"
-            alt=""
-            width={24}
-            height={24}
-            draggable="false"
-            class="inline-block rounded-none align-text-bottom select-none"
           /> Canva。
         </p>
         <ul class="not-typeset my-6 flex flex-col gap-4" data-not-typeset>

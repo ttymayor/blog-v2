@@ -1,0 +1,25 @@
+---
+import { Image } from "astro:assets";
+import type { ImageMetadata } from "astro";
+
+interface Props {
+  src: string | ImageMetadata;
+  alt?: string;
+  size?: number;
+  class?: string;
+}
+
+const { src, alt = "", size = 24, class: className } = Astro.props;
+---
+
+<Image
+  src={src}
+  alt={alt}
+  width={size}
+  height={size}
+  draggable="false"
+  class:list={[
+    "mr-1 inline-block rounded-none align-text-bottom select-none",
+    className,
+  ]}
+/>

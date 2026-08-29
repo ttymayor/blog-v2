@@ -1,0 +1,20 @@
+---
+import { MoveUpRight } from "@lucide/astro";
+
+interface Props {
+  href: string;
+  class?: string;
+}
+
+const { href, class: className } = Astro.props;
+---
+
+<a
+  href={href}
+  target="_blank"
+  rel="noopener noreferrer"
+  class={className}
+>
+  <slot />
+  <MoveUpRight class="text-muted-foreground mx-0.5 inline-block size-3.5" />
+</a>
