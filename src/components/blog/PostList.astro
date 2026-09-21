@@ -1,5 +1,7 @@
 ---
 import PostCard from "@/components/shared/PostCard.astro";
+import Separator from "@/components/ui/Separator.astro";
+
 import type { BlogPost } from "@/types/blog";
 
 interface Props {
@@ -13,11 +15,10 @@ const firstVisibleIndex = pageSize ? (initialPage - 1) * pageSize : 0;
 const lastVisibleIndex = pageSize ? firstVisibleIndex + pageSize : posts.length;
 ---
 
-<div class="group/item-group flex flex-col" data-post-list>
+<div class="group/item-group flex flex-col gap-2" data-post-list>
   {
     posts.map((post, index) => {
       const isVisible = index >= firstVisibleIndex && index < lastVisibleIndex;
-      const visibleIndex = index - firstVisibleIndex;
 
       return (
         <div
@@ -27,17 +28,6 @@ const lastVisibleIndex = pageSize ? firstVisibleIndex + pageSize : posts.length;
           data-category={post.category?.toLowerCase() ?? ""}
           hidden={!isVisible}
         >
-          <div
-            class="my-1"
-            data-post-separator
-            hidden={!isVisible || visibleIndex === 0}
-          >
-            <div
-              role="separator"
-              aria-orientation="horizontal"
-              class="bg-border h-px w-full shrink-0"
-            />
-          </div>
           <PostCard post={post} />
         </div>
       );

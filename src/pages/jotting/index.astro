@@ -4,7 +4,7 @@ import BaseLayout from "@/layouts/BaseLayout.astro";
 import BlankBlock from "@/components/BlankBlock.astro";
 import RelativeTime from "@/components/react/RelativeTime";
 import { getJottings } from "@/lib/jotting";
-import { Separator } from "@/components/ui/separator";
+import Separator from "@/components/ui/Separator.astro";
 import { Dot } from "@lucide/astro";
 
 const jottings = await getJottings();
@@ -73,9 +73,7 @@ const renderedJottings = await Promise.all(
                     </div>
                   </div>
                 </article>
-                {index !== renderedJottings.length - 1 && (
-                  <Separator className="" />
-                )}
+                {index !== renderedJottings.length - 1 && <Separator />}
               </>
             );
           })}

@@ -144,17 +144,6 @@ const socialLinks = [
           {" "}{SITE_TITLE}
         </p>
         <div class="flex items-center gap-4">
-          {
-            lastCommitHash && (
-              <a
-                href="/diff"
-                class="text-muted-foreground hover:text-foreground inline-flex items-center gap-2 text-xs transition-colors"
-              >
-                <GitBranch class="size-3" />
-                {lastCommitHash}
-              </a>
-            )
-          }
           <p class="text-muted-foreground h-fit text-xs">
             Built with
             {" "}

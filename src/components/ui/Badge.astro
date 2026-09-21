@@ -1,0 +1,29 @@
+---
+import type { HTMLAttributes } from "astro/types";
+
+import { cn } from "@/lib/utils";
+
+type BadgeVariant = "none" | "tag" | "category";
+
+type Props = HTMLAttributes<"span"> & {
+  variant?: BadgeVariant;
+};
+
+const badgeVariants: Record<BadgeVariant, string> = {
+  none: "",
+  tag: "tracking-wide text-foreground/80 bg-secondary px-2 text-xs py-0.5 border-1 rounded-xs font-medium font-sans",
+  category:
+    "tracking-wide bg-primary text-primary-foreground px-2 text-xs py-0.5 rounded-full font-medium",
+};
+
+const { class: className, variant = "none", ...props } = Astro.props;
+---
+
+<span
+  data-slot="badge"
+  data-variant={variant}
+  class={cn(badgeVariants[variant], className)}
+  {...props}
+>
+  <slot />
+</span>

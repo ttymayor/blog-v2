@@ -1,4 +1,6 @@
 ---
+import Badge from "@/components/ui/Badge.astro";
+import Separator from "@/components/ui/Separator.astro";
 import { relativeTime } from "@/lib/utils";
 import type { BlogPost } from "@/types/blog";
 
@@ -17,7 +19,7 @@ const badgeClass =
   data-slot="item"
   data-variant="default"
   data-size="sm"
-  class="group/item hover:bg-accent/50 focus-visible:border-ring focus-visible:ring-ring/50 -mx-4 flex flex-wrap items-center gap-2.5 rounded-2xl border border-transparent px-4 py-3 text-sm transition-colors duration-100 outline-none focus-visible:ring-[3px]"
+  class="group/item hover:bg-accent/25 focus-visible:border-ring focus-visible:ring-ring/50 ring-border -mx-4 flex flex-wrap items-center gap-2.5 rounded-2xl border border-transparent p-4 text-sm transition-colors duration-100 outline-none hover:ring-1 focus-visible:ring-[3px]"
 >
   {
     post.heroImage && (
@@ -27,7 +29,7 @@ const badgeClass =
         class="h-16 object-cover"
         loading="lazy"
         decoding="async"
-        style={`view-transition-name: post-hero-${transitionId}`}
+        transition:name={`post-hero-${transitionId}`}
       />
     )
   }
@@ -57,27 +59,17 @@ const badgeClass =
     data-slot="item-footer"
     class="flex basis-full items-center justify-between gap-2"
   >
-    <div class="flex flex-wrap items-center gap-1.5">
-      {
-        post.category && (
-          <span class:list={[badgeClass, "bg-primary text-primary-foreground"]}>
-            {post.category}
-          </span>
-        )
-      }
-      {
-        post.tags.map((tag) => (
-          <span
-            class:list={[
-              badgeClass,
-              "bg-secondary text-secondary-foreground rounded-xs",
-            ]}
-          >
-            {tag}
-          </span>
-        ))
-      }
-    </div>
+    {
+      (post.tags.length || post.category) && (
+        <div class="flex flex-wrap items-center gap-2">
+          {post.category && <Badge variant="category">{post.category}</Badge>}
+          {post.tags.map((tag) => (
+            <Badge variant="tag">#{tag}</Badge>
+          ))}
+        </div>
+      )
+    }
+    <Separator class="flex-1" />
     <time
       datetime={post.pubDate}
       data-post-relative-time

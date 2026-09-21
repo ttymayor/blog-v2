@@ -4,7 +4,7 @@ import type { CollectionEntry } from "astro:content";
 import type { Dayjs } from "dayjs";
 import type { BlogPost as BlogPostSummary } from "@/types/blog";
 import { Image, getImage } from "astro:assets";
-import { Separator } from "@/components/ui/separator";
+import Separator from "@/components/ui/Separator.astro";
 import TableOfContents from "@/components/mdx/TableOfContents.astro";
 import {
   Calendar,
@@ -16,8 +16,7 @@ import {
   TriangleAlert,
 } from "@lucide/astro";
 import BlankBlock from "@/components/BlankBlock.astro";
-import { Badge } from "@/components/ui/badge";
-import PostActions from "@/components/PostActions";
+import Badge from "@/components/ui/Badge.astro";
 import { Button } from "@/components/ui/button";
 import RelativeTime from "@/components/react/RelativeTime";
 import TegakiRenderer from "tegaki/astro";
@@ -117,9 +116,7 @@ if (chatWithAI) {
                 src={heroImage}
                 alt="hero image"
                 class="rounded-xl"
-                style={{
-                  viewTransitionName: `post-hero-${slug.replace(/\//g, "-")}`,
-                }}
+                transition:name={`post-hero-${slug.replaceAll("/", "-")}`}
               />
             </div>
           )
@@ -129,21 +126,11 @@ if (chatWithAI) {
             {
               (category || tags.length > 0) && (
                 <div class="flex flex-row flex-wrap gap-2">
-                  {category && (
-                    <Badge variant={"default"} client:load>
-                      {category}
-                    </Badge>
-                  )}
-                  {tags &&
-                    tags.length > 0 &&
+                  {category && <Badge variant="category">{category}</Badge>}
+                  {tags.length &&
                     tags.map((tag) => (
-                      <Badge
-                        variant={"secondary"}
-                        key={tag}
-                        className="rounded-xs"
-                        client:load
-                      >
-                        {tag}
+                      <Badge variant="tag" class="">
+                        #{tag}
                       </Badge>
                     ))}
                 </div>
@@ -152,13 +139,17 @@ if (chatWithAI) {
             <h1
               id="article-title"
               class="text-[clamp(1.75rem, 4vw, 2.25rem)] m-0 w-fit font-serif text-3xl font-bold md:text-4xl"
-              transition:name={`post-title-${slug.replace(/\//g, "-")}`}
+              transition:name={`post-title-${slug.replaceAll("/", "-")}`}
             >
               {title}
             </h1>
           </div>
-          <div class="flex flex-wrap items-center justify-between gap-x-4 gap-y-3">
-            <div class="text-muted-foreground flex flex-wrap items-center gap-4 text-xs">
+          <div
+            class="flex flex-wrap items-center justify-between gap-x-4 gap-y-3"
+          >
+            <div
+              class="text-muted-foreground flex flex-wrap items-center gap-4 text-xs"
+            >
               {
                 modifiedDate && (
                   <div class="flex items-center gap-1.5">
@@ -186,17 +177,6 @@ if (chatWithAI) {
                 )
               }
             </div>
-            {
-              chatWithAI && (
-                <div class="ml-auto shrink-0">
-                  <PostActions
-                    body={body ?? ""}
-                    encodedPrompt={encodedPrompt}
-                    client:load
-                  />
-                </div>
-              )
-            }
           </div>
         </header>
 
@@ -214,11 +194,11 @@ if (chatWithAI) {
           )
         }
 
-        <Separator className="my-6" client:load />
+        <Separator class="my-6" />
         <div class="prose">
           <slot />
           <div class="flex items-center gap-2">
-            <Separator className="flex-1" client:load />
+            <Separator class="flex-1" />
             <TegakiRenderer
               font={bundle}
               text="tantuyu. :)"
