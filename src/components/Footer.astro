@@ -1,28 +1,12 @@
 ---
-import { execSync } from "child_process";
+import { Image } from "astro:assets";
 import { SITE_TITLE, SITE_DESCRIPTION } from "@/consts";
-import { GitBranch } from "@lucide/astro";
-import { getPosts, getTotalWordCount } from "@/lib/blog";
-import PostCalendar from "@/components/react/blog/PostCalendar";
-
-const posts = await getPosts();
-const totalWords = await getTotalWordCount();
-
-const lastCommitHash = (() => {
-  try {
-    return execSync("git log -1 --format=%h", { cwd: process.cwd() })
-      .toString()
-      .trim();
-  } catch {
-    return null;
-  }
-})();
+import avatar from "@/assets/avatar.webp";
 
 const navLinks = [
   { href: "/", label: "Home" },
   { href: "/blog", label: "Blog" },
   { href: "/about", label: "About" },
-  { href: "/diff", label: "Diff" },
 ];
 
 const socialLinks = [
@@ -42,132 +26,173 @@ const socialLinks = [
     svg: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-4"><path d="M19.199 24C19.199 13.467 10.533 4.8 0 4.8V0c13.165 0 24 10.835 24 24h-4.801zM3.291 17.415c1.814 0 3.293 1.479 3.293 3.295 0 1.813-1.485 3.29-3.301 3.29C1.47 24 0 22.526 0 20.71s1.475-3.294 3.291-3.295zM15.909 24h-4.665c0-6.169-5.075-11.245-11.244-11.245V8.09c8.727 0 15.909 7.184 15.909 15.91z"/></svg>`,
   },
 ];
+
+const SITE_STARTED_AT = new Date("2026-01-29T17:45:00+08:00").getTime();
+const HOUR_IN_MS = 60 * 60 * 1000;
+
+function formatSiteUptime(now = Date.now()): string {
+  const elapsedHours = Math.max(
+    0,
+    Math.floor((now - SITE_STARTED_AT) / HOUR_IN_MS),
+  );
+  const days = Math.floor(elapsedHours / 24);
+  const hours = elapsedHours % 24;
+  return `本站存活時間：${days} 天 ${hours} 小時`;
+}
+
+const siteUptime = formatSiteUptime();
 ---
 
 <footer class="mt-auto w-full">
   <!-- hatched divider -->
   <div
-    class="h-8 w-full border-t [background:repeating-linear-gradient(-45deg,transparent,transparent_8px,#94a3b815_8px,#94a3b815_10px)]"
+    class="h-4 w-full border-t [background:repeating-linear-gradient(-45deg,transparent,transparent_8px,#94a3b815_8px,#94a3b815_10px)]"
   >
   </div>
 
   <!-- main footer body -->
-  <div class="w-full border-t">
+  <div class="rounded-t-md border-t">
     <div
-      class="mx-auto grid max-w-5xl grid-cols-1 gap-8 px-4 py-10 sm:grid-cols-3"
+      class="mx-auto flex max-w-5xl flex-row justify-between gap-4 px-4 py-10"
     >
-      <!-- brand -->
-      <div class="flex flex-col gap-2">
-        <a
-          href="/"
-          class="text-foreground font-mono text-lg font-semibold tracking-tight transition-opacity hover:opacity-70"
-        >
-          {SITE_TITLE}
-        </a>
-        <p class="text-muted-foreground max-w-48 text-xs leading-relaxed">
-          {SITE_DESCRIPTION}
-        </p>
-        <div class="mt-2">
-          <PostCalendar
-            client:load
-            posts={posts}
-            numWeeks={18}
-            compact={true}
-          />
-          <p
-            class="text-muted-foreground mx-auto max-w-5xl py-3 font-mono text-xs"
+      <div class="flex flex-col gap-4">
+        <!-- brand -->
+        <div class="flex flex-col gap-1">
+          <a
+            href="/"
+            class="text-foreground w-fit font-mono text-lg font-semibold tracking-tight transition-opacity hover:opacity-70"
           >
-            本站累計 {posts.length} 篇文章，共 {totalWords.toLocaleString()} 字
+            <h2>
+              {SITE_TITLE}
+            </h2>
+          </a>
+          <p class="text-muted-foreground max-w-48 text-xs leading-relaxed">
+            {SITE_DESCRIPTION}
           </p>
+        </div>
+
+        <!-- nav -->
+        <div class="flex flex-col items-start gap-1">
+          <span
+            class="text-muted-foreground text-center text-xs font-semibold tracking-widest uppercase"
+          >
+            Pages
+          </span>
+          <ul class="flex h-fit flex-row gap-3">
+            {
+              navLinks.map(({ href, label }) => (
+                <li>
+                  <a
+                    href={href}
+                    class="text-foreground/70 hover:text-foreground text-sm underline-offset-4 transition-colors hover:underline"
+                  >
+                    {label}
+                  </a>
+                </li>
+              ))
+            }
+          </ul>
+        </div>
+
+        <!-- social -->
+        <div class="flex flex-col items-start gap-1">
+          <span
+            class="text-muted-foreground text-xs font-semibold tracking-widest uppercase"
+          >
+            Connect
+          </span>
+          <ul class="flex flex-row gap-3">
+            {
+              socialLinks.map(({ href, label, svg }) => (
+                <a
+                  href={href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="footer-link text-foreground/70 hover:text-foreground gap-1 text-sm underline-offset-4 transition-colors hover:underline"
+                >
+                  <li class="flex items-center gap-1">
+                    <Fragment set:html={svg} />
+                    {label}
+                  </li>
+                </a>
+              ))
+            }
+          </ul>
         </div>
       </div>
 
-      <!-- nav -->
-      <div class="flex flex-col gap-3">
-        <span
-          class="text-muted-foreground text-xs font-semibold tracking-widest uppercase"
-        >
-          Pages
-        </span>
-        <ul class="flex flex-col gap-2">
-          {
-            navLinks.map(({ href, label }) => (
-              <li>
-                <a
-                  href={href}
-                  class="text-foreground/70 hover:text-foreground text-sm underline-offset-4 transition-colors hover:underline"
-                >
-                  {label}
-                </a>
-              </li>
-            ))
-          }
-        </ul>
-      </div>
-
-      <!-- social -->
-      <div class="flex flex-col gap-3">
-        <span
-          class="text-muted-foreground text-xs font-semibold tracking-widest uppercase"
-        >
-          Connect
-        </span>
-        <ul class="flex flex-col gap-2">
-          {
-            socialLinks.map(({ href, label, svg }) => (
-              <li>
-                <a
-                  href={href}
-                  target={href.startsWith("http") ? "_blank" : undefined}
-                  rel={
-                    href.startsWith("http") ? "noopener noreferrer" : undefined
-                  }
-                  class="footer-link text-foreground/70 hover:text-foreground inline-flex items-center gap-2 text-sm underline-offset-4 transition-colors hover:underline"
-                >
-                  <Fragment set:html={svg} />
-                  {label}
-                </a>
-              </li>
-            ))
-          }
-        </ul>
+      <div class="flex items-end gap-4">
+        <Image
+          src={avatar}
+          alt="avatar"
+          width={1200}
+          height={1200}
+          class="footer-avatar aspect-square w-35 rotate-12 opacity-33 select-none"
+          draggable="false"
+        />
       </div>
     </div>
-
     <!-- bottom bar -->
     <div class="border-t">
       <div
-        class="mx-auto flex max-w-5xl items-center justify-between gap-4 p-4"
+        class="mx-auto flex max-w-5xl flex-wrap items-center justify-between gap-4 p-4"
       >
         <p class="text-muted-foreground font-mono text-xs">
           &copy; {new Date().getFullYear()}
           {" "}{SITE_TITLE}
         </p>
-        <div class="flex items-center gap-4">
-          <p class="text-muted-foreground h-fit text-xs">
-            Built with
-            {" "}
-            <a
-              href="https://astro.build"
-              target="_blank"
-              rel="noopener noreferrer"
-              class="hover:text-foreground inline-flex underline underline-offset-2 transition-colors"
-              >Astro</a
-            >{" "}
-            and
-            {" "}
-            <a
-              href="https://react.dev"
-              target="_blank"
-              rel="noopener noreferrer"
-              class="hover:text-foreground underline underline-offset-2 transition-colors"
-              >React</a
-            >
-          </p>
-        </div>
+        <span
+          class="text-muted-foreground text-xs tabular-nums"
+          data-site-uptime>{siteUptime}</span
+        >
       </div>
     </div>
 
     <div class="h-16 md:hidden" aria-hidden="true"></div>
   </div>
 </footer>
+
+<script>
+  const SITE_STARTED_AT = new Date("2026-01-29T17:45:00+08:00").getTime();
+  const HOUR_IN_MS = 60 * 60 * 1000;
+
+  let siteUptimeTimer: number | undefined;
+
+  function formatSiteUptime(now = Date.now()): string {
+    const elapsedHours = Math.max(
+      0,
+      Math.floor((now - SITE_STARTED_AT) / HOUR_IN_MS),
+    );
+    const days = Math.floor(elapsedHours / 24);
+    const hours = elapsedHours % 24;
+    return `本站存活時間：${days} 天 ${hours} 小時`;
+  }
+
+  function updateSiteUptime() {
+    const elements =
+      document.querySelectorAll<HTMLElement>("[data-site-uptime]");
+    const elapsed = Math.max(0, Date.now() - SITE_STARTED_AT);
+
+    elements.forEach((element) => {
+      element.textContent = formatSiteUptime();
+    });
+
+    window.clearTimeout(siteUptimeTimer);
+    if (elements.length > 0) {
+      siteUptimeTimer = window.setTimeout(
+        updateSiteUptime,
+        HOUR_IN_MS - (elapsed % HOUR_IN_MS),
+      );
+    }
+  }
+
+  updateSiteUptime();
+  document.addEventListener("astro:page-load", updateSiteUptime);
+</script>
+
+<style>
+  .footer-avatar {
+    -webkit-mask-image: radial-gradient(circle, black 33%, transparent 70%);
+    mask-image: radial-gradient(circle, black 33%, transparent 70%);
+  }
+</style>
