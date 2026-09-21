@@ -1,0 +1,55 @@
+---
+interface Props {
+  totalPosts: number;
+}
+
+const { totalPosts } = Astro.props;
+---
+
+<div data-post-filter>
+  <div
+    data-slot="input-group"
+    role="group"
+    class="group/input-group border-input relative flex h-8 w-full min-w-0 items-center rounded-lg border transition-colors outline-none has-[[data-slot=input-group-control]:focus-visible]:border-ring has-[[data-slot=input-group-control]:focus-visible]:ring-3 has-[[data-slot=input-group-control]:focus-visible]:ring-ring/50"
+  >
+    <div
+      role="group"
+      data-slot="input-group-addon"
+      data-align="inline-start"
+      class="flex h-auto cursor-text items-center justify-center gap-2 py-1.5 pl-2 text-sm font-medium text-muted-foreground select-none [&>svg]:pointer-events-none [&>svg:not([class*='size-'])]:size-4"
+      aria-hidden="true"
+    >
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        width="24"
+        height="24"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      >
+        <path d="m21 21-4.34-4.34" />
+        <circle cx="11" cy="11" r="8" />
+      </svg>
+    </div>
+    <input
+      type="search"
+      placeholder="Search..."
+      autocomplete="off"
+      data-slot="input-group-control"
+      data-post-search
+      class="placeholder:text-muted-foreground h-full min-w-0 flex-1 rounded-none border-0 bg-transparent py-1 pr-2 pl-0 text-base shadow-none outline-none focus-visible:ring-0 md:text-sm"
+    />
+    <div
+      role="status"
+      aria-live="polite"
+      data-slot="input-group-addon"
+      data-align="inline-end"
+      class="order-last flex h-auto cursor-text items-center justify-center gap-2 py-1.5 pr-2 text-sm font-medium text-muted-foreground select-none"
+    >
+      <span class="text-muted-foreground text-sm" data-post-result-count>{totalPosts} results</span>
+    </div>
+  </div>
+</div>

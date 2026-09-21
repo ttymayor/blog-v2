@@ -1,0 +1,424 @@
+---
+import Filter from "@/components/blog/Filter.astro";
+import PostList from "@/components/blog/PostList.astro";
+import { BLOG_PAGE_SIZE } from "@/lib/pagination";
+import type { BlogPost } from "@/types/blog";
+
+interface Props {
+  posts: BlogPost[];
+  initialPage?: number;
+}
+
+function getPagePath(page: number) {
+  return page === 1 ? "/blog" : `/blog/${page}`;
+}
+
+function getPageNumbers(page: number, totalPages: number) {
+  if (totalPages <= 5) return Array.from({ length: totalPages }, (_, index) => index + 1);
+  if (page <= 3) return [1, 2, 3, 4, null, totalPages];
+  if (page >= totalPages - 2) {
+    return [1, null, totalPages - 3, totalPages - 2, totalPages - 1, totalPages];
+  }
+  return [1, null, page - 1, page, page + 1, null, totalPages];
+}
+
+const { posts, initialPage = 1 } = Astro.props;
+const totalPages = Math.max(1, Math.ceil(posts.length / BLOG_PAGE_SIZE));
+const page = Math.min(Math.max(1, initialPage), totalPages);
+const pageNumbers = getPageNumbers(page, totalPages);
+const pageButtonClass =
+  "inline-flex size-9 shrink-0 items-center justify-center gap-2 rounded-md text-sm font-medium whitespace-nowrap transition-all outline-none hover:bg-accent hover:text-accent-foreground focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4";
+---
+
+<div
+  class="flex flex-col gap-4"
+  data-post-browser
+  data-page-size={BLOG_PAGE_SIZE}
+  data-initial-page={page}
+>
+  <Filter totalPosts={posts.length} />
+  <PostList posts={posts} initialPage={page} pageSize={BLOG_PAGE_SIZE} />
+  {
+    totalPages > 1 && (
+      <nav
+        role="navigation"
+        aria-label="pagination"
+        data-post-pagination
+        class="mx-auto flex w-full justify-center"
+      >
+        <ul class="flex flex-row items-center gap-1">
+          <li>
+            <a
+              href={getPagePath(Math.max(1, page - 1))}
+              data-post-page={Math.max(1, page - 1)}
+              aria-label="Go to previous page"
+              aria-disabled={page === 1 ? "true" : undefined}
+              class:list={[
+                pageButtonClass,
+                "h-9 w-auto gap-1 px-2.5 sm:pl-2.5",
+                page === 1 ? "pointer-events-none opacity-50" : "cursor-pointer",
+              ]}
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <path d="m15 18-6-6 6-6" />
+              </svg>
+              <span class="hidden sm:block">Previous</span>
+            </a>
+          </li>
+          {
+            pageNumbers.map((pageNumber) =>
+              pageNumber === null ? (
+                <li>
+                  <span
+                    aria-hidden="true"
+                    class="flex size-9 items-center justify-center"
+                  >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="24"
+                      height="24"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      class="size-4"
+                    >
+                      <circle cx="12" cy="12" r="1" />
+                      <circle cx="19" cy="12" r="1" />
+                      <circle cx="5" cy="12" r="1" />
+                    </svg>
+                    <span class="sr-only">More pages</span>
+                  </span>
+                </li>
+              ) : (
+                <li>
+                  <a
+                    href={getPagePath(pageNumber)}
+                    data-post-page={pageNumber}
+                    aria-current={pageNumber === page ? "page" : undefined}
+                    class:list={[
+                      pageButtonClass,
+                      pageNumber === page ? "border bg-background shadow-xs" : "cursor-pointer",
+                    ]}
+                  >
+                    {pageNumber}
+                  </a>
+                </li>
+              ),
+            )
+          }
+          <li>
+            <a
+              href={getPagePath(Math.min(totalPages, page + 1))}
+              data-post-page={Math.min(totalPages, page + 1)}
+              aria-label="Go to next page"
+              aria-disabled={page === totalPages ? "true" : undefined}
+              class:list={[
+                pageButtonClass,
+                "h-9 w-auto gap-1 px-2.5 sm:pr-2.5",
+                page === totalPages ? "pointer-events-none opacity-50" : "cursor-pointer",
+              ]}
+            >
+              <span class="hidden sm:block">Next</span>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <path d="m9 18 6-6-6-6" />
+              </svg>
+            </a>
+          </li>
+        </ul>
+      </nav>
+    )
+  }
+</div>
+
+<script>
+  let cleanupPostBrowser: (() => void) | undefined;
+
+  function getPagePath(page: number) {
+    return page === 1 ? "/blog" : `/blog/${page}`;
+  }
+
+  function getPageFromUrl(totalPages: number) {
+    const match = window.location.pathname.match(/^\/blog\/(\d+)\/?$/);
+    const parsedPage = Number(match?.[1] ?? 1);
+
+    if (!Number.isSafeInteger(parsedPage) || parsedPage < 1) return 1;
+    return Math.min(parsedPage, totalPages);
+  }
+
+  function getPageNumbers(page: number, totalPages: number) {
+    if (totalPages <= 5) return Array.from({ length: totalPages }, (_, index) => index + 1);
+    if (page <= 3) return [1, 2, 3, 4, null, totalPages];
+    if (page >= totalPages - 2) {
+      return [1, null, totalPages - 3, totalPages - 2, totalPages - 1, totalPages];
+    }
+    return [1, null, page - 1, page, page + 1, null, totalPages];
+  }
+
+  function createIcon(path: string) {
+    const icon = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+    icon.setAttribute("xmlns", "http://www.w3.org/2000/svg");
+    icon.setAttribute("viewBox", "0 0 24 24");
+    icon.setAttribute("fill", "none");
+    icon.setAttribute("stroke", "currentColor");
+    icon.setAttribute("stroke-width", "2");
+    icon.setAttribute("stroke-linecap", "round");
+    icon.setAttribute("stroke-linejoin", "round");
+    const iconPath = document.createElementNS("http://www.w3.org/2000/svg", "path");
+    iconPath.setAttribute("d", path);
+    icon.append(iconPath);
+    return icon;
+  }
+
+  function createEllipsis() {
+    const ellipsis = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+    ellipsis.setAttribute("xmlns", "http://www.w3.org/2000/svg");
+    ellipsis.setAttribute("viewBox", "0 0 24 24");
+    ellipsis.setAttribute("fill", "none");
+    ellipsis.setAttribute("stroke", "currentColor");
+    ellipsis.setAttribute("stroke-width", "2");
+    ellipsis.setAttribute("stroke-linecap", "round");
+    ellipsis.setAttribute("stroke-linejoin", "round");
+    ellipsis.classList.add("size-4");
+
+    for (const cx of [5, 12, 19]) {
+      const circle = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+      circle.setAttribute("cx", String(cx));
+      circle.setAttribute("cy", "12");
+      circle.setAttribute("r", "1");
+      ellipsis.append(circle);
+    }
+
+    return ellipsis;
+  }
+
+  function initPostBrowser() {
+    cleanupPostBrowser?.();
+
+    const root = document.querySelector<HTMLElement>("[data-post-browser]");
+    if (!root) return;
+
+    const pageSize = Number(root.dataset.pageSize);
+    const searchInput = root.querySelector<HTMLInputElement>("[data-post-search]");
+    const resultCount = root.querySelector<HTMLElement>("[data-post-result-count]");
+    const pagination = root.querySelector<HTMLElement>("[data-post-pagination]");
+    const posts = Array.from(root.querySelectorAll<HTMLElement>("[data-post-item]")).map((element) => ({
+      element,
+      separator: element.querySelector<HTMLElement>("[data-post-separator]"),
+      title: element.dataset.title ?? "",
+      tags: JSON.parse(element.dataset.tags ?? "[]") as string[],
+      category: element.dataset.category ?? "",
+    }));
+    let filteredPosts = posts;
+    let page = getPageFromUrl(Math.max(1, Math.ceil(posts.length / pageSize)));
+    let searchTimer: number | undefined;
+
+    const pageButtonClass =
+      "inline-flex size-9 shrink-0 items-center justify-center gap-2 rounded-md text-sm font-medium whitespace-nowrap transition-all outline-none hover:bg-accent hover:text-accent-foreground focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4";
+
+    function totalPages() {
+      return Math.max(1, Math.ceil(filteredPosts.length / pageSize));
+    }
+
+    function updatePageInUrl(nextPage: number, method: "pushState" | "replaceState") {
+      const url = new URL(window.location.href);
+      url.pathname = getPagePath(nextPage);
+      url.searchParams.delete("page");
+      window.history[method]({}, "", url);
+    }
+
+    function renderPagination() {
+      if (!pagination) return;
+      const total = totalPages();
+      pagination.hidden = total <= 1;
+      if (total <= 1) return;
+
+      const list = document.createElement("ul");
+      list.className = "flex flex-row items-center gap-1";
+
+      function appendPageLink(nextPage: number, label: string, options: { previous?: boolean; next?: boolean } = {}) {
+        const item = document.createElement("li");
+        const link = document.createElement("a");
+        link.href = getPagePath(nextPage);
+        link.dataset.postPage = String(nextPage);
+        link.className = pageButtonClass;
+
+        if (options.previous || options.next) {
+          link.classList.add("h-9", "w-auto", "gap-1", "px-2.5");
+          link.setAttribute("aria-label", options.previous ? "Go to previous page" : "Go to next page");
+          if (options.previous) link.classList.add("sm:pl-2.5");
+          if (options.next) link.classList.add("sm:pr-2.5");
+          if (nextPage === page) {
+            link.setAttribute("aria-disabled", "true");
+            link.classList.add("pointer-events-none", "opacity-50");
+          } else {
+            link.classList.add("cursor-pointer");
+          }
+
+          if (options.previous) {
+            link.append(createIcon("m15 18-6-6 6-6"));
+            const text = document.createElement("span");
+            text.className = "hidden sm:block";
+            text.textContent = label;
+            link.append(text);
+          } else {
+            const text = document.createElement("span");
+            text.className = "hidden sm:block";
+            text.textContent = label;
+            link.append(text, createIcon("m9 18 6-6-6-6"));
+          }
+        } else {
+          link.textContent = label;
+          if (nextPage === page) {
+            link.setAttribute("aria-current", "page");
+            link.classList.add("border", "bg-background", "shadow-xs");
+          } else {
+            link.classList.add("cursor-pointer");
+          }
+        }
+
+        item.append(link);
+        list.append(item);
+      }
+
+      appendPageLink(Math.max(1, page - 1), "Previous", { previous: true });
+      for (const pageNumber of getPageNumbers(page, total)) {
+        const item = document.createElement("li");
+        if (pageNumber === null) {
+          const ellipsis = document.createElement("span");
+          ellipsis.setAttribute("aria-hidden", "true");
+          ellipsis.className = "flex size-9 items-center justify-center";
+          ellipsis.append(createEllipsis());
+          const text = document.createElement("span");
+          text.className = "sr-only";
+          text.textContent = "More pages";
+          ellipsis.append(text);
+          item.append(ellipsis);
+        } else {
+          const link = document.createElement("a");
+          link.href = getPagePath(pageNumber);
+          link.dataset.postPage = String(pageNumber);
+          link.textContent = String(pageNumber);
+          link.className = pageButtonClass;
+          if (pageNumber === page) {
+            link.setAttribute("aria-current", "page");
+            link.classList.add("border", "bg-background", "shadow-xs");
+          } else {
+            link.classList.add("cursor-pointer");
+          }
+          item.append(link);
+        }
+        list.append(item);
+      }
+      appendPageLink(Math.min(total, page + 1), "Next", { next: true });
+      pagination.replaceChildren(list);
+    }
+
+    function render() {
+      const total = totalPages();
+      page = Math.min(Math.max(1, page), total);
+      const firstIndex = (page - 1) * pageSize;
+      const visiblePosts = new Set(filteredPosts.slice(firstIndex, firstIndex + pageSize));
+      let visibleIndex = 0;
+
+      for (const post of posts) {
+        const visible = visiblePosts.has(post);
+        post.element.hidden = !visible;
+        if (post.separator) post.separator.hidden = !visible || visibleIndex === 0;
+        if (visible) visibleIndex += 1;
+      }
+
+      if (resultCount) resultCount.textContent = `${filteredPosts.length} results`;
+      renderPagination();
+    }
+
+    function setPage(nextPage: number, method: "pushState" | "replaceState") {
+      page = Math.min(Math.max(1, nextPage), totalPages());
+      updatePageInUrl(page, method);
+      render();
+    }
+
+    function onSearchInput() {
+      const nextSearch = searchInput?.value ?? "";
+
+      if (page !== 1) {
+        page = 1;
+        updatePageInUrl(page, "replaceState");
+        render();
+      }
+
+      window.clearTimeout(searchTimer);
+      searchTimer = window.setTimeout(() => {
+        const query = nextSearch.toLowerCase();
+        filteredPosts = posts.filter(
+          (post) =>
+            post.title.includes(query) ||
+            post.tags.some((tag) => tag.includes(query)) ||
+            post.category.includes(query),
+        );
+        render();
+      }, 300);
+    }
+
+    function onPaginationClick(event: MouseEvent) {
+      const link = (event.target as Element).closest<HTMLAnchorElement>("[data-post-page]");
+      if (
+        !link ||
+        event.defaultPrevented ||
+        event.button !== 0 ||
+        event.metaKey ||
+        event.ctrlKey ||
+        event.shiftKey ||
+        event.altKey
+      ) {
+        return;
+      }
+
+      event.preventDefault();
+      setPage(Number(link.dataset.postPage), "pushState");
+      window.scrollTo({ top: 0 });
+    }
+
+    function syncPageFromUrl() {
+      page = getPageFromUrl(totalPages());
+      render();
+    }
+
+    searchInput?.addEventListener("input", onSearchInput);
+    pagination?.addEventListener("click", onPaginationClick);
+    window.addEventListener("popstate", syncPageFromUrl);
+    render();
+
+    cleanupPostBrowser = () => {
+      window.clearTimeout(searchTimer);
+      searchInput?.removeEventListener("input", onSearchInput);
+      pagination?.removeEventListener("click", onPaginationClick);
+      window.removeEventListener("popstate", syncPageFromUrl);
+    };
+  }
+
+  initPostBrowser();
+  document.addEventListener("astro:page-load", initPostBrowser);
+</script>

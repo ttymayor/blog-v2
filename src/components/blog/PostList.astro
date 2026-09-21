@@ -1,0 +1,145 @@
+---
+import type { BlogPost } from "@/types/blog";
+import { relativeTime } from "@/lib/utils";
+
+interface Props {
+  posts: BlogPost[];
+  initialPage?: number;
+  pageSize?: number;
+}
+
+const { posts, initialPage = 1, pageSize } = Astro.props;
+const firstVisibleIndex = pageSize ? (initialPage - 1) * pageSize : 0;
+const lastVisibleIndex = pageSize ? firstVisibleIndex + pageSize : posts.length;
+const badgeClass =
+  "inline-flex w-fit shrink-0 items-center justify-center gap-1 overflow-hidden rounded-full border border-transparent px-2 py-0.5 text-xs font-medium whitespace-nowrap transition-[color,box-shadow] [&>svg]:pointer-events-none [&>svg]:size-3";
+---
+
+<div class="group/item-group flex flex-col" data-post-list>
+  {
+    posts.map((post, index) => {
+      const isVisible = index >= firstVisibleIndex && index < lastVisibleIndex;
+      const visibleIndex = index - firstVisibleIndex;
+      const transitionId = post.id.replace(/\//g, "-");
+
+      return (
+        <div
+          data-post-item
+          data-title={post.title.toLowerCase()}
+          data-tags={JSON.stringify(post.tags.map((tag) => tag.toLowerCase()))}
+          data-category={post.category?.toLowerCase() ?? ""}
+          hidden={!isVisible}
+        >
+          <div
+            class="my-1"
+            data-post-separator
+            hidden={!isVisible || visibleIndex === 0}
+          >
+            <div
+              role="separator"
+              aria-orientation="horizontal"
+              class="bg-border h-px w-full shrink-0"
+            />
+          </div>
+          <a
+            href={`/blog/${post.id}`}
+            data-slot="item"
+            data-variant="default"
+            data-size="sm"
+            class="group/item hover:bg-accent/50 focus-visible:border-ring focus-visible:ring-ring/50 -mx-4 flex flex-wrap items-center gap-2.5 rounded-2xl border border-transparent px-4 py-3 text-sm transition-colors duration-100 outline-none focus-visible:ring-[3px]"
+          >
+            {post.heroImage && (
+              <img
+                src={post.heroImage}
+                alt={post.title}
+                class="h-16 object-cover"
+                loading="lazy"
+                decoding="async"
+                style={`view-transition-name: post-hero-${transitionId}`}
+              />
+            )}
+            <div
+              data-slot="item-content"
+              class="flex min-w-0 flex-1 flex-col gap-1 [&+[data-slot=item-content]]:flex-none"
+            >
+              <div
+                data-slot="item-title"
+                class="flex w-fit items-center gap-2 font-serif text-lg leading-snug font-bold"
+                style={`view-transition-name: post-title-${transitionId}`}
+              >
+                {post.title}
+              </div>
+              {post.excerpt && (
+                <p
+                  data-slot="item-description"
+                  class="text-muted-foreground line-clamp-2 truncate text-sm leading-normal font-normal text-balance"
+                >
+                  {post.excerpt}
+                </p>
+              )}
+            </div>
+            <div
+              data-slot="item-footer"
+              class="flex basis-full items-center justify-between gap-2"
+            >
+              <div class="flex flex-wrap items-center gap-1.5">
+                {post.category && (
+                  <span
+                    class:list={[
+                      badgeClass,
+                      "bg-primary text-primary-foreground",
+                    ]}
+                  >
+                    {post.category}
+                  </span>
+                )}
+                {post.tags.map((tag) => (
+                  <span
+                    class:list={[
+                      badgeClass,
+                      "bg-secondary text-secondary-foreground rounded-xs",
+                    ]}
+                  >
+                    {tag}
+                  </span>
+                ))}
+              </div>
+              <time
+                datetime={post.pubDate}
+                data-post-relative-time
+                class="text-muted-foreground shrink-0 text-xs"
+              >
+                {relativeTime(post.pubDate)}
+              </time>
+            </div>
+          </a>
+        </div>
+      );
+    })
+  }
+</div>
+
+<script>
+  import { relativeTime } from "@/lib/utils";
+
+  let relativeTimeTimer: number | undefined;
+
+  function updateRelativeTimes() {
+    const elements = document.querySelectorAll<HTMLElement>(
+      "[data-post-relative-time]",
+    );
+
+    for (const element of elements) {
+      const date = element.getAttribute("datetime");
+      if (date) element.textContent = relativeTime(date);
+    }
+
+    window.clearInterval(relativeTimeTimer);
+    if (elements.length > 0) {
+      relativeTimeTimer = window.setInterval(updateRelativeTimes, 60_000);
+    }
+  }
+
+  updateRelativeTimes();
+  document.addEventListener("astro:page-load", updateRelativeTimes);
+</script>

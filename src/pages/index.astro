@@ -2,7 +2,7 @@
 import BaseLayout from "@/layouts/BaseLayout.astro";
 import ZhuyinTyping from "@/components/ZhuyinTyping.astro";
 import { ArrowRight } from "@lucide/astro";
-import PostList from "@/components/react/blog/PostList";
+import PostList from "@/components/blog/PostList.astro";
 import { SITE_DESCRIPTION } from "@/consts";
 import { getPosts } from "@/lib/blog";
 
@@ -134,7 +134,7 @@ const site_description = [
         >
       </div>
       <!-- <LatestPosts /> -->
-      <PostList client:load posts={latestPosts} />
+      <PostList posts={latestPosts} />
     </section>
   </div>
 </BaseLayout>
