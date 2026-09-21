@@ -6,3 +6,9 @@ minimumReleaseAgeExclude:
   - "@astrojs/mdx@7.0.0"
   - "@astrojs/react@6.0.0"
   - astro@7.0.0 || 7.2.1
+trustPolicyExclude:
+  - chokidar@4.0.3
+  - "@pierre/theme@1.1.0"
+  - jose@4.15.9
+  - reselect@5.1.1
+  - semver@6.3.1
