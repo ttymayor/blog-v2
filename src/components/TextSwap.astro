@@ -1,0 +1,116 @@
+---
+import type { HTMLAttributes } from "astro/types";
+
+import { cn } from "@/lib/utils";
+
+type TextSwapState = "a" | "b";
+
+type Props = Omit<HTMLAttributes<"span">, "data-state"> & {
+  textA: string;
+  textB: string;
+  state?: TextSwapState;
+};
+
+const {
+  textA,
+  textB,
+  state = "a",
+  class: className,
+  ...props
+} = Astro.props;
+const initialText = state === "a" ? textA : textB;
+---
+
+<span
+  {...props}
+  class={cn("t-text-swap", className)}
+  data-text-swap
+  data-state={state}
+  data-text-a={textA}
+  data-text-b={textB}
+>
+  {initialText}
+</span>
+
+<script>
+  type TextSwapState = "a" | "b";
+
+  function parseCssTime(value: string): number {
+    const trimmed = value.trim();
+    const amount = Number.parseFloat(trimmed);
+    if (!Number.isFinite(amount)) return 0;
+    return trimmed.endsWith("ms") ? amount : amount * 1000;
+  }
+
+  function getTransitionTime(element: HTMLElement): number {
+    const style = getComputedStyle(element);
+    const durations = style.transitionDuration.split(",").map(parseCssTime);
+    const delays = style.transitionDelay.split(",").map(parseCssTime);
+    const count = Math.max(durations.length, delays.length);
+    let longest = 0;
+
+    for (let index = 0; index < count; index += 1) {
+      const duration = durations[index % durations.length] ?? 0;
+      const delay = delays[index % delays.length] ?? 0;
+      longest = Math.max(longest, duration + delay);
+    }
+
+    return longest;
+  }
+
+  function getState(element: HTMLElement): TextSwapState {
+    return element.dataset.state === "b" ? "b" : "a";
+  }
+
+  function getText(element: HTMLElement, state: TextSwapState): string {
+    return state === "a"
+      ? (element.dataset.textA ?? "")
+      : (element.dataset.textB ?? "");
+  }
+
+  function initTextSwap() {
+    const elements = document.querySelectorAll<HTMLElement>("[data-text-swap]");
+
+    elements.forEach((element) => {
+      if (element.dataset.textSwapInit) return;
+      element.dataset.textSwapInit = "true";
+
+      let busy = false;
+
+      function sync() {
+        const target = getText(element, getState(element));
+        if (busy || element.textContent === target) return;
+
+        const duration = getTransitionTime(element);
+        if (duration <= 0 || matchMedia("(prefers-reduced-motion: reduce)").matches) {
+          element.textContent = target;
+          element.classList.remove("is-exit", "is-enter-start");
+          return;
+        }
+
+        busy = true;
+        element.classList.add("is-exit");
+
+        window.setTimeout(() => {
+          const latestTarget = getText(element, getState(element));
+          element.textContent = latestTarget;
+          element.classList.remove("is-exit");
+          element.classList.add("is-enter-start");
+          void element.offsetWidth;
+          element.classList.remove("is-enter-start");
+          busy = false;
+          sync();
+        }, duration);
+      }
+
+      const observer = new MutationObserver(sync);
+      observer.observe(element, {
+        attributes: true,
+        attributeFilter: ["data-state", "data-text-a", "data-text-b"],
+      });
+    });
+  }
+
+  initTextSwap();
+  document.addEventListener("astro:page-load", initTextSwap);
+</script>
