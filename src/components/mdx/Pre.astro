@@ -1,5 +1,6 @@
 ---
 import { Copy, Check } from "@lucide/astro";
+import IconSwap from "@/components/IconSwap.astro";
 
 const { class: className, ...props } = Astro.props;
 const dataLanguage = props["data-language"];
@@ -16,14 +17,10 @@ const lang =
       class="copy-btn ml-auto opacity-0 group-hover:opacity-100"
       aria-label="Copy code"
     >
-      <span class="t-icon-swap" data-state="a">
-        <span class="t-icon" data-icon="a">
-          <Copy size={14} />
-        </span>
-        <span class="t-icon" data-icon="b">
-          <Check size={14} />
-        </span>
-      </span>
+      <IconSwap>
+        <Copy slot="iconA" size={14} />
+        <Check slot="iconB" size={14} />
+      </IconSwap>
     </button>
   </div>
   <pre class={className} {...props}><slot /></pre>

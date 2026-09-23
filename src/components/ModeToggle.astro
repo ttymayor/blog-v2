@@ -1,0 +1,77 @@
+---
+import { Moon, Sun } from "@lucide/astro";
+
+import IconSwap from "@/components/IconSwap.astro";
+---
+
+<theme-toggle>
+  <button
+    type="button"
+    data-theme-toggle
+    data-slot="button"
+    data-variant="full-ghost"
+    data-size="icon"
+    aria-label="切換至淺色模式"
+    class="focus-visible:border-ring focus-visible:ring-ring/50 inline-flex size-9 shrink-0 cursor-pointer items-center justify-center gap-2 rounded-full bg-transparent text-sm font-medium whitespace-nowrap transition-all outline-none hover:text-accent-foreground focus-visible:ring-[3px] [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4"
+  >
+    <IconSwap themeIcon data-theme-swap>
+      <Sun slot="iconA" />
+      <Moon slot="iconB" />
+    </IconSwap>
+  </button>
+</theme-toggle>
+
+<script>
+  class ThemeToggle extends HTMLElement {
+    private button: HTMLButtonElement | null = null;
+    private iconSwap: HTMLElement | null = null;
+    private abortController: AbortController | null = null;
+
+    connectedCallback() {
+      this.abortController?.abort();
+      this.abortController = new AbortController();
+      this.button = this.querySelector<HTMLButtonElement>("[data-theme-toggle]");
+      this.iconSwap = this.querySelector<HTMLElement>("[data-theme-swap]");
+
+      const signal = this.abortController.signal;
+      this.button?.addEventListener("click", this.toggleTheme, { signal });
+      document.addEventListener("themechange", this.syncTheme, { signal });
+      this.syncTheme();
+    }
+
+    disconnectedCallback() {
+      this.abortController?.abort();
+    }
+
+    private toggleTheme = () => {
+      const isDark = document.documentElement.classList.contains("dark");
+      const theme = isDark ? "light" : "dark";
+
+      document.documentElement.classList.toggle("dark", theme === "dark");
+      localStorage.setItem("theme", theme);
+      document.dispatchEvent(
+        new CustomEvent("themechange", { detail: { theme } }),
+      );
+    };
+
+    private syncTheme = () => {
+      const isDark = document.documentElement.classList.contains("dark");
+
+      this.iconSwap?.setAttribute("data-state", isDark ? "b" : "a");
+      this.button?.setAttribute(
+        "aria-label",
+        isDark ? "切換至淺色模式" : "切換至深色模式",
+      );
+    };
+  }
+
+  if (!customElements.get("theme-toggle")) {
+    customElements.define("theme-toggle", ThemeToggle);
+  }
+</script>
+
+<style>
+  theme-toggle {
+    display: inline-flex;
+  }
+</style>

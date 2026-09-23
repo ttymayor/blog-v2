@@ -116,10 +116,8 @@
   transform: scale(var(--icon-swap-start-scale));
 }
 
-/* Dark-mode CSS override: show icon B without waiting for React hydration.
-   Prevents Sun→Moon flash for dark-mode users on first load.
-   When data-state syncs to "b" in useEffect the computed values stay the same,
-   so no CSS transition fires. */
+/* Dark-mode CSS override: show icon B before the theme-toggle element
+   initializes, preventing a Sun→Moon flash on first load. */
 .dark .t-icon-swap[data-theme-icon] .t-icon[data-icon="b"] {
   opacity: 1;
   filter: blur(0);

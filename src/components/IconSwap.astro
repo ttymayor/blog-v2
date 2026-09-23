@@ -1,0 +1,33 @@
+---
+import type { HTMLAttributes } from "astro/types";
+
+import { cn } from "@/lib/utils";
+
+type IconSwapState = "a" | "b";
+
+type Props = Omit<HTMLAttributes<"span">, "data-state"> & {
+  state?: IconSwapState;
+  themeIcon?: boolean;
+};
+
+const {
+  state = "a",
+  themeIcon = false,
+  class: className,
+  ...props
+} = Astro.props;
+---
+
+<span
+  {...props}
+  class={cn("t-icon-swap", className)}
+  data-state={state}
+  data-theme-icon={themeIcon ? "" : undefined}
+>
+  <span class="t-icon" data-icon="a">
+    <slot name="iconA" />
+  </span>
+  <span class="t-icon" data-icon="b">
+    <slot name="iconB" />
+  </span>
+</span>

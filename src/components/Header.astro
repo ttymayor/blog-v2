@@ -2,10 +2,10 @@
 import { Image } from "astro:assets";
 import AvatarImage from "@/assets/avatar.webp";
 import { SITE_TITLE } from "@/consts";
-import { ModeToggle } from "@/components/react/ModeToggle";
+import ModeToggle from "@/components/ModeToggle.astro";
 import { BookOpenText, Menu, PenTool, User } from "@lucide/astro";
 import { cn } from "@/lib/utils";
-import Drawer from "./ui/Drawer.astro";
+import Drawer from "@/components/ui/Drawer.astro";
 
 const pathname = Astro.url.pathname.replace(import.meta.env.BASE_URL, "");
 
@@ -72,7 +72,7 @@ const isBlogPost = /^blog\/.+/.test(pathname);
       }
     </div>
     <div class="flex flex-row items-center justify-around md:hidden">
-      <ModeToggle client:idle />
+      <ModeToggle />
       <Drawer id="settings" title="目錄" description="網站目錄">
         <span
           slot="trigger"
