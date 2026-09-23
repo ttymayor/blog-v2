@@ -166,6 +166,10 @@
     text-autospace: normal;
   }
 
+  button:not(:disabled), [role="button"]:not(:disabled) {
+    cursor: pointer;
+  }
+
   ::selection {
     @apply bg-blue-300/50 dark:bg-blue-200/30;
   }
