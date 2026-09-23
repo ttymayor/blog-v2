@@ -1,7 +1,6 @@
 ---
 import { render } from "astro:content";
 import BaseLayout from "@/layouts/BaseLayout.astro";
-import BlankBlock from "@/components/BlankBlock.astro";
 import RelativeTime from "@/components/react/RelativeTime";
 import { getJottings } from "@/lib/jotting";
 import Separator from "@/components/ui/Separator.astro";
@@ -17,7 +16,6 @@ const renderedJottings = await Promise.all(
 ---
 
 <BaseLayout title="隨筆" description="一些長短不一、尚未整理成文章的個人抒發。">
-  <BlankBlock />
   <div class="mx-auto w-full max-w-2xl px-5 py-12">
     <header class="mb-8 font-serif">
       <h1 class="mb-3 text-4xl font-bold">隨筆</h1>

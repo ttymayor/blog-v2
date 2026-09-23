@@ -40,8 +40,8 @@ export function ModeToggle() {
       className="cursor-pointer rounded-full"
     >
       <IconSwap
-        iconA={<Sun className="h-[1.2rem] w-[1.2rem]" />}
-        iconB={<Moon className="h-[1.2rem] w-[1.2rem]" />}
+        iconA={<Sun />}
+        iconB={<Moon />}
         state={theme === "light" ? "a" : "b"}
         data-theme-icon=""
       />

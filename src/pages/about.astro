@@ -15,7 +15,6 @@ import slideLinux101 from "@/assets/slides/20250925-linux.png";
 import slideUnUsefulTool from "@/assets/slides/20260430-un-useful-tool.png";
 import { SITE_TITLE } from "@/consts";
 import BaseLayout from "@/layouts/BaseLayout.astro";
-import BlankBlock from "@/components/BlankBlock.astro";
 import ExternalLink from "@/components/about/ExternalLink.astro";
 import InlineIcon from "@/components/about/InlineIcon.astro";
 
@@ -61,8 +60,6 @@ const ai_agents: string[] = [
   description="關於 tantuyu：寫程式、使用 Linux，也喜歡資安、喜劇與漫才。"
   ogImage="/og/about.png"
 >
-  <BlankBlock />
-
   <main class="bg-background relative z-10 px-6 pb-24">
     <article class="mx-auto max-w-3xl pt-14 md:pt-20">
       <header
@@ -237,19 +234,26 @@ const ai_agents: string[] = [
         <h2 id="music">Music</h2>
         <p>
           下面這個這是我最近很喜歡的歌手：陳嫺靜。近期還有
-          <ExternalLink href="https://open.spotify.com/artist/1Se0FtmWSFmL81n85repGg">
+          <ExternalLink
+            href="https://open.spotify.com/artist/1Se0FtmWSFmL81n85repGg"
+          >
             someshiit 山姆
           </ExternalLink>，如果是樂團的話，聽最多的應該是
-          <ExternalLink href="https://open.spotify.com/artist/5AO5nzx14PfLNfVgYVd0rw">
+          <ExternalLink
+            href="https://open.spotify.com/artist/5AO5nzx14PfLNfVgYVd0rw"
+          >
             Crispy脆樂團
           </ExternalLink>，流行音樂的話是
-          <ExternalLink href="https://open.spotify.com/artist/2JBUyLiFvpFPWdZGqIGYLD">
+          <ExternalLink
+            href="https://open.spotify.com/artist/2JBUyLiFvpFPWdZGqIGYLD"
+          >
             盧廣仲
           </ExternalLink> 與
-          <ExternalLink href="https://open.spotify.com/artist/0rARfHZ4ZteUlzbAuxUwAs">
+          <ExternalLink
+            href="https://open.spotify.com/artist/0rARfHZ4ZteUlzbAuxUwAs"
+          >
             洪佩瑜
           </ExternalLink>。
-
         </p>
 
         <div class="relative mt-8 overflow-hidden rounded-4xl" style="">

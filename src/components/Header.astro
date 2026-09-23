@@ -3,13 +3,13 @@ import { Image } from "astro:assets";
 import AvatarImage from "@/assets/avatar.webp";
 import { SITE_TITLE } from "@/consts";
 import { ModeToggle } from "@/components/react/ModeToggle";
-import { BookOpenText, PenTool, User, House } from "@lucide/astro";
+import { BookOpenText, Menu, PenTool, User } from "@lucide/astro";
 import { cn } from "@/lib/utils";
+import Drawer from "./ui/Drawer.astro";
 
 const pathname = Astro.url.pathname.replace(import.meta.env.BASE_URL, "");
 
 const navItems = [
-  { href: "/", label: "首頁", Icon: House, isHome: true },
   { href: "/jotting", label: "隨筆", Icon: BookOpenText },
   { href: "/blog", label: "文章", Icon: PenTool },
   { href: "/about", label: "關於", Icon: User },
@@ -21,45 +21,35 @@ const isBlogPost = /^blog\/.+/.test(pathname);
 <header
   id="site-header"
   data-blog-post={isBlogPost ? "" : undefined}
-  class="group pointer-events-auto fixed bottom-0 left-0 z-50 flex w-full flex-row items-center justify-center md:top-0 md:bottom-auto"
+  class="group pointer-events-auto sticky top-0 z-50 flex w-full flex-row items-center justify-center"
 >
   <nav
     id="nav-container"
     class={cn(
-      "relative flex w-full items-center justify-around border-t p-2 shadow-xl transition-all duration-300 ease-in-out backdrop-blur-sm bg-linear-to-b from-card/95 via-card/80 to-card/95",
-      // small screen dark mode
-      "dark:border-white/25 dark:from-card/95 dark:via-card/80 dark:to-card/95",
+      "flex w-full md:max-w-5xl items-center rounded-none justify-between border-0 md:border-t p-3 shadow-lg transition-all duration-300 ease-in-out backdrop-blur-sm bg-linear-to-b from-card/95 via-card/80 to-card/95",
       // computer light mode
-      "md:border-white/5 md:mx-4 md:mt-4 md:w-full md:max-w-5xl md:justify-between md:rounded-full md:p-4 md:backdrop-blur-sm md:from-card/95 md:via-card/80 md:to-card/95",
-      // computer dark mode
-      "md:dark:border-white/25 md:dark:from-card/95 md:dark:via-card/80 md:dark:to-card/95",
+      "md:border-white/25 md:mx-4 md:mt-4 md:justify-between md:rounded-full md:p-4",
     )}
     transition:name="header"
   >
     <!-- Desktop Logo (Hidden on Mobile) -->
-    <a
-      href="/"
-      class="relative z-10 hidden shrink-0 items-center gap-3 transition-all active:scale-98 md:flex"
-    >
+    <a href="/" class="flex shrink-0 items-center gap-3">
       <Image
         inferSize
         src={AvatarImage}
         alt="Avatar"
-        class="h-10 w-10 rounded-full object-cover"
+        class="size-10 rounded-full object-cover"
       />
-      <h2 class="m-0 text-[1em] font-black">
+      <h2 class="text-[1.25em] font-bold">
         {SITE_TITLE}
       </h2>
     </a>
 
-    <div
-      class="flex flex-1 flex-row items-center justify-around md:flex-none md:justify-end md:gap-4"
-    >
+    <!-- Navigation Links (Hidden on Mobile) -->
+    <div class="hidden md:flex md:flex-row md:items-center md:gap-2">
       {
-        navItems.map(({ href, label, Icon, isHome }) => {
-          const isActive = isHome
-            ? pathname === "" || pathname === "/"
-            : pathname.startsWith(href.replace("/", ""));
+        navItems.map(({ href, label, Icon }) => {
+          const isActive = pathname.startsWith(href.replace("/", ""));
 
           return (
             <a
@@ -67,73 +57,38 @@ const isBlogPost = /^blog\/.+/.test(pathname);
               data-nav-item
               data-active={isActive ? "true" : undefined}
               class:list={[
-                "relative z-10 inline-flex flex-col items-center justify-center gap-1 rounded-full whitespace-nowrap no-underline transition-all md:flex-row md:gap-2",
-                "h-12 w-16 md:h-fit md:w-fit md:px-3 md:py-2",
-                isHome ? "md:hidden" : "",
+                "inline-flex flex-row items-center justify-center gap-1 rounded-full whitespace-nowrap no-underline transition-all",
+                "h-fit w-fit px-3 py-2",
                 isActive
-                  ? "md:text-foreground md:dark:text-foreground text-[#745525] dark:text-[#d0ae7d]"
+                  ? "text-foreground dark:text-foreground"
                   : "text-foreground/60 md:text-foreground/80 hover:text-foreground",
               ]}
             >
-              <Icon class="size-5 md:size-5" />
-              <span class="text-[10px] font-semibold md:text-sm">{label}</span>
+              <Icon class="size-5" />
+              <span class="text-sm">{label}</span>
             </a>
           );
         })
       }
-      <div
-        class="flex h-12 w-16 flex-col items-center justify-center md:hidden"
-      >
-        <ModeToggle client:idle />
-      </div>
+    </div>
+    <div class="flex flex-row items-center justify-around md:hidden">
+      <ModeToggle client:idle />
+      <!-- <Drawer id="settings" title="">
+        <span slot="trigger">
+          <Menu class="size-5" />
+        </span>
+
+        <div>設定內容</div>
+
+        <button
+          slot="footer"
+          type="button"
+          data-drawer-close
+          class="rounded-md border px-4 py-2"
+        >
+          關閉
+        </button>
+      </Drawer> -->
     </div>
   </nav>
 </header>
-
-<script>
-  function initHeaderScroll() {
-    const header = document.getElementById("site-header");
-    if (!header || !("blogPost" in header.dataset)) return;
-
-    const nav = document.getElementById("nav-container");
-    if (!nav) return;
-
-    let scrolled = false;
-
-    const update = () => {
-      const shouldScroll = window.scrollY > 30;
-      if (shouldScroll === scrolled) return;
-      scrolled = shouldScroll;
-      header.classList.toggle("header-scrolled", scrolled);
-    };
-
-    window.addEventListener("scroll", update, { passive: true });
-    update();
-  }
-
-  initHeaderScroll();
-  document.addEventListener("astro:page-load", initHeaderScroll);
-</script>
-
-<style is:global>
-  @media (min-width: 1024px) {
-    #site-header {
-      transition:
-        height 0.3s ease,
-        align-items 0s;
-    }
-
-    #site-header.header-scrolled {
-      height: 1.5rem;
-      align-items: flex-start;
-    }
-
-    #site-header.header-scrolled #nav-container {
-      transform: translateY(-100%);
-    }
-
-    #site-header.header-scrolled:hover #nav-container {
-      transform: translateY(0);
-    }
-  }
-</style>

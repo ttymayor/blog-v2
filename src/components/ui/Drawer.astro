@@ -1,0 +1,286 @@
+---
+interface Props {
+  id: string;
+  title?: string;
+  description?: string;
+  triggerLabel?: string;
+  triggerClass?: string;
+}
+
+const {
+  id,
+  title = "選單",
+  description,
+  triggerLabel = `開啟${title}`,
+  triggerClass,
+} = Astro.props;
+
+const titleId = `${id}-title`;
+const descriptionId = `${id}-description`;
+const contentId = `${id}-content`;
+const hasFooter = Astro.slots.has("footer");
+---
+
+<astro-drawer data-drawer-root>
+  <button
+    type="button"
+    data-drawer-trigger
+    aria-controls={contentId}
+    aria-expanded="false"
+    aria-label={triggerLabel}
+    class:list={[
+      "focus-visible:ring-ring/50 inline-flex shrink-0 cursor-pointer items-center justify-center outline-none focus-visible:ring-[3px]",
+      triggerClass,
+    ]}
+  >
+    <slot name="trigger">{title}</slot>
+  </button>
+
+  <div
+    id={id}
+    data-drawer-layer
+    data-state="closed"
+    aria-hidden="true"
+    class="drawer-layer fixed inset-0 z-1000"
+  >
+    <button
+      type="button"
+      data-drawer-overlay
+      tabindex="-1"
+      aria-label={`關閉${title}`}
+      class="drawer-overlay absolute inset-0 cursor-default bg-black/50"
+    ></button>
+
+    <section
+      id={contentId}
+      data-drawer-content
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby={titleId}
+      aria-describedby={description ? descriptionId : undefined}
+      tabindex="-1"
+      class="drawer-content bg-background fixed inset-y-0 right-0 z-10 flex h-full w-3/4 max-w-sm flex-col border-l shadow-lg outline-none"
+    >
+      <header class="grid gap-1.5 p-4 text-center sm:text-left">
+        <div class="flex items-start justify-between gap-4">
+          <div class="min-w-0">
+            <h2 id={titleId} class="text-foreground font-semibold">{title}</h2>
+            {
+              description && (
+                <p
+                  id={descriptionId}
+                  class="text-muted-foreground mt-1 text-sm"
+                >
+                  {description}
+                </p>
+              )
+            }
+          </div>
+          <button
+            type="button"
+            data-drawer-close
+            aria-label={`關閉${title}`}
+            class="text-muted-foreground hover:bg-accent hover:text-accent-foreground focus-visible:ring-ring/50 -mt-2 -mr-2 inline-flex size-10 shrink-0 cursor-pointer items-center justify-center rounded-md transition-colors outline-none focus-visible:ring-[3px]"
+          >
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              class="size-5"
+              aria-hidden="true"
+            >
+              <path d="M18 6 6 18"></path>
+              <path d="m6 6 12 12"></path>
+            </svg>
+          </button>
+        </div>
+      </header>
+
+      <div class="min-h-0 flex-1 overflow-y-auto px-4 pb-4">
+        <slot />
+      </div>
+
+      {
+        hasFooter && (
+          <footer class="mt-auto flex flex-col gap-2 border-t p-4">
+            <slot name="footer" />
+          </footer>
+        )
+      }
+    </section>
+  </div>
+</astro-drawer>
+
+<script>
+  const focusableSelector = [
+    "a[href]",
+    "button:not([disabled])",
+    "input:not([disabled])",
+    "select:not([disabled])",
+    "textarea:not([disabled])",
+    '[tabindex]:not([tabindex="-1"])',
+  ].join(",");
+
+  class AstroDrawer extends HTMLElement {
+    private trigger: HTMLButtonElement | null = null;
+    private layer: HTMLElement | null = null;
+    private content: HTMLElement | null = null;
+    private abortController: AbortController | null = null;
+    private previousBodyOverflow = "";
+
+    connectedCallback() {
+      this.abortController?.abort();
+      this.abortController = new AbortController();
+
+      this.trigger = this.querySelector<HTMLButtonElement>(
+        "[data-drawer-trigger]",
+      );
+      this.layer = this.querySelector<HTMLElement>("[data-drawer-layer]");
+      this.content = this.querySelector<HTMLElement>("[data-drawer-content]");
+
+      const signal = this.abortController.signal;
+      this.trigger?.addEventListener("click", () => this.open(), { signal });
+      this.querySelectorAll<HTMLElement>(
+        "[data-drawer-close], [data-drawer-overlay]",
+      ).forEach((element) =>
+        element.addEventListener("click", () => this.close(), { signal }),
+      );
+      this.querySelectorAll<HTMLAnchorElement>(
+        "[data-drawer-content] a[href]",
+      ).forEach((link) =>
+        link.addEventListener("click", () => this.close(), { signal }),
+      );
+      document.addEventListener(
+        "keydown",
+        (event) => this.handleKeydown(event),
+        { signal },
+      );
+    }
+
+    disconnectedCallback() {
+      this.abortController?.abort();
+      if (this.isOpen()) this.unlockPage();
+    }
+
+    private isOpen() {
+      return this.layer?.dataset.state === "open";
+    }
+
+    private open() {
+      if (!this.layer || !this.content || this.isOpen()) return;
+
+      this.previousBodyOverflow = document.body.style.overflow;
+      document.body.style.overflow = "hidden";
+      this.layer.dataset.state = "open";
+      this.layer.setAttribute("aria-hidden", "false");
+      this.trigger?.setAttribute("aria-expanded", "true");
+      this.content.focus({ preventScroll: true });
+    }
+
+    private close() {
+      if (!this.layer || !this.isOpen()) return;
+
+      this.layer.dataset.state = "closed";
+      this.layer.setAttribute("aria-hidden", "true");
+      this.trigger?.setAttribute("aria-expanded", "false");
+      this.unlockPage();
+      this.trigger?.focus({ preventScroll: true });
+    }
+
+    private unlockPage() {
+      document.body.style.overflow = this.previousBodyOverflow;
+    }
+
+    private handleKeydown(event: KeyboardEvent) {
+      if (!this.isOpen() || !this.content) return;
+
+      if (event.key === "Escape") {
+        event.preventDefault();
+        this.close();
+        return;
+      }
+
+      if (event.key !== "Tab") return;
+
+      const focusable = Array.from(
+        this.content.querySelectorAll<HTMLElement>(focusableSelector),
+      ).filter(
+        (element) =>
+          !element.hasAttribute("disabled") &&
+          element.getClientRects().length > 0,
+      );
+
+      if (focusable.length === 0) {
+        event.preventDefault();
+        this.content.focus();
+        return;
+      }
+
+      const first = focusable[0];
+      const last = focusable[focusable.length - 1];
+      const activeElement = document.activeElement;
+
+      if (
+        event.shiftKey &&
+        (activeElement === first || activeElement === this.content)
+      ) {
+        event.preventDefault();
+        last.focus();
+      } else if (!event.shiftKey && activeElement === last) {
+        event.preventDefault();
+        first.focus();
+      }
+    }
+  }
+
+  if (!customElements.get("astro-drawer")) {
+    customElements.define("astro-drawer", AstroDrawer);
+  }
+</script>
+
+<style>
+  astro-drawer {
+    display: contents;
+  }
+
+  .drawer-layer {
+    pointer-events: none;
+    visibility: hidden;
+    transition: visibility 0s linear 300ms;
+  }
+
+  .drawer-overlay {
+    opacity: 0;
+    transition: opacity 300ms ease;
+  }
+
+  .drawer-content {
+    transform: translateX(100%);
+    transition: transform 300ms ease-out;
+  }
+
+  .drawer-layer[data-state="open"] {
+    pointer-events: auto;
+    visibility: visible;
+    transition-delay: 0s;
+  }
+
+  .drawer-layer[data-state="open"] .drawer-overlay {
+    opacity: 1;
+  }
+
+  .drawer-layer[data-state="open"] .drawer-content {
+    transform: translateX(0);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .drawer-layer,
+    .drawer-overlay,
+    .drawer-content {
+      transition-duration: 0.01ms;
+    }
+  }
+</style>

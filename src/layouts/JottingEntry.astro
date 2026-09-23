@@ -1,6 +1,5 @@
 ---
 import BaseLayout from "@/layouts/BaseLayout.astro";
-import BlankBlock from "@/components/BlankBlock.astro";
 import { ArrowLeft, Dot } from "@lucide/astro";
 import RelativeTime from "@/components/react/RelativeTime";
 
@@ -14,7 +13,6 @@ const persistName = `jotting-content-${id}`;
 ---
 
 <BaseLayout title="隨筆">
-  <BlankBlock />
   <div class="mx-auto w-full max-w-2xl px-5 py-12">
     <a
       href="/jotting"
