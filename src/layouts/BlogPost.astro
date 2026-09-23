@@ -1,7 +1,6 @@
 ---
 import BaseLayout from "@/layouts/BaseLayout.astro";
 import type { CollectionEntry } from "astro:content";
-import type { Dayjs } from "dayjs";
 import type { BlogPost as BlogPostSummary } from "@/types/blog";
 import { Image, getImage } from "astro:assets";
 import Separator from "@/components/ui/Separator.astro";
@@ -31,7 +30,6 @@ type Props = CollectionEntry<"blog">["data"] & {
   headings: Heading[];
   minutesRead: string;
   wordCount: number;
-  lastModified: Dayjs;
   readMinutes: number;
   slug: string;
   body?: string;
@@ -49,7 +47,6 @@ const {
   minutesRead,
   wordCount,
   pubDate,
-  lastModified,
   readMinutes,
   slug,
   body,
@@ -64,14 +61,11 @@ const ogImage = heroImage
     ? `/og/${slug}.png`
     : undefined;
 
-const modifiedDate: Date | undefined = lastModified?.isValid?.()
-  ? lastModified.toDate()
-  : undefined;
+const publishedAt = new Date(pubDate).getTime();
 const readTime: number = Math.round(readMinutes);
 const isOutdated =
-  modifiedDate &&
-  !isNaN(modifiedDate.getTime()) &&
-  Date.now() - modifiedDate.getTime() > 180 * 24 * 60 * 60 * 1000;
+  Number.isFinite(publishedAt) &&
+  Date.now() - publishedAt > 180 * 24 * 60 * 60 * 1000;
 
 let aiPrompt = "";
 let encodedPrompt = "";
@@ -113,69 +107,63 @@ if (chatWithAI) {
                 src={heroImage}
                 alt="hero image"
                 class="rounded-xl"
-                transition:name={`post-hero-${slug.replaceAll("/", "-")}`}
+                transition:name={`article-hero-${slug.replaceAll("/", "-")}`}
               />
             </div>
           )
         }
-        <header class="mb-4" data-post-header>
-          <div class="mb-4 flex flex-col gap-2">
+        <section class="mb-4 flex flex-col gap-4" data-article-header>
+          {
+            (category || tags.length > 0) && (
+              <div class="flex flex-row flex-wrap gap-2">
+                {category && <Badge variant="category">{category}</Badge>}
+                {tags.length > 0 &&
+                  tags.map((tag) => (
+                    <Badge variant="tag" class="">
+                      #{tag}
+                    </Badge>
+                  ))}
+              </div>
+            )
+          }
+          <h1
+            id="article-title"
+            class="text-[clamp(1.75rem, 4vw, 2.25rem)] m-0 w-fit font-serif text-3xl font-bold md:text-4xl"
+            transition:name={`article-title-${slug.replaceAll("/", "-")}`}
+          >
+            {title}
+          </h1>
+          <div
+            class="text-muted-foreground flex flex-wrap items-center gap-4 text-xs"
+          >
             {
-              (category || tags.length > 0) && (
-                <div class="flex flex-row flex-wrap gap-2">
-                  {category && <Badge variant="category">{category}</Badge>}
-                  {tags.length > 0 &&
-                    tags.map((tag) => (
-                      <Badge variant="tag" class="">
-                        #{tag}
-                      </Badge>
-                    ))}
+              pubDate && (
+                <div class="flex items-center gap-1.5">
+                  <Calendar class="size-4" />
+                  <span class="font-serif font-bold">
+                    <RelativeTime dateStr={pubDate} />
+                  </span>
                 </div>
               )
             }
-            <h1
-              id="article-title"
-              class="text-[clamp(1.75rem, 4vw, 2.25rem)] m-0 w-fit font-serif text-3xl font-bold md:text-4xl"
-              transition:name={`post-title-${slug.replaceAll("/", "-")}`}
-            >
-              {title}
-            </h1>
+            {
+              minutesRead && (
+                <div class="flex items-center gap-1.5">
+                  <Timer class="size-4" />
+                  <span class="font-serif font-bold">{readTime} 分鐘</span>
+                </div>
+              )
+            }
+            {
+              wordCount && (
+                <div class="flex items-center gap-1.5">
+                  <Type class="size-4" />
+                  <span class="font-serif font-bold">約 {wordCount} 字</span>
+                </div>
+              )
+            }
           </div>
-          <div
-            class="flex flex-wrap items-center justify-between gap-x-4 gap-y-3"
-          >
-            <div
-              class="text-muted-foreground flex flex-wrap items-center gap-4 text-xs"
-            >
-              {
-                modifiedDate && (
-                  <div class="flex items-center gap-1.5">
-                    <Calendar class="size-4" />
-                    <span class="font-serif font-bold">
-                      <RelativeTime dateStr={pubDate} />
-                    </span>
-                  </div>
-                )
-              }
-              {
-                minutesRead && (
-                  <div class="flex items-center gap-1.5">
-                    <Timer class="size-4" />
-                    <span class="font-serif font-bold">{readTime} 分鐘</span>
-                  </div>
-                )
-              }
-              {
-                wordCount && (
-                  <div class="flex items-center gap-1.5">
-                    <Type class="size-4" />
-                    <span class="font-serif font-bold">約 {wordCount} 字</span>
-                  </div>
-                )
-              }
-            </div>
-          </div>
-        </header>
+        </section>
 
         <!-- Warning for outdated post -->
         {

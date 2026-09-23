@@ -29,7 +29,7 @@ const badgeClass =
         class="h-16 object-cover"
         loading="lazy"
         decoding="async"
-        transition:name={`post-hero-${transitionId}`}
+        transition:name={`article-hero-${transitionId}`}
       />
     )
   }
@@ -40,7 +40,7 @@ const badgeClass =
     <div
       data-slot="item-title"
       class="flex w-fit items-center gap-2 font-serif text-lg leading-snug font-bold"
-      style={`view-transition-name: post-title-${transitionId}`}
+      style={`view-transition-name: article-title-${transitionId}`}
     >
       {post.title}
     </div>

@@ -35,7 +35,7 @@ const { post } = Astro.props;
         </div>
         <h3
           class="mb-0 flex items-center gap-2 text-lg font-bold"
-          transition:name={`post-title-${post.id.replace(/\//g, "-")}`}
+          transition:name={`article-title-${post.id.replace(/\//g, "-")}`}
         >
           {post.title}
         </h3>

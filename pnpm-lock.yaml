@@ -83,9 +83,6 @@ importers:
       cn:
         specifier: ^0.4.0
         version: 0.4.0
-      dayjs:
-        specifier: ^1.11.21
-        version: 1.11.21
       geist:
         specifier: ^1.7.2
         version: 1.7.2(next@16.2.3(@babel/core@7.29.7)(react-dom@19.2.7(react@19.2.7))(react@19.2.7))
@@ -3066,8 +3063,6 @@ packages:
     resolution: {integrity: sha512-ndfJ/JxxMd3nw31uyKoY2naivF+r29V+Lc0svZxe1JvvIRmi8hUsrMvdOwgS1o6uBHmiz91geQ0ylPP0aj1VUA==}
     engines: {node: '>=12'}
 
-  dayjs@1.11.21:
-    resolution: {integrity: sha512-98IT+HOahAisibz/yjKbzuOBwYcjJ7BCLPzARyHiyEBmRz4fatF+KPJszEHXsGYjUG234aH/cOjW1wwTbKUZlA==}
 
   debug@4.4.3:
     resolution: {integrity: sha512-RGwwWnwQvkVfavKVt22FGLw+xYSdzARwm0ru6DhTVA3umU5hZc28V3kO4stgYryrTlLpuvgI9GiijltAjNbcqA==}
@@ -7746,7 +7741,6 @@ snapshots:
 
   d3-timer@3.0.1: {}
 
-  dayjs@1.11.21: {}
 
   debug@4.4.3:
     dependencies:
