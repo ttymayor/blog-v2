@@ -1,7 +1,7 @@
 ---
 import { render } from "astro:content";
 import BaseLayout from "@/layouts/BaseLayout.astro";
-import RelativeTime from "@/components/react/RelativeTime";
+import RelativeTime from "@/components/RelativeTime.astro";
 import { getJottings } from "@/lib/jotting";
 import Separator from "@/components/ui/Separator.astro";
 import { Dot } from "@lucide/astro";
@@ -58,7 +58,6 @@ const renderedJottings = await Promise.all(
                       >
                         <RelativeTime
                           dateStr={jotting.data.pubDate}
-                          client:load
                         />
                       </time>
                     </header>

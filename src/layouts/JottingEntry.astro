@@ -1,7 +1,7 @@
 ---
 import BaseLayout from "@/layouts/BaseLayout.astro";
 import { ArrowLeft, Dot } from "@lucide/astro";
-import RelativeTime from "@/components/react/RelativeTime";
+import RelativeTime from "@/components/RelativeTime.astro";
 
 interface Props {
   id: string;
@@ -30,7 +30,7 @@ const persistName = `jotting-content-${id}`;
         <span class="text-muted-foreground font-light">@tantuyu</span>
         <Dot class="size-2" />
         <time datetime={pubDate} class="text-muted-foreground font-light">
-          <RelativeTime dateStr={pubDate} client:load />
+          <RelativeTime dateStr={pubDate} />
         </time>
       </header>
       <div

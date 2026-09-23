@@ -17,7 +17,7 @@ import {
 } from "@lucide/astro";
 import Badge from "@/components/ui/Badge.astro";
 import { Button } from "@/components/ui/button";
-import RelativeTime from "@/components/react/RelativeTime";
+import RelativeTime from "@/components/RelativeTime.astro";
 import TegakiRenderer from "tegaki/astro";
 import bundle from "tegaki/fonts/caveat";
 
@@ -124,7 +124,7 @@ if (chatWithAI) {
               (category || tags.length > 0) && (
                 <div class="flex flex-row flex-wrap gap-2">
                   {category && <Badge variant="category">{category}</Badge>}
-                  {tags.length &&
+                  {tags.length > 0 &&
                     tags.map((tag) => (
                       <Badge variant="tag" class="">
                         #{tag}
@@ -152,7 +152,7 @@ if (chatWithAI) {
                   <div class="flex items-center gap-1.5">
                     <Calendar class="size-4" />
                     <span class="font-serif font-bold">
-                      <RelativeTime dateStr={pubDate} client:load />
+                      <RelativeTime dateStr={pubDate} />
                     </span>
                   </div>
                 )

@@ -1,0 +1,37 @@
+---
+import { relativeTime } from "@/lib/utils";
+
+interface Props {
+  dateStr: string;
+}
+
+const { dateStr } = Astro.props;
+---
+
+<relative-time data-date={dateStr}>{relativeTime(dateStr)}</relative-time>
+
+<script>
+  import { relativeTime } from "@/lib/utils";
+
+  class RelativeTimeElement extends HTMLElement {
+    private timer: number | undefined;
+
+    connectedCallback() {
+      this.update();
+      this.timer = window.setInterval(() => this.update(), 60_000);
+    }
+
+    disconnectedCallback() {
+      window.clearInterval(this.timer);
+    }
+
+    private update() {
+      const date = this.dataset.date;
+      if (date) this.textContent = relativeTime(date);
+    }
+  }
+
+  if (!customElements.get("relative-time")) {
+    customElements.define("relative-time", RelativeTimeElement);
+  }
+</script>
