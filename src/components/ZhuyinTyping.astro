@@ -44,7 +44,6 @@ const { text, speed = 180, zhuyinSpeed = 90, class: className } = Astro.props;
 </style>
 
 <script>
-  import { prepareWithSegments } from "@chenglou/pretext";
 
   const zhuyinMap: Record<string, string> = {
     還: "ㄏㄞˊ",
@@ -83,10 +82,12 @@ const { text, speed = 180, zhuyinSpeed = 90, class: className } = Astro.props;
     "，": "，",
   };
 
-  const FONT = '16px "Geist", "Noto Sans TC", sans-serif';
+  const graphemeSegmenter = new Intl.Segmenter(undefined, {
+    granularity: "grapheme",
+  });
 
   function toGraphemes(text: string): string[] {
-    return prepareWithSegments(text, FONT).segments;
+    return Array.from(graphemeSegmenter.segment(text), ({ segment }) => segment);
   }
 
   class ZhuyinTyper {
