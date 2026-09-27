@@ -29,14 +29,14 @@ const site_description = [
 ---
 
 <Layout ogImage="/og/index.png">
-  <main class="mx-auto w-full max-w-6xl px-4 py-12 md:px-8">
-    <section id="hero" class="mb-10">
-      <h2 id="greeting" class="font-serif text-3xl font-black tracking-wider">
+  <main class="page-container">
+    <section id="hero" class="page-header">
+      <h2 id="greeting" class="page-title">
         <ZhuyinTyping text="休息一下" class="greeting-text" />
       </h2>
       <p
         id="site-description"
-        class="t-text-swap text-muted-foreground m-0 font-serif text-lg"
+        class="page-description t-text-swap"
         data-texts={JSON.stringify(site_description)}
       >
         {SITE_DESCRIPTION}

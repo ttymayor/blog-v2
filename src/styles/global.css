@@ -23,6 +23,22 @@
   animation: marquee 10s linear infinite;
 }
 
+@utility page-container {
+  @apply mx-auto w-full max-w-6xl px-4 py-12 md:px-8;
+}
+
+@utility page-header {
+  @apply mb-8 font-serif;
+}
+
+@utility page-title {
+  @apply mb-2 text-[clamp(2rem,3vw,2.25rem)] font-bold;
+}
+
+@utility page-description {
+  @apply text-muted-foreground leading-relaxed;
+}
+
 @custom-variant dark (&:is(.dark *));
 
 /*

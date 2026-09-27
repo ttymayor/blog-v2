@@ -7,7 +7,11 @@ const posts = await getPosts();
 ---
 
 <Layout title="Blog">
-  <main class="mx-auto w-full max-w-6xl px-4 py-12 md:px-8">
+  <main class="page-container">
+    <section class="page-header">
+      <h1 class="page-title">文章</h1>
+      <p class="page-description">說是文章，但只是一坨隨意紀錄的文字與歷程。</p>
+    </section>
     <PostBrowser posts={posts} />
   </main>
 </Layout>

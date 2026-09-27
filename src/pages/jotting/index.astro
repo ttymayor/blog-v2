@@ -16,11 +16,11 @@ const renderedJottings = await Promise.all(
 ---
 
 <Layout title="隨筆" description="一些長短不一、尚未整理成文章的個人抒發。">
-  <main class="mx-auto w-full max-w-6xl px-4 py-12 md:px-8">
-    <header class="mb-8 font-serif">
-      <h1 class="mb-3 text-4xl font-bold">隨筆</h1>
-      <p class="text-muted-foreground m-0 leading-relaxed">寫一點。</p>
-    </header>
+  <main class="page-container">
+    <section class="page-header">
+      <h1 class="page-title">隨筆</h1>
+      <p class="page-description">寫一點。</p>
+    </section>
 
     {renderedJottings.length > 0 ? (
       <div class="border-border -mx-4 overflow-hidden md:rounded-4xl md:border">
@@ -91,8 +91,9 @@ const renderedJottings = await Promise.all(
         if (card.dataset.initialized) return;
         card.dataset.initialized = "true";
 
-        const link =
-          card.querySelector<HTMLAnchorElement>("[data-jotting-link]");
+        const link = card.querySelector<HTMLAnchorElement>(
+          "[data-jotting-link]",
+        );
         if (!link) return;
 
         const openJotting = () => {
