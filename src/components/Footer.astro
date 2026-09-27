@@ -45,16 +45,12 @@ const siteUptime = formatSiteUptime();
 
 <footer class="mt-auto w-full">
   <!-- hatched divider -->
-  <div
-    class="h-4 w-full border-t [background:repeating-linear-gradient(-45deg,transparent,transparent_8px,#94a3b815_8px,#94a3b815_10px)]"
-  >
-  </div>
+  <div class="h-4 w-full border-t border-b [background:repeating-linear-gradient(-45deg,transparent,transparent_8px,#94a3b815_8px,#94a3b815_10px)]"></div>
 
   <!-- main footer body -->
-  <div class="border-t">
-    <div
-      class="mx-auto flex max-w-7xl flex-row justify-between gap-4 px-4 py-10"
-    >
+  <div class="">
+    <div class="mx-auto flex max-w-6xl flex-row justify-between gap-4 px-4 py-10 md:px-8">
+      <!-- mx-auto w-full max-w-6xl px-4 py-12  -->
       <div class="flex flex-col gap-4">
         <!-- brand -->
         <div class="flex flex-col gap-1">
@@ -62,9 +58,7 @@ const siteUptime = formatSiteUptime();
             href="/"
             class="text-foreground w-fit font-mono text-lg font-semibold tracking-tight transition-opacity hover:opacity-70"
           >
-            <h2>
-              {SITE_TITLE}
-            </h2>
+            <h2>{SITE_TITLE}</h2>
           </a>
           <p class="text-muted-foreground max-w-48 text-xs leading-relaxed">
             {SITE_DESCRIPTION}
@@ -73,50 +67,42 @@ const siteUptime = formatSiteUptime();
 
         <!-- nav -->
         <div class="flex flex-col items-start">
-          <span
-            class="text-muted-foreground text-center text-xs font-semibold tracking-widest uppercase"
-          >
+          <span class="text-muted-foreground text-center text-xs font-semibold tracking-widest uppercase">
             Pages
           </span>
           <ul class="flex h-fit flex-row gap-3">
-            {
-              navLinks.map(({ href, label }) => (
-                <li>
-                  <a
-                    href={href}
-                    class="text-foreground/70 hover:text-foreground text-sm underline-offset-4 transition-colors hover:underline"
-                  >
-                    {label}
-                  </a>
-                </li>
-              ))
-            }
+            {navLinks.map(({ href, label }) => (
+              <li>
+                <a
+                  href={href}
+                  class="text-foreground/70 hover:text-foreground text-sm underline-offset-4 transition-colors hover:underline"
+                >
+                  {label}
+                </a>
+              </li>
+            ))}
           </ul>
         </div>
 
         <!-- social -->
         <div class="flex flex-col items-start gap-1">
-          <span
-            class="text-muted-foreground text-xs font-semibold tracking-widest uppercase"
-          >
+          <span class="text-muted-foreground text-xs font-semibold tracking-widest uppercase">
             Connect
           </span>
           <ul class="flex flex-row gap-3">
-            {
-              socialLinks.map(({ href, label, svg }) => (
-                <a
-                  href={href}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  class="footer-link text-foreground/70 hover:text-foreground gap-1 text-sm underline-offset-4 transition-colors hover:underline"
-                >
-                  <li class="flex items-center gap-1">
-                    <Fragment set:html={svg} />
-                    {label}
-                  </li>
-                </a>
-              ))
-            }
+            {socialLinks.map(({ href, label, svg }) => (
+              <a
+                href={href}
+                target="_blank"
+                rel="noopener noreferrer"
+                class="footer-link text-foreground/70 hover:text-foreground gap-1 text-sm underline-offset-4 transition-colors hover:underline"
+              >
+                <li class="flex items-center gap-1">
+                  <Fragment set:html={svg} />
+                  {label}
+                </li>
+              </a>
+            ))}
           </ul>
         </div>
       </div>
@@ -134,17 +120,16 @@ const siteUptime = formatSiteUptime();
     </div>
     <!-- bottom bar -->
     <div class="border-t">
-      <div
-        class="mx-auto flex max-w-7xl flex-wrap items-center justify-between gap-4 p-4"
-      >
+      <div class="mx-auto flex max-w-6xl flex-wrap justify-between gap-4 p-4 md:px-8">
         <p class="text-muted-foreground font-mono text-xs">
-          &copy; {new Date().getFullYear()}
-          {" "}{SITE_TITLE}
+          &copy; {new Date().getFullYear()} {SITE_TITLE}
         </p>
         <span
           class="text-muted-foreground text-xs tabular-nums"
-          data-site-uptime>{siteUptime}</span
+          data-site-uptime
         >
+          {siteUptime}
+        </span>
       </div>
     </div>
   </div>
