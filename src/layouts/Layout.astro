@@ -68,9 +68,9 @@ const pageTitle = title ? `${title}｜${SITE_TITLE}` : SITE_TITLE;
   </head>
   <body>
     {header && <Header transition:persist transition:name="header" />}
-    <main class="p-0" transition:animate="fade">
+    <div transition:animate="fade">
       <slot />
-    </main>
+    </div>
     <Footer transition:persist transition:name="footer" />
     <div class="hidden md:block">
       <PullCordLamp client:only="react" transition:persist />

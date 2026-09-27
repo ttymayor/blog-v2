@@ -1,8 +1,13 @@
 ---
-import BlogListPage from "@/components/BlogListPage.astro";
+import Layout from "@/layouts/Layout.astro";
+import PostBrowser from "@/components/blog/PostBrowser.astro";
 import { getPosts } from "@/lib/blog";
 
 const posts = await getPosts();
 ---
 
-<BlogListPage posts={posts} initialPage={1} />
+<Layout title="Blog">
+  <main class="mx-auto w-full max-w-6xl px-4 py-12 md:px-8">
+    <PostBrowser posts={posts} />
+  </main>
+</Layout>

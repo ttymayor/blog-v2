@@ -1,5 +1,5 @@
 ---
-import BaseLayout from "@/layouts/BaseLayout.astro";
+import Layout from "@/layouts/Layout.astro";
 import ZhuyinTyping from "@/components/ZhuyinTyping.astro";
 import { ArrowRight } from "@lucide/astro";
 import PostList from "@/components/blog/PostList.astro";
@@ -28,8 +28,8 @@ const site_description = [
 ];
 ---
 
-<BaseLayout ogImage="/og/index.png">
-  <div class="mx-auto w-full max-w-5xl px-4 py-12">
+<Layout ogImage="/og/index.png">
+  <main class="mx-auto w-full max-w-6xl px-4 py-12 md:px-8">
     <section id="hero" class="mb-10">
       <h2 id="greeting" class="font-serif text-3xl font-black tracking-wider">
         <ZhuyinTyping text="休息一下" class="greeting-text" />
@@ -123,17 +123,17 @@ const site_description = [
       // Re-update after view transitions
       document.addEventListener("astro:page-load", updateGreeting);
     </script>
-
     <section id="latest-posts" class="flex flex-col gap-1">
       <div class="flex items-center justify-between">
         <h3 class="font-serif text-2xl font-bold">最新文章</h3>
         <a
           href="/blog"
           class="text-muted-foreground flex items-center gap-2 font-serif transition-all hover:translate-x-1"
-          >瞧<ArrowRight class="size-5" /></a
         >
+          瞧<ArrowRight class="size-5" />
+        </a>
       </div>
       <PostList posts={latestPosts} />
     </section>
-  </div>
-</BaseLayout>
+  </main>
+</Layout>

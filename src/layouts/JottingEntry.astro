@@ -1,5 +1,5 @@
 ---
-import BaseLayout from "@/layouts/BaseLayout.astro";
+import Layout from "@/layouts/Layout.astro";
 import { ArrowLeft, Dot } from "@lucide/astro";
 import RelativeTime from "@/components/RelativeTime.astro";
 
@@ -12,8 +12,8 @@ const { id, pubDate } = Astro.props;
 const persistName = `jotting-content-${id}`;
 ---
 
-<BaseLayout title="隨筆">
-  <div class="mx-auto w-full max-w-2xl px-5 py-12">
+<Layout title="隨筆">
+  <main class="mx-auto w-full max-w-6xl px-4 py-12 md:px-8">
     <a
       href="/jotting"
       class="text-muted-foreground hover:text-foreground mb-8 inline-flex items-center gap-2 text-sm no-underline transition-colors"
@@ -23,22 +23,24 @@ const persistName = `jotting-content-${id}`;
     </a>
     <div
       transition:name={`jotting-border`}
-      class="border-border -mx-5 overflow-hidden p-5 sm:rounded-4xl sm:border"
+      class="border-border -mx-4 overflow-hidden p-5 sm:rounded-4xl sm:border"
     >
-      <header class="mb-5 flex flex-row items-center gap-1.5 text-sm">
-        <span class="font-semibold">tantuyu</span>
-        <span class="text-muted-foreground font-light">@tantuyu</span>
-        <Dot class="size-2" />
-        <time datetime={pubDate} class="text-muted-foreground font-light">
-          <RelativeTime dateStr={pubDate} />
-        </time>
-      </header>
-      <div
-        data-astro-transition-persist={persistName}
-        class="prose jotting-prose gap-5 font-serif"
-      >
-        <slot />
+      <div>
+        <header class="mb-5 flex flex-row items-center gap-1.5 text-sm">
+          <span class="font-semibold">tantuyu</span>
+          <span class="text-muted-foreground font-light">@tantuyu</span>
+          <Dot class="size-2" />
+          <time datetime={pubDate} class="text-muted-foreground font-light">
+            <RelativeTime dateStr={pubDate} />
+          </time>
+        </header>
+        <div
+          data-astro-transition-persist={persistName}
+          class="prose jotting-prose gap-5 font-serif"
+        >
+          <slot />
+        </div>
       </div>
     </div>
-  </div>
-</BaseLayout>
+  </main>
+</Layout>
