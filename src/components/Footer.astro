@@ -124,12 +124,19 @@ const siteUptime = formatSiteUptime();
         <p class="text-muted-foreground font-mono text-xs">
           &copy; {new Date().getFullYear()} {SITE_TITLE}
         </p>
-        <span
-          class="text-muted-foreground text-xs tabular-nums"
-          data-site-uptime
-        >
-          {siteUptime}
-        </span>
+        <div class="text-muted-foreground text-xs flex items-center gap-2">
+          <span class="tabular-nums" data-site-uptime>
+            {siteUptime}
+          </span>
+          <button
+            type="button"
+            data-music-player-open
+            aria-controls="floating-music-player"
+            class="text-muted-foreground hover:text-foreground cursor-pointer underline-offset-4 transition-colors hover:underline"
+          >
+            聽聽歌
+          </button>
+        </div>
       </div>
     </div>
   </div>

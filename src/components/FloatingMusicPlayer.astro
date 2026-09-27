@@ -1,0 +1,193 @@
+---
+import { Maximize2, Minimize2, Music2, X } from "@lucide/astro";
+
+const videoSrc = "https://www.youtube.com/embed/Bs__cspD9_8";
+const videoTitle = "願你愛自己，像我愛你一樣";
+---
+
+<floating-music-player
+  hidden
+  id="floating-music-player"
+  data-video-src={videoSrc}
+  class="bg-card text-card-foreground fixed right-3 bottom-3 z-50 overflow-hidden rounded-xl border shadow-2xl transition-[width,border-radius] md:right-6 md:bottom-6"
+>
+  <div data-music-player-expanded>
+    <div class="flex items-center justify-between gap-3 px-3 py-2">
+      <div class="flex min-w-0 items-center gap-2">
+        <Music2 class="size-4 shrink-0" aria-hidden="true" />
+        <p class="truncate text-sm font-medium">{videoTitle}</p>
+      </div>
+      <div class="flex shrink-0 items-center gap-1">
+        <button
+          type="button"
+          data-music-player-minimize
+          aria-label="最小化音樂播放器"
+          class="text-muted-foreground hover:bg-accent hover:text-accent-foreground focus-visible:ring-ring/50 inline-flex size-8 cursor-pointer items-center justify-center rounded-full transition-colors outline-none focus-visible:ring-[3px]"
+        >
+          <Minimize2 class="size-4" aria-hidden="true" />
+        </button>
+        <button
+          type="button"
+          data-music-player-close
+          aria-label="關閉音樂播放器"
+          class="text-muted-foreground hover:bg-accent hover:text-accent-foreground focus-visible:ring-ring/50 inline-flex size-8 cursor-pointer items-center justify-center rounded-full transition-colors outline-none focus-visible:ring-[3px]"
+        >
+          <X class="size-4" aria-hidden="true" />
+        </button>
+      </div>
+    </div>
+
+    <iframe
+      class="aspect-[957/867] w-full border-0"
+      title={videoTitle}
+      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+      referrerpolicy="strict-origin-when-cross-origin"
+      allowfullscreen
+      transition:persist="floating-music-player"
+    ></iframe>
+  </div>
+
+  <button
+    type="button"
+    data-music-player-maximize
+    aria-label="展開音樂播放器"
+    class="hover:bg-accent focus-visible:ring-ring/50 flex h-12 w-full cursor-pointer items-center gap-3 px-4 transition-colors outline-none focus-visible:ring-[3px] sm:size-12 sm:justify-center sm:p-0"
+  >
+    <Music2 class="size-4 shrink-0" aria-hidden="true" />
+    <span class="min-w-0 flex-1 truncate text-left text-sm font-medium sm:sr-only">
+      {videoTitle}
+    </span>
+    <Maximize2 class="size-4 shrink-0 sm:hidden" aria-hidden="true" />
+  </button>
+
+</floating-music-player>
+
+<script>
+  const STORAGE_KEY = "music-player-visible";
+
+  class FloatingMusicPlayer extends HTMLElement {
+    private iframe: HTMLIFrameElement | null = null;
+    private abortController: AbortController | null = null;
+
+    connectedCallback() {
+      this.abortController?.abort();
+      this.abortController = new AbortController();
+      this.iframe = this.querySelector("iframe");
+
+      const signal = this.abortController.signal;
+      this.querySelector("[data-music-player-close]")?.addEventListener(
+        "click",
+        this.close,
+        { signal },
+      );
+      this.querySelector("[data-music-player-minimize]")?.addEventListener(
+        "click",
+        this.minimize,
+        { signal },
+      );
+      this.querySelector("[data-music-player-maximize]")?.addEventListener(
+        "click",
+        this.maximize,
+        { signal },
+      );
+      document.addEventListener("click", this.handleDocumentClick, { signal });
+
+      if (this.shouldOpen()) this.open();
+    }
+
+    disconnectedCallback() {
+      this.abortController?.abort();
+    }
+
+    private shouldOpen() {
+      try {
+        return localStorage.getItem(STORAGE_KEY) === "true";
+      } catch {
+        return false;
+      }
+    }
+
+    private handleDocumentClick = (event: MouseEvent) => {
+      const target = event.target;
+      if (
+        target instanceof Element &&
+        target.closest("[data-music-player-open]")
+      ) {
+        this.open();
+      }
+    };
+
+    private open = () => {
+      try {
+        localStorage.setItem(STORAGE_KEY, "true");
+      } catch {
+        // The player still works when storage is unavailable.
+      }
+
+      this.maximize();
+      this.hidden = false;
+      if (this.iframe && !this.iframe.hasAttribute("src")) {
+        this.iframe.src = this.dataset.videoSrc ?? "";
+      }
+    };
+    private minimize = () => {
+      this.setAttribute("data-minimized", "");
+    };
+
+    private maximize = () => {
+      this.removeAttribute("data-minimized");
+    };
+
+
+    private close = () => {
+      try {
+        localStorage.setItem(STORAGE_KEY, "false");
+      } catch {
+        // The player still closes when storage is unavailable.
+      }
+
+      this.maximize();
+      this.hidden = true;
+      this.iframe?.removeAttribute("src");
+    };
+  }
+
+  if (!customElements.get("floating-music-player")) {
+    customElements.define("floating-music-player", FloatingMusicPlayer);
+  }
+</script>
+
+<style>
+  floating-music-player {
+    display: block;
+    width: calc(100vw - 1.5rem);
+  }
+
+  @media (min-width: 40rem) {
+    floating-music-player {
+      width: 20rem;
+    }
+
+    floating-music-player[data-minimized] {
+      width: 3rem;
+      height: 3rem;
+      border-radius: 9999px;
+    }
+  }
+
+  floating-music-player[hidden] {
+    display: none;
+  }
+
+  floating-music-player [data-music-player-maximize] {
+    display: none;
+  }
+
+  floating-music-player[data-minimized] [data-music-player-expanded] {
+    display: none;
+  }
+
+  floating-music-player[data-minimized] [data-music-player-maximize] {
+    display: flex;
+  }
+</style>
