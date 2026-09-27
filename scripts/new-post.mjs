@@ -3,14 +3,10 @@
 import { mkdirSync, writeFileSync } from "node:fs";
 import { dirname, join, relative } from "node:path";
 import { fileURLToPath } from "node:url";
-import { checkbox, input } from "@inquirer/prompts";
-import { analyzePostMeta } from "./lib/post-meta.mjs";
+import { input } from "@inquirer/prompts";
 
 const ROOT_DIR = fileURLToPath(new URL("..", import.meta.url));
 const BLOG_DIR = join(ROOT_DIR, "src", "content", "blog");
-const { tags: TAG_STATS, categories: CAT_STATS } = analyzePostMeta(BLOG_DIR);
-const CATEGORIES = CAT_STATS.map(({ name }) => name);
-const DEFAULT_CATEGORY = CATEGORIES[0] ?? "tech";
 
 function toSlug(title) {
   return (
@@ -23,22 +19,13 @@ function toSlug(title) {
   );
 }
 
-function validateSlug(value) {
-  const slug = value.trim();
-  if (!slug) return "Slug is required";
-  if (!/^[\p{L}\p{N}][\p{L}\p{N}_-]*$/u.test(slug)) {
-    return "Slug may contain only letters, numbers, underscores, and hyphens";
-  }
-  return true;
-}
-
-function buildPost({ title, description, pubDate, tags, category }) {
+function buildPost({ title, pubDate }) {
   return `---
 title: ${JSON.stringify(title)}
-description: ${JSON.stringify(description)}
+description: ""
 pubDate: ${JSON.stringify(pubDate)}
-tags: ${JSON.stringify(tags)}
-category: ${JSON.stringify(category)}
+tags: []
+category: ""
 draft: true
 ---
 
@@ -66,35 +53,7 @@ async function main() {
       validate: (value) => value.trim() !== "" || "Title is required",
     })
   ).trim();
-  const description = (await input({ message: "Description (optional):" })).trim();
-  const category = (
-    await input({
-      message: `Category (${CATEGORIES.join(" / ")}):`,
-      default: DEFAULT_CATEGORY,
-      validate: (value) => value.trim() !== "" || "Category is required",
-    })
-  ).trim();
-  const selectedTags = await checkbox({
-    message: "Select tags:",
-    choices: TAG_STATS.map(({ name, count }) => ({
-      name: `${name} (${count})`,
-      value: name,
-    })),
-  });
-  const extraTags = (await input({ message: "Additional tags (comma separated, optional):" }))
-    .split(",")
-    .map((tag) => tag.trim())
-    .filter(Boolean);
-  const tags = [...new Set([...selectedTags, ...extraTags])];
-  const slug = (
-    await input({
-      message: "Slug:",
-      default: toSlug(title),
-      validate: validateSlug,
-    })
-  )
-    .trim()
-    .normalize("NFKC");
+  const slug = toSlug(title);
 
   const filePath = join(BLOG_DIR, year, month, `${slug}.mdx`);
 
@@ -104,10 +63,7 @@ async function main() {
       filePath,
       buildPost({
         title,
-        description,
         pubDate: now.toISOString(),
-        tags,
-        category,
       }),
       { encoding: "utf-8", flag: "wx" },
     );
