@@ -23,12 +23,11 @@ const renderedJottings = await Promise.all(
     </header>
 
     {renderedJottings.length > 0 ? (
-      <div
-        transition:name={`jotting-border`}
-        class="border-border -mx-4 overflow-hidden md:rounded-4xl md:border"
-      >
+      <div class="border-border -mx-4 overflow-hidden md:rounded-4xl md:border">
         {renderedJottings.map(({ jotting, Content }, index) => {
-          const persistName = `jotting-content-${jotting.id}`;
+          const transitionId = jotting.id.replaceAll("/", "-");
+          const transitionName = `jotting-item-${transitionId}`;
+          const persistName = `jotting-state-${transitionId}`;
           return (
             <>
               <article
@@ -44,7 +43,11 @@ const renderedJottings = await Promise.all(
                 >
                   閱讀這則隨筆
                 </a>
-                <div class="relative p-5">
+                <div
+                  class="relative p-5"
+                  transition:name={transitionName}
+                  transition:animate="initial"
+                >
                   <header class="mb-5 flex flex-row items-center gap-1.5 text-sm">
                     <span class="font-semibold">tantuyu</span>
                     <span class="text-muted-foreground font-light">
@@ -60,8 +63,8 @@ const renderedJottings = await Promise.all(
                   </header>
 
                   <div
-                    data-astro-transition-persist={persistName}
                     class="prose jotting-prose gap-5 font-serif"
+                    transition:persist={persistName}
                   >
                     <Content />
                   </div>
