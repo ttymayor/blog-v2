@@ -82,6 +82,8 @@ const renderedJottings = await Promise.all(
 </Layout>
 
 <script>
+  import { navigate } from "astro:transitions/client";
+
   function initJottingCardLinks() {
     document
       .querySelectorAll<HTMLElement>("[data-jotting-card]")
@@ -89,8 +91,29 @@ const renderedJottings = await Promise.all(
         if (card.dataset.initialized) return;
         card.dataset.initialized = "true";
 
-        const openJotting = () =>
-          card.querySelector<HTMLAnchorElement>("[data-jotting-link]")?.click();
+        const link =
+          card.querySelector<HTMLAnchorElement>("[data-jotting-link]");
+        if (!link) return;
+
+        const openJotting = () => {
+          void navigate(link.href, {
+            sourceElement: link,
+            state: { fromJottingIndex: true },
+          });
+        };
+
+        link.addEventListener("click", (event) => {
+          if (
+            event.button !== 0 ||
+            event.metaKey ||
+            event.ctrlKey ||
+            event.shiftKey ||
+            event.altKey
+          )
+            return;
+          event.preventDefault();
+          openJotting();
+        });
 
         card.addEventListener("click", (event) => {
           const target = event.target;
