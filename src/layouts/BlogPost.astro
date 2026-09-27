@@ -53,6 +53,7 @@ const {
   prevPost,
   nextPost,
   chatWithAI,
+  draft,
 } = Astro.props;
 
 const ogImage = heroImage
@@ -126,13 +127,22 @@ if (chatWithAI) {
               </div>
             )
           }
-          <h1
-            id="article-title"
-            class="text-[clamp(1.75rem, 4vw, 2.25rem)] m-0 w-fit font-serif text-3xl font-bold md:text-4xl"
-            transition:name={`article-title-${slug.replaceAll("/", "-")}`}
-          >
-            {title}
-          </h1>
+          <div class="flex flex-wrap items-center gap-2">
+            <h1
+              id="article-title"
+              class="text-[clamp(1.75rem, 4vw, 2.25rem)] m-0 w-fit font-serif text-3xl font-bold md:text-4xl"
+              transition:name={`article-title-${slug.replaceAll("/", "-")}`}
+            >
+              {title}
+            </h1>
+            {
+              import.meta.env.DEV && draft && (
+                <Badge variant="tag" class="shrink-0">
+                  草稿
+                </Badge>
+              )
+            }
+          </div>
           <div
             class="text-muted-foreground flex flex-wrap items-center gap-4 text-xs"
           >

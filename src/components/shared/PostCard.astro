@@ -10,8 +10,6 @@ interface Props {
 
 const { post } = Astro.props;
 const transitionId = post.id.replace(/\//g, "-");
-const badgeClass =
-  "inline-flex w-fit shrink-0 items-center justify-center gap-1 overflow-hidden rounded-full border border-transparent px-2 py-0.5 text-xs font-medium whitespace-nowrap transition-[color,box-shadow] [&>svg]:pointer-events-none [&>svg]:size-3";
 ---
 
 <a
@@ -43,6 +41,7 @@ const badgeClass =
       style={`view-transition-name: article-title-${transitionId}`}
     >
       {post.title}
+      {import.meta.env.DEV && post.draft && <Badge variant="tag">草稿</Badge>}
     </div>
     {
       post.excerpt && (
