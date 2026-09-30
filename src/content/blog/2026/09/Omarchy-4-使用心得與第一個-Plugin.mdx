@@ -1,0 +1,52 @@
+---
+title: "Omarchy 4.0：使用心得與第一個 Plugin"
+description: "從原生 Arch Linux 改用 Omarchy 4.0，簡短分享 Hyprland、AI Agent 與開發工具的使用體驗，以及分享自己實作的 Logitech G Mouse Plugin"
+pubDate: "2026-09-30T01:20:10.406Z"
+tags: ["Omarchy", "Linux", "AI"]
+category: "生活"
+---
+
+## 前言
+
+約莫在 2026 年 8 月底，[DHH](https://dhh.dk/) 大佬推出了一版新的 Linux 發行版：Omarchy 4.0。
+
+由於短期內的評論都讚譽有加，所以就把我的筆電從原生 Arch Linux 換成了 Omarchy 4.0，雖然都是 Arch，但是 Omarchy 4.0 的配置與現代開發者的習慣更契合，尤其是對於那些喜歡使用新軟體、與 AI 配合的開發者來說。
+
+## 體驗
+
+### 重灌之後
+
+在重灌過程中，非常迅速，僅僅花了不到 3 分鐘，就完成了整個安裝過程。
+
+預設使用很多較為現代化或高度可自訂的軟體與工具。指令例如：
+
+1. zoxide (`cd` 的替代品)
+2. eza (`ls` 的替代品)
+3. 還有一些其他的工具，像是 `bat`、`fd`、`fzf`，甚至 `yt-dlp` 等等指令
+
+桌面環境：Hyprland、Quickshell  
+終端：Foot Terminal  
+預設：Neovim（沒有 Vim）
+
+### 高度與 AI 結合
+
+同時，在進入系統後會進行預設 AI Agent 的選擇，這就是 Omarchy 4.0 的一個亮點，對於喜歡使用 AI 的開發者來說非常方便。
+
+並且也與 DHH 的理念一致，一樣有著與 Ruby on Rails 的 CoC（Convention over Configuration，慣例優於設定）特點。有著成套的工具與軟體，僅需少量的設定，就能夠快速上手，這對於開發者來說是非常友善的。
+
+系統也本身支援與 AI 的高度配合，在系統本身就有 Skill 可以讓 AI Agent 自行調用去偵錯、調整，甚至自行寫 Plugin 外掛。
+
+### 問題
+
+我遇到的一些問題無非是一些不習慣的配置，例如我沒有用過 Hyprland / Quickshell
+
+1. 第一個是 Workspace 與平鋪視窗，但平鋪視窗好解決，僅需要看一下 Keybindings (`Super` + `k`)，就看到可以使用 `Super` + `l` 切換平鋪或滾動。將某個 Workspace 每個視窗調到最大，就可以用 `alt` + `tab` 切視窗了，變回 Windows (?
+2. 其次是切視窗時會將螢幕上的游標會跑到螢幕中間。這也好解決，可以直接叫 AI Agent 描述系統問題直接修改。我相信這也是 DHH 會希望使用者進行的修改操作，而非自己查文檔再慢慢改。
+3. 中文輸入法（其實是大部分重灌過的 Linux 都需要稍微裝一下與配置）但也可以叫 AI 解決。
+4. 透過系統安裝的 Zed 編輯器，指令呼叫是 `zeditor` 不是 `zed`
+
+## 於是我寫了一個 Omarchy Plugin
+
+[Logitech G Mouse](https://github.com/ttymayor/oma-logitech-g-mouse) 是一個可以在 Omarchy 上，提供查看、調整 DPI 的羅技 G 系列滑鼠外掛（使用 HID++ 協定）。
+
+目前並不完善，但確定已支援：G304、G305、G PRO X2 SUPERSTRIKE
